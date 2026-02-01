@@ -12,8 +12,10 @@
                 <p class="tagline">Discover restaurants near DLSU</p>
             </div>
             <ul class="nav-menu" id="navMenu">
-                <!-- Navigation will change based on login status -->
-                <li><a href="Home.html">Home</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="establishments.html">Establishments</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html">Sign Up</a></li>
             </ul>
         </div>
     </nav>
@@ -25,7 +27,7 @@
                 <h2>TaftBites helps you connect with restaurants near DLSU.</h2>
                 <p>Share reviews and discover new places to eat around De La Salle University.</p>
             </div>
-            
+            <!--- Be edited to include register.html and login.html 
             <div class="main-right">
                 <div class="signup-box">
                     <h3>Sign Up</h3>
@@ -46,12 +48,44 @@
                     </form>
                 </div>
             </div>
+            -->
         </div>
     </section>
 
+    <!-- Featured Establishments Section -->
+    <section class="featured">
+        <div class="container">
+            <h2>Featured Establishments</h2>
+            <div id="featuredList">
+                <!-- Featured establishments will be displayed here -->
+                <div class="establishment-item">
+                    <h3><a href="establishment-detail.html">Establishment Name</a></h3>
+                    <p>Rating: </p>
+                    <p>Description: </p>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+    <!-- Recent Reviews Section -->
+    <section class="recent">
+        <div class="container">
+            <h2>Recent Reviews</h2>
+            <div id="recentReviews">
+                <!-- Recent reviews will be displayed here -->
+                <div class="review-item">
+                    <h4><a href="establishment-detail.html">Review Title</a></h4>
+                    <p>By: <a href="profile.html">Username</a> on Establishment Name</p>
+                    <p>Rating: </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <!-- Footer -->
     <footer class="footer">
         <p>TaftBites © 2026 · XSG Group #57 · DLSU-Manila</p>
     </footer>
 </body>
+
 </html>
