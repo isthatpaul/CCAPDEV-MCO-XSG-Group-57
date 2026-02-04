@@ -1,54 +1,79 @@
 <!DOCTYPE html> 
 <html>
     <head>
-        <title> User Profile Page </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>User Profile - TaftBites</title>
+        <link rel="stylesheet" href="css/base.css">
     </head>
     <body>
-        <div clas="navbar">
-            <h1> User Profile </h1>
+        <div class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>TaftBites</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="establishments.html">Establishments</a></li>
+                    <li><a href="profile.html" aria-current="page">Profile</a></li>
+                    <li><a href="index.html">Logout</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="content">
-            <div id="profile_photo">
-                <img src="url" alt="Profile photo." width="150"/>
+    <main class="main">
+        <div class="container">
+            <div class="main-content">
+                <div class="main-left">
+                    <div id="profile_photo" class="card center">
+                        <img src="url" alt="Profile photo." width="150" style="border-radius:6px;">
+                    </div>
+                    <div id="join_date" class="card" style="margin-top:12px">
+                        <p class="small text-muted">Member since 2024</p>
+                    </div>
+                    <div id="bio" class="card" style="margin-top:12px">
+                        <h3>Bio</h3>
+                        <p>Bio appears here</p>
+                    </div>
+                    <div id="contact_info" class="card" style="margin-top:12px">
+                        <h3>Contact Information</h3>
+                        <p>Email: </p>
+                        <p>Contact No.: </p>
+                    </div>
+                </div>
+
+                <div class="main-right">
+                    <div class="card">
+                        <h3>Edit Profile</h3>
+                        <form id="editProfileForm">
+                            <div>
+                                <label for="editBio">Update Bio</label>
+                                <textarea id="editBio" name="bio" rows="4" placeholder="Tell other users about yourself..."></textarea>
+                            </div>
+
+                            <div>
+                                <label for="editEmail">Update Contact Email</label>
+                                <input type="email" id="editEmail" name="email" placeholder="you@example.com">
+                            </div>
+
+                            <div>
+                                <label for="editPhone">Update Contact Number</label>
+                                <input type="tel" id="editPhone" name="phone" placeholder="0917xxxxxxx">
+                            </div>
+
+                            <div>
+                                <label for="editPicture">Change Profile Picture</label>
+                                <input type="file" id="editPicture" name="picture">
+                            </div>
+
+                            <div style="margin-top:10px">
+                                <button type="submit">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            
-            <div id="join_date">
-                <p> Member since 2024 </p>
-            </div>
-
-            <div id="bio">
-                <h3> Bio </h3>
-                <p> Bio appears here </p>
-            </div>
-
-            <div id="contact_info">
-                <h3> Contact Information: </h3>
-                <p> Email: </p>
-                <p> Contact No.:  </p>
-            </div>
-
-             
-            <div id="edit_profile">
-                <h3>Edit Profile</h3>
-
-                <form>
-                    <label>Update Bio:</label><br>
-                    <textarea rows="4" cols="40"></textarea><br><br>
-
-                    <label>Update Contact Email:</label><br>
-                    <input type="email"><br><br>
-                    
-                    <label>Update Contact Number:</label><br>
-                    <input type="text"><br><br>
-
-                    <label>Change Profile Picture:</label><br>
-                    <input type="file"><br><br>
-
-                    <input type="submit" value="Save Changes">
-                </form>
-            </div>
-
         </div>
+    </main>
 
 
     </body>

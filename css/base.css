@@ -33,11 +33,15 @@ header, .navbar{
     color:#fff;
     border-bottom:1px solid rgba(0,0,0,0.06);
 }
-header nav{
+/* Layout for header nav and standalone .navbar */
+header nav,
+.navbar .container{
     display:flex;
     align-items:center;
+    justify-content:space-between;
 }
-header nav ul{
+header nav ul,
+.navbar .nav-menu{
     list-style:none;
     margin:0;
     padding:12px 0;
@@ -45,16 +49,19 @@ header nav ul{
     gap:18px;
     align-items:center;
 }
-header nav ul li{
+header nav ul li,
+.navbar .nav-menu li{
     display:inline-block;
 }
-header nav a{
+header nav a,
+.navbar a{
     color:#fff;
     font-weight:600;
     padding:6px 8px;
     border-radius:3px;
 }
-header nav a[aria-current="page"], header nav a:hover{
+header nav a[aria-current="page"], header nav a:hover,
+.navbar a[aria-current="page"], .navbar a:hover{
     background: rgba(255,255,255,0.08);
 }
 
@@ -137,5 +144,5 @@ footer{padding:18px 0;text-align:center;color:var(--muted);font-size:13px}
     .main-content{flex-direction:column}
     .main-right{width:100%}
     .container{padding:0 12px}
-    header nav ul{flex-wrap:wrap}
+    header nav ul, .navbar .nav-menu{flex-wrap:wrap}
 }
