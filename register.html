@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign Up - TaftBites</title>
+    <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="establishments.html">Establishments</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html" aria-current="page">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="main-content">
+                <div class="main-left">
+                    <h1 id="signupHeading">Create an account</h1>
+                    <p>Join TaftBites to post reviews and save your favorite places.</p>
+                    <ul class="text-muted">
+                        <li>Post reviews and photos</li>
+                        <li>Save favorite establishments</li>
+                        <li>Follow other users</li>
+                    </ul>
+                </div>
+                <div class="main-right">
+                    <div class="card">
+                        <form id="registerForm" action="/auth/register" method="POST" novalidate>
+                            <!-- Full name -->
+                            <div>
+                                <label for="fullName">Full name</label>
+                                <input type="text" id="fullName" name="name" required autocomplete="name" placeholder="Jane Doe">
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label for="regEmail">Email</label>
+                                <input type="email" id="regEmail" name="email" required autocomplete="email" placeholder="you@example.com">
+                            </div>
+
+                            <!-- Password -->
+                            <div>
+                                <label for="regPassword">Password</label>
+                                <input type="password" id="regPassword" name="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters">
+                                <small>Password must be at least 8 characters.</small>
+                            </div>
+
+                            <div>
+                                <label for="regConfirm">Confirm password</label>
+                                <input type="password" id="regConfirm" name="confirmPassword" required autocomplete="new-password" placeholder="Repeat your password">
+                            </div>
+
+                            <div>
+                                <label>
+                                    <input type="checkbox" id="agreeTerms" name="terms" required> I agree to the <a href="#terms">terms and conditions</a>
+                                </label>
+                            </div>
+
+                            <div>
+                                <button type="submit">Create account</button>
+                            </div>
+
+                            <p>Already have an account? <a href="login.html">Login</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>TaftBites © 2026</p>
+    </footer>
+
+    <script>
+        // Ensure password and confirm match before submission
+        const regForm = document.getElementById('registerForm');
+        const password = document.getElementById('regPassword');
+        const confirm = document.getElementById('regConfirm');
+
+        function validatePasswords() {
+            if (confirm.value === '') {
+                confirm.setCustomValidity('');
+                return;
+            }
+            if (password.value !== confirm.value) {
+                confirm.setCustomValidity('Passwords do not match');
+            } else {
+                confirm.setCustomValidity('');
+            }
+        }
+
+        password.addEventListener('input', validatePasswords);
+        confirm.addEventListener('input', validatePasswords);
+
+        regForm.addEventListener('submit', function (e) {
+            validatePasswords();
+            if (!regForm.checkValidity()) {
+                e.preventDefault();
+                const firstInvalid = regForm.querySelector(':invalid');
+                if (firstInvalid) firstInvalid.focus();
+            }
+        });
+    </script>
+</body>
+</html>
