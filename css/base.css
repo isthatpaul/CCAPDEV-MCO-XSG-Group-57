@@ -136,6 +136,12 @@ button:hover, .btn:hover{background:var(--green-dark)}
 /* Featured list and review items */
 .establishment-item, .review-item{margin-bottom:12px;padding:12px;border-radius:3px;background:linear-gradient(180deg,#fff,#fbfcfc);border:1px solid var(--border)}
 
+/* Star rating design*/
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
 /* Footer */
 footer{padding:18px 0;text-align:center;color:var(--muted);font-size:13px}
 

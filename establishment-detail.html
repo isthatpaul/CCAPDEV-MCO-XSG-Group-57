@@ -7,47 +7,65 @@
         <link rel="stylesheet" href="css/base.css">
     </head>
     <body>
-        <div id="main">
-            <div class = "details">
-                <h2>Establisment Name</h2>
-                <p>operating hours, contact information, location, website or social media links, and other publicly visible information relevant to customers</p>
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>TaftBites</h1>
+                    <p class="tagline">Discover restaurants near DLSU</p>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="establishments.html">Establishments</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="index.html">Logout</a></li>
+                </ul>
             </div>
-            <button id="writeReview">Write a Review</button>
-            <button id="EditReview">Edit Review</button>
-            <div id="reviewOverlay" class="overlay">
-                <div class = "popup">
-                    <form id = "reviewForm">
-                        <h3>Write Review<h3>
-                        <input type="text" id="reviewTitle" placeholder="title" required>
-                        <br>
-                        <textarea id="reviewTextBody" rows="5" placeholder="Write your review..."></textarea>
-                        <br>
-                        <div class="rating">
-                            <label for="star1" title="1 star">1★</label>
-                            <input type="radio" id="star1" name="rating" value="1">
-                            
-                            <label for="star2" title="2 stars">2★</label>
-                            <input type="radio" id="star2" name="rating" value="2">
+        </nav>
 
-                            <label for="star3" title="3 stars">3★</label>
-                            <input type="radio" id="star3" name="rating" value="3">
+        <section class ="main">
+            <div class = "container">
+                <div id="details">
+                    <h2>Establisment Name</h2>
+                    <p>operating hours, contact information, location, website or social media links, and other publicly visible information relevant to customers</p>
+                </div>
+                <button id="writeReview">Write a Review</button>
+                <button id="EditReview">Edit Review</button>
+                <div id="reviewOverlay" class="overlay">
+                    <div class = "popup">
+                        <form id = "reviewForm">
+                            <h3>Write Review<h3>
+                            <input type="text" id="reviewTitle" placeholder="title" required>
+                            <br>
+                            <textarea id="reviewTextBody" rows="5" placeholder="Write your review..."></textarea>
+                            <br>
+                            <div class="star-rating">
+                                <label for="star1" title="1 star">1★</label>
+                                <input type="radio" id="star1" name="rating" value="1">
+                                
+                                <label for="star2" title="2 stars">2★</label>
+                                <input type="radio" id="star2" name="rating" value="2">
 
-                            <label for="star4" title="4 stars">4★</label>
-                            <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star3" title="3 stars">3★</label>
+                                <input type="radio" id="star3" name="rating" value="3">
 
-                            <label for="star5" title="5 stars">5★</label>
-                            <input type="radio" id="star5" name="rating" value="5" required>
-                        </div>
-                        <button type="submit">Post</button>
-                        <button class="cancel">Cancel</button>
-                    </form>
+                                <label for="star4" title="4 stars">4★</label>
+                                <input type="radio" id="star4" name="rating" value="4">
+
+                                <label for="star5" title="5 stars">5★</label>
+                                <input type="radio" id="star5" name="rating" value="5" required>
+                            </div>
+                            <button type="submit">Post</button>
+                            <button class="cancel">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+                <div class = "reviewList">
+                    <h3>Reviews</h3>
+                    <p>list of reviews</p>
                 </div>
             </div>
             
-            <div class = "reviewList">
-                <h3>Reviews</h3>
-                <p>list of reviews</p>
-            </div>
         </div>
     </body>
 </html>
