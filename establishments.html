@@ -8,20 +8,22 @@
 </head>
     <body>
         <!-- Navigation Bar -->
-        <nav class="navbar">
-            <div class="container">
-                <div class="nav-brand">
-                    <h1>TaftBites</h1>
-                    <p class="tagline">Discover restaurants near DLSU</p>
+        <header>
+            <nav class="navbar">
+                <div class="container">
+                    <div class="nav-brand">
+                        <h1>TaftBites</h1>
+                        <p class="tagline">Discover restaurants near DLSU</p>
+                    </div>
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="establishments.html" aria-current="page">Establishments</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                        <li><a href="index.html">Logout</a></li>
+                    </ul>
                 </div>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="establishments.html">Establishments</a></li>
-                    <li><a href="profile.html">Profile</a></li>
-                    <li><a href="index.html">Logout</a></li>
-                </ul>
-            </div>
-        </nav>
+            </nav>
+        </header>
 
         <!-- Search Section -->
         <section class="main">
@@ -31,7 +33,6 @@
                     <input type="text" id="searchInput" placeholder="Search for restaurants...">
                     <button type="submit">Search</button>
                 </form>
-                
                 <button id="addEstablishmentBtn">Add New Establishment</button>
             </div>
         </section>
@@ -40,9 +41,7 @@
         <section class="establishments">
             <div class="container">
                 <h2>All Establishments Near DLSU</h2>
-                
                 <div id="establishmentsList">
-                    <!-- Establishment items will be displayed here -->
                     <div class="establishment-item">
                         <h3><a href="establishment-detail.html">Establishment Name</a></h3>
                         <p>Rating: </p>
@@ -82,9 +81,32 @@
             </div>
         </div>
 
-
         <footer class="footer">
             <p>TaftBites © 2026 · XSG Group #57 · DLSU-Manila</p>
         </footer>
+
+        <script>
+        const addBtn = document.getElementById('addEstablishmentBtn');
+        const overlay = document.getElementById('addEstablishmentOverlay');
+        const cancelBtn = overlay.querySelector('.cancel');
+        const form = document.getElementById('addEstablishmentForm');
+
+        addBtn.addEventListener('click', () => {
+            overlay.style.display = 'flex';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            form.reset();
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Form submitted');
+            overlay.style.display = 'none';
+            form.reset();
+        });
+    </script>
     </body>
+
 </html>
