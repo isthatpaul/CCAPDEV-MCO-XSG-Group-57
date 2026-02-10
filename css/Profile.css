@@ -1,0 +1,214 @@
+/* Base styles inspired by early 2010s Facebook UI but using a green palette */
+:root{
+    --green: #00703c; 
+    --green-dark: #005a31;
+    --bg: #f1f3f2;
+    --card-bg: #ffffff;
+    --muted: #6b6f72;
+    --border: #d7d9d8;
+    --focus: rgba(0,112,60,0.25);
+}
+
+/* Reset / sensible defaults */
+*{box-sizing: border-box}
+html,body{height:100%}
+body{
+    margin:0;
+    font-family: Tahoma, "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: #222;
+    -webkit-font-smoothing:antialiased;
+}
+a{color:var(--green);text-decoration:none}
+a:hover{color:var(--green-dark);text-decoration:underline}
+.container{
+    width:1000px;
+    max-width:96%;
+    margin:0 auto;
+}
+
+/* Top navigation bar similar to early Facebook */
+header, .navbar{
+    background: linear-gradient(180deg,var(--green),var(--green-dark));
+    color:#fff;
+    border-bottom:1px solid rgba(0,0,0,0.06);
+}
+/* Layout for header nav and standalone .navbar */
+header nav,
+.navbar .container{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+header nav ul,
+.navbar .nav-menu{
+    list-style:none;
+    margin:0;
+    padding:12px 0;
+    display:flex;
+    gap:18px;
+    align-items:center;
+}
+header nav ul li,
+.navbar .nav-menu li{
+    display:inline-block;
+}
+header nav a,
+.navbar a{
+    color:#fff;
+    font-weight:600;
+    padding:6px 8px;
+    border-radius:3px;
+}
+header nav a[aria-current="page"], header nav a:hover,
+.navbar a[aria-current="page"], .navbar a:hover{
+    background: rgba(255,255,255,0.08);
+}
+
+/* Logo / brand used in index.html */
+.nav-brand h1{
+    margin:0;
+    font-size:20px;
+    letter-spacing:0.4px;
+}
+.nav-brand p.tagline{
+    margin:0;
+    font-size:12px;
+    color: rgba(255,255,255,0.9);
+}
+
+/* Main layout (content + sidebar) */
+.main{
+    padding:24px 0;
+}
+.main-content{
+    display:flex;
+    gap:24px;
+    align-items:flex-start;
+}
+.main-left{flex:1}
+
+.main-right{width:320px}
+
+/* Generic card/panel */
+.card, .panel{
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:16px;
+    box-shadow:0 1px 0 rgba(0,0,0,0.03);
+}
+
+/* Forms */
+form{display:block}
+form label{display:block;margin-bottom:6px;color:var(--muted);font-size:13px}
+input[type="text"], input[type="email"], input[type="password"], textarea, select{
+    width:100%;
+    padding:8px 10px;
+    border:1px solid var(--border);
+    border-radius:3px;
+    background:#fff;
+    color:#111;
+    font-size:14px;
+}
+input:focus, textarea:focus, select:focus{outline:none;box-shadow:0 0 0 3px var(--focus);border-color:var(--green)}
+
+/* Buttons */
+button{font-family:inherit}
+button, .btn{
+    display:inline-block;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    padding:8px 12px;
+    border-radius:3px;
+    cursor:pointer;
+    font-weight:600;
+}
+button:hover, .btn:hover{background:var(--green-dark)}
+.btn-secondary{background:#e9eef0;color:#222;border:1px solid var(--border)}
+
+/* Smaller utilities */
+.text-muted{color:var(--muted);font-size:13px}
+.small{font-size:13px}
+.row{display:flex;gap:12px}
+.center{display:flex;align-items:center;justify-content:center}
+
+/* Featured list and review items */
+.establishment-item, .review-item{margin-bottom:12px;padding:12px;border-radius:3px;background:linear-gradient(180deg,#fff,#fbfcfc);border:1px solid var(--border)}
+
+/* Star rating design*/
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+/* Footer */
+footer{padding:18px 0;text-align:center;color:var(--muted);font-size:13px}
+
+/* Responsive adjustments */
+@media (max-width:800px){
+    .main-content{flex-direction:column}
+    .main-right{width:100%}
+    .container{padding:0 12px}
+    header nav ul, .navbar .nav-menu{flex-wrap:wrap}
+}
+
+.overlay{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.overlay .popup{
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: 6px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.overlay .popup h2{
+    margin-top: 0;
+    color: var(--green);
+}
+
+.overlay .popup form > div{
+    margin-bottom: 12px;
+}
+
+.overlay .popup button{
+    margin-right: 8px;
+}
+
+.overlay .popup .cancel{
+    background: #e9eef0;
+    color: #222;
+}
+
+.overlay .popup .cancel:hover{
+    background: #d7d9d8;
+}
+
+#profile_photo {
+    display: flex; 
+    flex-direction: column;
+
+}
+
+img {
+    margin-top: 1px;
+    width: 250px;
+    height: 250px;
+    align-items:left;
+}
