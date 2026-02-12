@@ -17,34 +17,25 @@ function updateNavigation() {
     
     if (!logoutBtn) return; // Exit if no logout button found
     
+    const profileLink = navMenu.querySelector('a[href="profile.html"]');
+    const signupLink = navMenu.querySelector('a[href="register.html"]');
+    
     if (isLoggedIn()) {
-        // User is logged in
+        // User is logged in - show Profile, hide Sign Up, show Logout
         logoutBtn.textContent = "Logout";
         logoutBtn.href = "#";
         logoutBtn.onclick = handleLogout;
         
-        // Show Profile link, hide Login and Sign Up links
-        const profileLink = navMenu.querySelector('a[href="profile.html"]');
-        const loginLink = navMenu.querySelector('a[href="login.html"]');
-        const signupLink = navMenu.querySelector('a[href="register.html"]');
-        
         if (profileLink) profileLink.parentElement.style.display = "inline-block";
-        if (loginLink) loginLink.parentElement.style.display = "none";
         if (signupLink) signupLink.parentElement.style.display = "none";
         
     } else {
-        // User is not logged in
+        // User is not logged in - hide Profile, show Sign Up, show Login
         logoutBtn.textContent = "Login";
         logoutBtn.href = "login.html";
         logoutBtn.onclick = null;
         
-        // Hide Profile link, show Login and Sign Up links
-        const profileLink = navMenu.querySelector('a[href="profile.html"]');
-        const loginLink = navMenu.querySelector('a[href="login.html"]');
-        const signupLink = navMenu.querySelector('a[href="register.html"]');
-        
         if (profileLink) profileLink.parentElement.style.display = "none";
-        if (loginLink) loginLink.parentElement.style.display = "inline-block";
         if (signupLink) signupLink.parentElement.style.display = "inline-block";
     }
 }
