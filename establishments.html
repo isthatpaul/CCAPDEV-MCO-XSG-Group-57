@@ -5,48 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Establishments - TaftBites</title>
     <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/establishments.css">
 </head>
     <body>
         <!-- Navigation Bar -->
-        <header>
-            <nav class="navbar">
-                <div class="container">
-                    <div class="nav-brand">
-                        <h1>TaftBites</h1>
-                        <p class="tagline">Discover restaurants near DLSU</p>
-                    </div>
-                    <ul class="nav-menu" id="navMenu">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="establishments.html" aria-current="page">Establishments</a></li>
-                        <li><a href="profile.html">Profile</a></li>
-                        <li><a href="index.html">Logout</a></li>
-                    </ul>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>TaftBites</h1>
+                    <p class="tagline">Discover restaurants near DLSU</p>
                 </div>
-            </nav>
-        </header>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="establishments.html" aria-current="page">Establishments</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="index.html">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
 
         <!-- Search Section -->
-        <section class="main">
+        <section class="search-section">
             <div class="container">
                 <h1>Find Establishments</h1>
-                <form id="searchForm">
-                    <input type="text" id="searchInput" placeholder="Search for restaurants...">
+                <form id="searchForm" class="search-form">
+                    <input type="text" id="searchInput" placeholder="Search for restaurants, cuisines, or locations...">
                     <button type="submit">Search</button>
                 </form>
-                <button id="addEstablishmentBtn">Add New Establishment</button>
+                <button id="addEstablishmentBtn" class="add-est-btn">+ Add New Establishment</button>
             </div>
         </section>
 
         <!-- Establishments List -->
-        <section class="establishments">
+        <section class="est-list-section">
             <div class="container">
                 <h2>All Establishments Near DLSU</h2>
                 <div id="establishmentsList">
-                    <div class="establishment-item">
-                        <h3><a href="establishment-detail.html">Establishment Name</a></h3>
-                        <p>Rating: </p>
-                        <p>Description: </p>
-                        <p>Location: </p>
+                    <div class="est-list-item">
+                        <div class="est-list-icon">&#127860;</div>
+                        <div class="est-list-info">
+                            <h3><a href="establishment-detail.html">Agno Food Court</a></h3>
+                            <div class="est-list-meta">
+                                <span class="est-list-rating">★★★★☆</span>
+                                <span>Taft Ave, Manila</span>
+                                <span>7AM - 9PM</span>
+                            </div>
+                            <p>Affordable food court near campus with a wide variety of stalls and cuisines.</p>
+                        </div>
+                    </div>
+                    <div class="est-list-item">
+                        <div class="est-list-icon">&#128029;</div>
+                        <div class="est-list-info">
+                            <h3><a href="establishment-detail2.html">Jolibee</a></h3>
+                            <div class="est-list-meta">
+                                <span class="est-list-rating">★★★★★</span>
+                                <span>Taft Avenue, Manila</span>
+                                <span>Open 24/7</span>
+                            </div>
+                            <p>A Filipino staple known for its fast food and unique flavors.</p>
+                        </div>
+                    </div>
+                    <div class="est-list-item">
+                        <div class="est-list-icon"></div>
+                        <div class="est-list-info">
+                            <h3><a href="establishment-detail3.html">Cafe Breton</a></h3>
+                            <div class="est-list-meta">
+                                <span class="est-list-rating">★★★★☆</span>
+                                <span>676767</span>
+                                <span>8AM - 11PM</span>
+                            </div>
+                            <p>A cozy cafe offering a variety of pastries and beverages.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,24 +86,30 @@
             <div class="popup">
                 <h2>Add New Establishment</h2>
                 <form id="addEstablishmentForm">
-                    <label for="estName">Establishment Name</label>
-                    <input type="text" id="estName" placeholder="Enter establishment name" required>
-                    
-                    <label for="estLocation">Location</label>
-                    <input type="text" id="estLocation" placeholder="Enter location" required>
-                    
-                    <label for="estHours">Operating Hours</label>
-                    <input type="text" id="estHours" placeholder="e.g., Mon-Fri 9AM-9PM" required>
-                    
-                    <label for="estContact">Contact Information</label>
-                    <input type="text" id="estContact" placeholder="Enter contact number" required>
-                    
-                    <label for="estWebsite">Website/Social Media</label>
-                    <input type="text" id="estWebsite" placeholder="Enter website or social media link">
-                    
-                    <label for="estDescription">Description</label>
-                    <textarea id="estDescription" rows="4" placeholder="Describe the establishment..." required></textarea>
-                    
+                    <div>
+                        <label for="estName">Establishment Name</label>
+                        <input type="text" id="estName" placeholder="Enter establishment name" required>
+                    </div>
+                    <div>
+                        <label for="estLocation">Location</label>
+                        <input type="text" id="estLocation" placeholder="Enter location" required>
+                    </div>
+                    <div>
+                        <label for="estHours">Operating Hours</label>
+                        <input type="text" id="estHours" placeholder="e.g., Mon-Fri 9AM-9PM" required>
+                    </div>
+                    <div>
+                        <label for="estContact">Contact Information</label>
+                        <input type="text" id="estContact" placeholder="Enter contact number" required>
+                    </div>
+                    <div>
+                        <label for="estWebsite">Website/Social Media</label>
+                        <input type="text" id="estWebsite" placeholder="Enter website or social media link">
+                    </div>
+                    <div>
+                        <label for="estDescription">Description</label>
+                        <textarea id="estDescription" rows="4" placeholder="Describe the establishment..." required></textarea>
+                    </div>
                     <button type="submit">Add Establishment</button>
                     <button type="button" class="cancel">Cancel</button>
                 </form>
@@ -82,7 +117,7 @@
         </div>
 
         <footer class="footer">
-            <p>TaftBites © 2026 · XSG Group #57 · DLSU-Manila</p>
+            <p>TaftBites © 2026</p>
         </footer>
 
         <script>
@@ -106,7 +141,6 @@
             overlay.style.display = 'none';
             form.reset();
         });
-    </script>
+        </script>
     </body>
-
 </html>
