@@ -27,11 +27,13 @@ a:hover{color:var(--green-dark);text-decoration:underline}
     margin:0 auto;
 }
 
-/* Top navigation bar similar to early Facebook */
+/* Top navigation bar - enhanced with better graphics */
 header, .navbar{
-    background: linear-gradient(180deg,var(--green),var(--green-dark));
+    background: linear-gradient(135deg, #00703c 0%, #005a31 50%, #00482a 100%);
     color:#fff;
-    border-bottom:1px solid rgba(0,0,0,0.06);
+    border-bottom: 3px solid rgba(255,255,255,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 0;
 }
 /* Layout for header nav and standalone .navbar */
 header nav,
@@ -39,14 +41,15 @@ header nav,
     display:flex;
     align-items:center;
     justify-content:space-between;
+    padding: 16px 0;
 }
 header nav ul,
 .navbar .nav-menu{
     list-style:none;
     margin:0;
-    padding:12px 0;
+    padding:0;
     display:flex;
-    gap:18px;
+    gap:24px;
     align-items:center;
 }
 header nav ul li,
@@ -57,24 +60,36 @@ header nav a,
 .navbar a{
     color:#fff;
     font-weight:600;
-    padding:6px 8px;
-    border-radius:3px;
+    padding:8px 14px;
+    border-radius:6px;
+    transition: all 0.3s ease;
+    position: relative;
 }
-header nav a[aria-current="page"], header nav a:hover,
-.navbar a[aria-current="page"], .navbar a:hover{
-    background: rgba(255,255,255,0.08);
+header nav a[aria-current="page"], 
+.navbar a[aria-current="page"]{
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+header nav a:hover,
+.navbar a:hover{
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* Logo / brand used in index.html */
+/* Logo / brand - enhanced styling */
 .nav-brand h1{
     margin:0;
-    font-size:20px;
-    letter-spacing:0.4px;
+    font-size:24px;
+    letter-spacing:1px;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 .nav-brand p.tagline{
-    margin:0;
-    font-size:12px;
-    color: rgba(255,255,255,0.9);
+    margin:4px 0 0 0;
+    font-size:13px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
 }
 
 /* Main layout (content + sidebar) */

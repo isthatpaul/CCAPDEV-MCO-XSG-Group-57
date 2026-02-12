@@ -209,9 +209,10 @@ footer{padding:18px 0;text-align:center;color:var(--muted);font-size:13px}
 }
 
 #user-reviews {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* slightly to the right of the left column */
+    gap: 0;
 }
 
 #profile-info {
@@ -220,16 +221,46 @@ footer{padding:18px 0;text-align:center;color:var(--muted);font-size:13px}
 }
 
 /* Individual review cards */
-#user-reviews .review {
-    width: 200%;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-radius: 6px;
+.review {
+    width: 100% !important;
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+    border-radius: 6px !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f8faf9 100%) !important;
+    border: 1px solid #e0e3e2 !important;
+    transition: all 0.3s ease;
+}
+
+.review:hover {
+    box-shadow: 0 4px 12px rgba(0, 112, 60, 0.1) !important;
+    transform: translateY(-2px);
+    border-color: var(--green) !important;
+}
+
+.review h4 {
+    margin: 0 0 10px 0;
+    color: var(--green);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.review p {
+    margin: 6px 0;
+    line-height: 1.5;
+    color: #333;
+    font-size: 14px;
+}
+
+.review strong {
+    color: var(--green-dark);
+    font-weight: 600;
 }
 
 img {
     margin-top: 1px;
-    width: 250px;
-    height: 250px;
-    align-items:left;
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+    align-items: left;
 }

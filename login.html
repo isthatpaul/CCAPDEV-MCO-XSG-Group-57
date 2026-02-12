@@ -18,8 +18,10 @@
             <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="establishments.html">Establishments</a></li>
+                <li><a href="profile.html">Profile</a></li>
                 <li><a href="login.html" aria-current="page">Login</a></li>
                 <li><a href="register.html">Sign Up</a></li>
+                <li><a href="index.html" id="logoutBtn">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -69,16 +71,8 @@
         <p>TaftBites © 2026</p>
     </footer>
 
-    <script>
-        // Basic client-side validation: focus the first invalid control on submit
-        const form = document.getElementById('loginForm');
-        form.addEventListener('submit', function (e) {
-            if (!form.checkValidity()) {
-                e.preventDefault();
-                const firstInvalid = form.querySelector(':invalid');
-                if (firstInvalid) firstInvalid.focus();
-            }
-        });
-    </script>
+    <script src="JS/Users.js"></script>
+    <script src="JS/login.js"></script>
+    <script src="JS/nav.js"></script>
 </body>
 </html>
