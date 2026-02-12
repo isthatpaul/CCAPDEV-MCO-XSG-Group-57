@@ -86,7 +86,9 @@ header nav a[aria-current="page"], header nav a:hover,
     gap:24px;
     align-items:flex-start;
 }
-.main-left{flex:1}
+.main-left{
+     flex: 0 0 250px; /* fixed width for profile info */
+}
 
 .main-right{width:320px}
 
@@ -204,6 +206,25 @@ footer{padding:18px 0;text-align:center;color:var(--muted);font-size:13px}
     display: flex; 
     flex-direction: column;
 
+}
+
+#user-reviews {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* slightly to the right of the left column */
+}
+
+#profile-info {
+    padding: 16px;
+    border-radius: 6px;
+}
+
+/* Individual review cards */
+#user-reviews .review {
+    width: 200%;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 6px;
 }
 
 img {
