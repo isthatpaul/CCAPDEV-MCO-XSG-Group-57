@@ -25,42 +25,71 @@
             </div>
         </nav>
     
-        <section class="main">
+        <section class="hero">
+            <img src="taft.jpg" alt="" class="hero-bg"/>
+            <div class="hero-overlay"></div>
             <div class="container">
-                <div class="main-content">
-                    <div class="main-left">
-                        <h2>TaftBites helps you connect with restaurants near DLSU</h2>
-                        <p>Share reviews and discover new places to eat around De La Salle University - Manila.</p>
-                    </div>
-                </div>
+                <h2>Discover restaurants near DLSU</h2>
+                <p>Share reviews and find new places to eat around De La Salle University — Manila.</p>
+                <a href="establishments.html" class="hero-btn">Browse Establishments</a>
             </div>
         </section>
     
         <!-- Establishments Section -->
-        <section class="featured">
+        <section class="section">
             <div class="container">
-                <h2>Featured Establishments</h2>
-                <div id="featuredList">
-                    <!-- Sample Establishment 1 -->
-                    <div class="establishment-item">
-                        <h3><a href="establishment-detail.html">Agno Food Court</a></h3>
-                        <p>Rating: ★★★★☆ 4.0</p>
-                        <p>Description: Affordable Filipino food favorites near campus</p>
-                    </div>
-    
-                    <!-- Sample Establishment 2 (dont mind the name wala akong maisip TT) -->
-                    <div class="establishment-item">
-                        <h3><a href="establishment-detail.html">IDK's Diner</a></h3>
-                        <p>Rating: ★★★★☆ 4.0</p>
-                        <p>Description: Open 24/7</p>
-                    </div>
+                <div class="section-header">
+                    <h2>Featured Establishments</h2>
+                    <a href="establishments.html">See all &rarr;</a>
+                </div>
+                <div class="card-grid">
+                    <a href="establishment-detail.html" class="est-card">
+                        <div class="est-card-img" style="background:#e8f5ee;">
+                            <span class="est-card-emoji"></span>
+                        </div>
+                        <div class="est-card-body">
+                            <h3>Agno Food Court</h3>
+                            <div class="est-card-rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="rating-num">4.0</span>
+                            </div>
+                            <p>Affordable food near campus.</p>
+                        </div>
+                    </a>
+                    <a href="establishment-detail2.html" class="est-card">
+                        <div class="est-card-img" style="background:#fef3e2;">
+                            <span class="est-card-emoji"></span>
+                        </div>
+                        <div class="est-card-body">
+                            <h3>Jolibee</h3>
+                            <div class="est-card-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-num">5.0</span>
+                            </div>
+                            <p>A Filipino staple fast-food chain known for its fried chicken and burgers.</p>
+                        </div>
+                    </a>
+                    <a href="establishment-detail3.html" class="est-card">
+                        <div class="est-card-img" style="background:#fef3e2;">
+                            <span class="est-card-emoji"></span>
+                        </div>
+                        <div class="est-card-body">
+                            <h3>Cafe Breton</h3>
+                            <div class="est-card-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-num">5.0</span>
+                            </div>
+                            <p>A cozy cafe offering a variety of pastries, coffee, and light meals.</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </section>
        
         <!-- Reviews Section -->
-        <section class="recent">
-            <div class="container">
+        <section class="section section-alt">
+        <div class="container">
+            <div class="section-header">
                 <h2>Recent Reviews</h2>
                 <div id="recentReviews">
     
@@ -100,10 +129,11 @@
 
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
         
         <footer class="footer">
-            <p>TaftBites © 2026 · XSG Group #57 · DLSU-Manila</p>
+            <p>TaftBites © 2026</p>
         </footer>
 
         <script src="JS/Users.js"></script>
