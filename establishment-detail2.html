@@ -23,100 +23,85 @@
                 </ul>
             </div>
         </nav>
-
-        <!-- Detail Section -->
-        <section class="detail-header">
-            <div class="container">
-                <div class="detail-card">
-                    <h2>Jolibee</h2>
-                    <p>A Filipino staple known for its fast food and unique flavors.</p>
-                    <div class="detail-info">
-                        <div class="detail-info-item">
-                            <strong>Location</strong>
-                            <span>Taft Ave, Manila</span>
-                        </div>
-                        <div class="detail-info-item">
-                            <strong>Hours</strong>
-                            <span>Mon-Sun</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="detail-actions">
-                    <button id="writeReviewButton">Write a Review</button>
-                    <button id="editReviewButton" class="btn-secondary">Edit Review</button>
-                </div>
+        
+        <!-- InFormation Section -->
+        <section class ="main">
+            <div class = "establishment-det-holder">
+                <img src = "sample_estab2.jpg" alt="establishment photo" style="width: 100%; height: 300px; object-fit: cover;">
             </div>
-        </section>
+            <div class = "container">
+                <div id="details">
+                    <h2 class="establishment-title">Agno Food Court</h2>
+                    <div class="main-content">
+                        <div class="main-left card">
+                            <p><strong>Overall Rating:</strong>★★★★☆ 4.0</p>
+                            <p><strong>Location:</strong> Taft Ave, Manila</p>
+                            <p><strong>Contact:</strong> 0912 123 2367</p>
+                            <p><strong>Hours:</strong> 7:00 AM - 9:00 PM</p>
+                            <p><strong>Links:</strong> <a href="#">Facebook</a></p>
+                        </div>
 
-        <!-- Review Form Overlay -->
-        <div id="reviewOverlayForm" class="overlay">
-            <div class="popup">
-                <h3>Write Review</h3>
-                <form id="reviewForm">
-                    <div>
-                        <label for="reviewTitle">Title</label>
-                        <input type="text" id="reviewTitle" placeholder="Give your review a title" required>
-                    </div>
-                    <div>
-                        <label for="reviewTextBody">Your Review</label>
-                        <textarea id="reviewTextBody" rows="5" placeholder="Write your review..."></textarea>
-                    </div>
-                    <div>
-                        <label>Rating</label>
-                        <div class="star-rating">
-                            <label for="star1" title="1 star">1★</label>
-                            <input type="radio" id="star1" name="rating" value="1">
-
-                            <label for="star2" title="2 stars">2★</label>
-                            <input type="radio" id="star2" name="rating" value="2">
-
-                            <label for="star3" title="3 stars">3★</label>
-                            <input type="radio" id="star3" name="rating" value="3">
-
-                            <label for="star4" title="4 stars">4★</label>
-                            <input type="radio" id="star4" name="rating" value="4">
-
-                            <label for="star5" title="5 stars">5★</label>
-                            <input type="radio" id="star5" name="rating" value="5" required>
+                        <div class="main-right card">
+                            <h3>Description</h3>
+                            <p>Agno canteen near Gokongwei Building</p>
                         </div>
                     </div>
+                </div>
 
-                    <button type="submit">Post Review</button>
-                    <button type="button" class="cancel">Cancel</button>
-                </form>
+                <!-- Review Form -->
+                <div id="reviewOverlayForm" class="overlay">
+                    <div class = "popup">
+                        <form id = "reviewForm">
+                            <h3>Write Review<h3>
+                            <input type="text" id="reviewTitle" placeholder="title" required>
+                            <br>
+                            <textarea id="reviewTextBody" rows="5" placeholder="Write your review..."></textarea>
+                            <br>
+                            <div class="star-rating">
+                                <label for="star1" title="1 star">1★</label>
+                                <input type="radio" id="star1" name="rating" value="1">
+                                
+                                <label for="star2" title="2 stars">2★</label>
+                                <input type="radio" id="star2" name="rating" value="2">
+
+                                <label for="star3" title="3 stars">3★</label>
+                                <input type="radio" id="star3" name="rating" value="3">
+
+                                <label for="star4" title="4 stars">4★</label>
+                                <input type="radio" id="star4" name="rating" value="4">
+
+                                <label for="star5" title="5 stars">5★</label>
+                                <input type="radio" id="star5" name="rating" value="5" required>
+                            </div>
+
+                            <!-- Review Buttons -->
+                            <button type="submit">Post</button>
+                            <button class="cancel">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Review List Preview -->
+                <div class = "user-reviews">
+                    <h3>Reviews</h3>
+                    <!-- Buttons -->
+                    <button id="writeReviewButton">Write a Review</button>
+                    <button id="editReviewButton">Edit Review</button>
+                    
+                    <!-- Review Cards -->
+                    <div class="reviewListCard">
+                        <div class="review-item">Review List</div>
+
+                        <div class="review card">
+                            <h4><a href="establishment-detail2.html">Affordable and delicious</a></h4>
+                            <p>On Agno Food Court</p>
+                            <p>Rating: ★★★★☆</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Reviews Section -->
-        <section class="review-section">
-            <div class="container">
-                <div class="review-list">
-                    <div class="review-list-header">
-                        <h3>Reviews</h3>
-                        <span>1 review</span>
-                    </div>
-
-                    <div class="review-list-item">
-                        <div class="review-list-item-header">
-                            <div class="review-list-avatar">KC</div>
-                            <div>
-                                <strong>Karl Chen</strong>
-                                <span> · 5 days ago</span>
-                            </div>
-                        </div>
-                        <div class="review-list-stars">★★★★★</div>
-                        <h4>Reliable</h4>
-                        <p>Always my first choice when I don't have much time between classes. Quick service and consistently good food.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <footer class="footer">
-            <p>TaftBites © 2026</p>
-        </footer>
-
+        <!-- JS scripts -->
         <script>
             const writeReviewButton = document.getElementById('writeReviewButton');
             const overlay = document.getElementById('reviewOverlayForm');
