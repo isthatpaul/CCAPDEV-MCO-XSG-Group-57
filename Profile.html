@@ -1,0 +1,110 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>User Profile - TaftBites</title>
+        <link rel="stylesheet" href="css/Profile.css">
+    </head>
+    <body>
+        <div class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>TaftBites</h1>
+                    <p class="tagline">Discover restaurants near DLSU</p>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="establishments.html">Establishments</a></li>
+                    <li><a href="profile.html" aria-current="page">Profile</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Sign Up</a></li>
+                    <li><a href="index.html" id="logoutBtn">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    <main class="main">
+        <div class="container">
+            <div class="main-content">
+                <div class="main-left" >
+                    <div class="card" id="profile-info">
+                    <div id="profile_photo" class="card center">
+                         <h3>Profile Photo</h3> 
+                        <img id="profileImg" src="sample_profile.jpg" alt="Profile photo."> 
+                    </div>
+                    <div id="join_date" style="margin-top:12px">
+                        <h3 id="member-since">Member Since:</h3> 
+                        <p id="joinDateText">February 2026</p>
+                    </div>
+                    <div id="bio" style="margin-top:12px">
+                        <h3>Bio</h3>
+                        <p id="bioInfo">User bio goes here</p>
+                    </div>
+                    <div id="contact_info" style="margin-top:12px">
+                        <h3>Contact Information</h3>
+                        <p id="email">Email: user@example.com</p>
+                        <p id="contactNo">Contact No.: 0912345678</p>
+                    </div>
+
+                    <!-- User Navigation -->
+                    <div id="user-nav" style="margin-top:12px; display:none;">
+                        <button id="prevUserBtn" style="margin-right: 8px;">← Previous User</button>
+                        <button id="nextUserBtn">Next User →</button>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="main-right">
+                    <button id="edit-button" style="display:none;">Edit</button>
+                    <div class="card" id="edit-card" style="display:none;">
+                        <h3>Edit Profile</h3>
+                        <form id="editProfileForm">
+                            <div>
+                                <label for="editBio">Update Bio</label>
+                                <textarea id="editBio" name="bio" rows="4" placeholder="Tell other users about yourself..."></textarea>
+                            </div>
+
+                            <div>
+                                <label for="editEmail">Update Contact Email</label>
+                                <input type="email" id="editEmail" name="email" placeholder="you@example.com">
+                            </div>
+
+                            <div>
+                                <label for="editPhone">Update Contact Number</label>
+                                <input type="tel" id="editPhone" name="phone" placeholder="0917xxxxxxx">
+                            </div>
+
+                            <div>
+                                <label for="editPicture">Change Profile Picture</label>
+                                <input type="file" id="editPicture" name="picture">
+                            </div>
+
+                            <div style="margin-top:10px">
+                                <button type="submit">Save Changes</button>
+                                <button type="button" id="cancelEditBtn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Reviews Container -->
+                    <div>
+                        <h3 id="reviewsHeading">Reviews</h3>
+                        <div id="user-reviews" style="margin-top:12px">
+                            <!-- Reviews populated by JavaScript -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>TaftBites © 2026 · XSG Group #57 · DLSU-Manila</p>
+    </footer>
+
+    <script src="JS/Users.js"></script>
+    <script src="JS/nav.js"></script>
+    <script src="js/Profile.js"></script>
+    </body>
+</html>

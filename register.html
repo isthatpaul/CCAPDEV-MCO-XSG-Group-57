@@ -17,8 +17,10 @@
             <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="establishments.html">Establishments</a></li>
+                <li><a href="profile.html">Profile</a></li>
                 <li><a href="login.html">Login</a></li>
                 <li><a href="register.html" aria-current="page">Sign Up</a></li>
+                <li><a href="index.html" id="logoutBtn">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -53,13 +55,13 @@
                             <!-- Password -->
                             <div>
                                 <label for="regPassword">Password</label>
-                                <input type="password" id="regPassword" name="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters">
-                                <small>Password must be at least 8 characters.</small>
+                                <input type="password" id="regPassword" name="password" required minlength="4" autocomplete="new-password" placeholder="At least 4 characters">
+                                <small>Password must be at least 4 characters.</small>
                             </div>
 
                             <div>
-                                <label for="regConfirm">Confirm password</label>
-                                <input type="password" id="regConfirm" name="confirmPassword" required autocomplete="new-password" placeholder="Repeat your password">
+                                <label for="regConfirmPassword">Confirm password</label>
+                                <input type="password" id="regConfirmPassword" name="confirmPassword" required autocomplete="new-password" placeholder="Repeat your password">
                             </div>
 
                             <div>
@@ -84,35 +86,8 @@
         <p>TaftBites © 2026</p>
     </footer>
 
-    <script>
-        // Ensure password and confirm match before submission
-        const regForm = document.getElementById('registerForm');
-        const password = document.getElementById('regPassword');
-        const confirm = document.getElementById('regConfirm');
-
-        function validatePasswords() {
-            if (confirm.value === '') {
-                confirm.setCustomValidity('');
-                return;
-            }
-            if (password.value !== confirm.value) {
-                confirm.setCustomValidity('Passwords do not match');
-            } else {
-                confirm.setCustomValidity('');
-            }
-        }
-
-        password.addEventListener('input', validatePasswords);
-        confirm.addEventListener('input', validatePasswords);
-
-        regForm.addEventListener('submit', function (e) {
-            validatePasswords();
-            if (!regForm.checkValidity()) {
-                e.preventDefault();
-                const firstInvalid = regForm.querySelector(':invalid');
-                if (firstInvalid) firstInvalid.focus();
-            }
-        });
-    </script>
+    <script src="JS/Users.js"></script>
+    <script src="JS/register.js"></script>
+    <script src="JS/nav.js"></script>
 </body>
 </html>

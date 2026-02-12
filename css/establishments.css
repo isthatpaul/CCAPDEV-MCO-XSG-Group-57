@@ -1,0 +1,211 @@
+/* Search */
+.search-section {
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+}
+.search-section h1 {
+    margin: 0 0 16px;
+    font-size: 22px;
+    font-weight: 700;
+}
+.search-form {
+    display: flex;
+    margin-bottom: 12px;
+}
+.search-form input[type="text"] {
+    flex: 1;
+    border-radius: 6px 0 0 6px;
+    border-right: none;
+}
+.search-form button {
+    border-radius: 0 6px 6px 0;
+}
+.add-est-btn {
+    margin-top: 8px;
+    background: var(--card-bg);
+    color: var(--green);
+    border: 2px dashed var(--green);
+}
+.add-est-btn:hover {
+    background: var(--green-light);
+}
+
+/* List */
+.est-list-section {
+    padding: 24px 0;
+}
+.est-list-section h2 {
+    margin: 0 0 16px;
+    font-size: 20px;
+    font-weight: 700;
+}
+.est-list-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+.est-list-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    transform: translateY(-1px);
+}
+.est-list-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    background: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+}
+.est-list-info {
+    flex: 1;
+}
+.est-list-info h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+}
+.est-list-info h3 a {
+    color: var(--text);
+}
+.est-list-info h3 a:hover {
+    color: var(--green);
+}
+.est-list-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+    font-size: 13px;
+    color: var(--muted);
+}
+.est-list-info p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+.est-list-rating {
+    color: #f5a623;
+    letter-spacing: 1px;
+}
+
+/* Detail */
+.detail-header {
+    padding: 32px 0 0;
+}
+.detail-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+.detail-card h2 {
+    margin: 0 0 8px;
+    font-size: 24px;
+    font-weight: 700;
+}
+.detail-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+.detail-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--divider);
+}
+.detail-info-item strong {
+    display: block;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+.detail-info-item span {
+    color: var(--muted);
+    font-size: 13px;
+}
+.detail-actions {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+/* Reviews */
+.review-list {
+    margin-top: 24px;
+}
+.review-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--divider);
+}
+.review-list-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+.review-list-header span {
+    font-size: 13px;
+    color: var(--muted);
+}
+.review-list-item {
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+.review-list-item-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.review-list-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+.review-list-item-header strong {
+    font-size: 14px;
+}
+.review-list-item-header span {
+    font-size: 12px;
+    color: var(--muted);
+}
+.review-list-stars {
+    color: #f5a623;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.review-list-item h4 {
+    margin: 4px 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+.review-list-item p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
