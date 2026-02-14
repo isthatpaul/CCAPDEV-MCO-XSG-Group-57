@@ -6,24 +6,33 @@
     <title>TaftBites - Restaurant Reviews Near DLSU</title>
     <link rel="stylesheet" href="css/base.css">
 </head>
-    <body>  
-        <!-- Navigation Bar -->
-        <nav class="navbar">
-            <div class="container">
-                <div class="nav-brand">
-                    <h1>TaftBites</h1>
-                    <p class="tagline">Discover restaurants near DLSU</p>
-                </div>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="establishments.html">Establishments</a></li>
-                    <li style="display:none"><a href="profile.html">Profile</a></li>
-                    <li style="display:none"><a href="register.html">Sign Up</a></li>
-                    <li><a href="login.html" id="logoutBtn">Login</a></li>
-                </ul>
+    <body>
+
+        <!-- Sidebar Toggle Button (always visible at top-left) -->
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+
+        <!-- Sidebar Overlay (dims page when sidebar is open) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>TaftBites</h1>
+                <p class="tagline">Discover restaurants near DLSU</p>
             </div>
+            <ul class="sidebar-menu" id="navMenu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="establishments.html">Establishments</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="register.html">Sign Up</a></li>
+                <li><a href="login.html" id="logoutBtn">Login</a></li>
+            </ul>
         </nav>
-    
+
         <section class="hero">
             <img src="taft.jpg" alt="" class="hero-bg"/>
             <div class="hero-overlay"></div>
@@ -42,7 +51,7 @@
                 </form>
             </div>
         </section>
-    
+
         <!-- Establishments Section -->
         <section class="section">
             <div class="container">
@@ -93,59 +102,49 @@
                 </div>
             </div>
         </section>
-       
+
         <!-- Reviews Section -->
         <section class="section section-alt">
-        <div class="container">
-            <div class="section-header">
-                <h2>Recent Reviews</h2>
+            <div class="container">
+                <div class="section-header">
+                    <h2>Recent Reviews</h2>
+                </div>
+                <div id="recentReviews" class="reviews-grid">
+                    <div class="review-item">
+                        <h4><a href="establishment-detail1.html">Decent but limited</a></h4>
+                        <p>By: <a href="profile.html?id=2">maria_santos</a> on Bloemen Food Court</p>
+                        <p>Rating: ★★★★☆</p>
+                    </div>
+                    <div class="review-item">
+                        <h4><a href="establishment-detail2.html">Affordable and delicious</a></h4>
+                        <p>By: <a href="profile.html?id=1">LuisHarold</a> on Agno Food Court</p>
+                        <p>Rating: ★★★★☆</p>
+                    </div>
+                    <div class="review-item">
+                        <h4><a href="establishment-detail3.html">Near campus</a></h4>
+                        <p>By: <a href="profile.html?id=3">Karlie Chirk</a> on IDK's Diner</p>
+                        <p>Rating: ★★★★★</p>
+                    </div>
+                    <div class="review-item">
+                        <h4><a href="establishment-detail4.html">Cozy breakfast spot</a></h4>
+                        <p>By: <a href="profile.html?id=4">Bob Builder</a> On Sunny Side Cafe</p>
+                        <p>Rating: ★★★★☆</p>
+                    </div>
+                    <div class="review-item">
+                        <h4><a href="establishment-detail5.html">Best iced coffee</a></h4>
+                        <p>By: <a href="profile.html?id=5">John Doe</a> On Brew & Chill</p>
+                        <p>Rating: ★★★★★</p>
+                    </div>
+                </div>
             </div>
-            <div id="recentReviews">
+        </section>
 
-                <!-- Sample Review 1 -->
-                <div class="review-item">
-                    <h4><a href="establishment-detail1.html">Decent but limited</a></h4>
-                    <p>By: <a href="profile.html?id=2">maria_santos</a> on Bloemen Food Court</p>
-                    <p>Rating: ★★★★☆</p>
-                </div>
-                
-                <!-- Sample Review 2 -->
-                <div class="review-item">
-                    <h4><a href="establishment-detail2.html">Affordable and delicious</a></h4>
-                    <p>By: <a href="profile.html?id=1">LuisHarold</a> on Agno Food Court</p>
-                    <p>Rating: ★★★★☆</p>
-                </div>
-
-                <!-- Sample Review 3 -->
-                <div class="review-item">
-                    <h4><a href="establishment-detail3.html">Near campus</a></h4>
-                    <p>By: <a href="profile.html?id=3">Karlie Chirk</a> on IDK's Diner</p>
-                    <p>Rating: ★★★★★</p>
-                </div>
-
-                <!-- Sample Review 4 -->
-                <div class="review-item">
-                    <h4><a href="establishment-detail4.html">Cozy breakfast spot</a></h4>
-                    <p>By: <a href="profile.html?id=4">Bob Builder</a> On Sunny Side Cafe</p>
-                    <p>Rating: ★★★★☆</p>
-                </div>
-                
-                <div class="review-item">
-                    <h4><a href="establishment-detail5.html">Best iced coffee</a></h4>
-                    <p>By: <a href="profile.html?id=5">John Doe</a> On Brew & Chill</p>
-                    <p>Rating: ★★★★★</p>
-                </div>
-
-            </div>
-        </div>
-    </section>
-        
         <footer class="footer">
             <p>TaftBites © 2026</p>
         </footer>
 
         <script src="JS/Users.js"></script>
         <script src="JS/nav.js"></script>
+        <script src="JS/sidebar.js"></script>
     </body>
-
 </html>
