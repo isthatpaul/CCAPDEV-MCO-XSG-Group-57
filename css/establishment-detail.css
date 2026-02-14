@@ -1,0 +1,27 @@
+/* Vote buttons */
+.review-actions{
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    align-items: center;
+}
+.btn-vote{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 2px 0;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.btn-vote:hover{
+    color: var(--green);
+    background: none;
+}
+.btn-vote-icon{
+    font-size: 16px;
+}

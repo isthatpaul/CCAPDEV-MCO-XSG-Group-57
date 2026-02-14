@@ -6,6 +6,8 @@
         <title>Establishment Detail</title>
         <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/establishments.css">
+        <link rel="stylesheet" href="css/establishment-detail.css">
+        
     </head>
     <body>
         <!-- Navigation Bar -->
@@ -115,6 +117,10 @@
                         <div class="review-list-stars">★★★★☆</div>
                         <h4>Super underrated</h4>
                         <p>A hidden gem with great food and a cozy atmosphere.</p>
+                        <div class="review-actions">
+                            <button type="button" class="btn-vote">▲ Upvote</button>
+                            <button type="button" class="btn-vote">▼ Downvote</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,11 +128,16 @@
 
         <script>
             const writeReviewButton = document.getElementById('writeReviewButton');
+            const editReviewButton = document.getElementById('editReviewButton');
             const overlay = document.getElementById('reviewOverlayForm');
             const cancelBtn = overlay.querySelector('.cancel');
             const form = document.getElementById('reviewForm');
 
             writeReviewButton.addEventListener('click', () => {
+                overlay.style.display = 'flex';
+            });
+            
+            editReviewButton.addEventListener('click', () => {
                 overlay.style.display = 'flex';
             });
 
