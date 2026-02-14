@@ -37,16 +37,56 @@
                     <div class="main-content">
                         <div class="main-left card">
                             <p><strong>Overall Rating:</strong>★★★★⯪ 4.8</p>
-                            <p><strong>Location:</strong> Taft Ave, Manila</p>
-                            <p><strong>Contact:</strong> 0924 456 7433</p>
-                            <p><strong>Hours:</strong> 7:00 AM - 9:00 PM</p>
-                            <p><strong>Links:</strong> <a href="#">Facebook</a></p>
+                            <p id="estLocation"><strong>Location:</strong> Taft Ave, Manila</p>
+                            <p id="estContact"><strong>Contact:</strong> 0924 456 7433</p>
+                            <p id="estHours"><strong>Hours:</strong> 7:00 AM - 9:00 PM</p>
+                            <p id="estLink"><strong>Links:</strong> <a href="#">Facebook</a></p>
                         </div>
 
                         <div class="main-right card">
                             <h3>Description</h3>
-                            <p>...</p>
+                            <p id="estDescription">...</p>
                         </div>
+
+                        <button id="edit-button">Edit</button>
+
+                        <div class="card" id="edit-card" style="display:none;">
+                            <h3>Edit Establishment</h3>
+                            <form id="editEstablishmentForm">
+
+                                <div>
+                                    <label>Location</label>
+                                    <input type="text" id="editLocation">
+                                </div>
+
+                                <div>
+                                    <label>Contact</label>
+                                    <input type="text" id="editContact">
+                                </div>
+
+                                <div>
+                                    <label>Hours</label>
+                                    <input type="text" id="editHours">
+                                </div>
+
+                                <div>
+                                    <label>Link</label>
+                                    <input type="text" id="editLink">
+                                </div>
+
+                                <div>
+                                    <label>Description</label>
+                                    <textarea id="editDescription" rows="4"></textarea>
+                                </div>
+
+                                <div style="margin-top:10px">
+                                    <button type="submit">Save Changes</button>
+                                    <button type="button" id="cancelEditBtn">Cancel</button>
+                                </div>
+
+                            </form>
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -153,5 +193,6 @@
             });
         </script>
 
+        <script src="js/Establishments.js"></script>
     </body>
 </html>

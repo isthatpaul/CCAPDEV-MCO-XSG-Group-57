@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Establishment Detail</title>
+        <title>Establishment Detail - TaftBites</title>
         <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/establishments.css">
         <link rel="stylesheet" href="css/establishment-detail.css">
@@ -24,28 +24,67 @@
                 </ul>
             </div>
         </nav>
-       
-        <div class = "establishment-det-holder">
-                <img src = "sample_estab7.jpg" alt="establishment photo" style="width: 100%; height: 300px; object-fit: cover;">
-        </div>
 
+        <div class = "establishment-det-holder">
+                <img src = "sample_estab2.jpg" alt="establishment photo" style="width: 100%; height: 300px; object-fit: cover;">
+        </div>
+        
         <!-- Detail Section -->
         <section class="detail-header">
             <div class="container">
-                <div id="details">
+                 <div id="details">
                     <h2 class="establishment-title">Jollibee</h2>
                     <div class="main-content">
-                        <div class="main-left card">
+                        <div class="main-left card" id="establishment-info">
                             <p><strong>Overall Rating:</strong>★★★★☆ 4.0</p>
-                            <p><strong>Location:</strong> Taft Ave, Manila</p>
-                            <p><strong>Contact:</strong> 87000</p>
-                            <p><strong>Hours:</strong> 24/7 </p>
-                            <p><strong>Links:</strong> <a href="#">Facebook</a></p>
+                            <p id="estLocation"><strong>Location:</strong> Taft Ave, Manila</p>
+                            <p id="estContact"><strong>Contact:</strong> 87000</p>
+                            <p id="estHours"><strong>Hours:</strong> 24/7</p>
+                            <p id="estLink"><strong>Links:</strong> <a href="#">Facebook</a></p>
                         </div>
 
                         <div class="main-right card">
                             <h3>Description</h3>
-                            <p>...</p>
+                            <p id="estDescription">...</p>
+                        </div>
+
+                        <button id="edit-button">Edit</button>
+
+                        <div class="card" id="edit-card" style="display:none;">
+                            <h3>Edit Establishment</h3>
+                            <form id="editEstablishmentForm">
+
+                                <div>
+                                    <label>Location</label>
+                                    <input type="text" id="editLocation">
+                                </div>
+
+                                <div>
+                                    <label>Contact</label>
+                                    <input type="text" id="editContact">
+                                </div>
+
+                                <div>
+                                    <label>Hours</label>
+                                    <input type="text" id="editHours">
+                                </div>
+
+                                <div>
+                                    <label>Link</label>
+                                    <input type="text" id="editLink">
+                                </div>
+
+                                <div>
+                                    <label>Description</label>
+                                    <textarea id="editDescription" rows="4"></textarea>
+                                </div>
+
+                                <div style="margin-top:10px">
+                                    <button type="submit">Save Changes</button>
+                                    <button type="button" id="cancelEditBtn">Cancel</button>
+                                </div>
+
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -109,19 +148,20 @@
                         <div class="review-list-item-header">
                             <div class="review-list-avatar">KC</div>
                             <div>
-                                <strong>Bob</strong>
-                                <span> 67 days ago</span>
+                                <h4><a href="profile1.html"> <strong>luis_harold</strong> </a></h4>
+                                <span> 30 days ago</span>
                             </div>
                         </div>
                         <div class="review-list-stars">★★★★☆</div>
-                        <h4>Super underrated</h4>
-                        <p>A hidden gem with great food and a cozy atmosphere.</p>
+                        <h4>The OG for a reason</h4>
+                        <p>Will always be the best</p>
                         <div class="review-actions">
                             <button type="button" class="btn-vote">▲ Upvote</button>
                             <button type="button" class="btn-vote">▼ Downvote</button>
                         </div>
 
                     </div>
+
                 </div>
             </div>
         </section>
@@ -129,6 +169,7 @@
         <footer class="footer">
             <p>TaftBites © 2026</p>
         </footer>
+        
 
         <script>
             const writeReviewButton = document.getElementById('writeReviewButton');
@@ -157,6 +198,6 @@
                 form.reset();
             });
         </script>
-
+         <script src="js/Establishments.js"></script>
     </body>
 </html>

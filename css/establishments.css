@@ -209,3 +209,11 @@
     font-size: 14px;
     line-height: 1.5;
 }
+
+.detail-actions-wrapper {
+    display: flex;
+    justify-content: flex-start; /* or center/right */
+    gap: 10px;
+    margin-top: 16px;
+    position: relative; /* ensures overlaying content doesn’t push it */
+}
