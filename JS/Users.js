@@ -40,7 +40,7 @@ const users = [
         joinDate: "March 2025",
         bio: "Mukhbang eater!",
         phone: "09181517222",
-        image: "sample_profile2.jpg",
+        image: "sample_profile2.png",
         reviews: [
             { id: 6, establishmentId: 2, title: "Cozy atmosphere perfect for studying", rating: 5, comment: "The ambiance is so relaxing. I love studying here with their iced lattes. WiFi is strong too!" },
             { id: 7, establishmentId: 6, title: "Convenient location near MRT", rating: 4, comment: "Super accessible. Quick meals available. Good for when you're in a hurry to catch the train." },
@@ -58,7 +58,7 @@ const users = [
         joinDate: "April 2024",
         bio: "Food lover :)",
         phone: "09097623483",
-        image: "sample_profile3.jpg",
+        image: "sample_profile3.png",
         reviews: [
             { id: 11, establishmentId: 3, title: "Consistently good quality", rating: 4, comment: "Never disappointed with their food. The service staff are attentive and friendly. Great value!" },
             { id: 12, establishmentId: 5, title: "Gourmet burger experience", rating: 5, comment: "Every burger here tastes like it's made with love. Premium ingredients shine through. Must-visit!" },
