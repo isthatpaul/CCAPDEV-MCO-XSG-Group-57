@@ -499,7 +499,20 @@ footer, .footer{
     margin-top: 0;
     background: #e8eae9;
 }
-
+.menu-icon{
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    vertical-align: middle;
+    /* Turns black/dark icons white to match sidebar text */
+    filter: brightness(0) invert(1);
+    opacity: 0.75;
+    transition: opacity 0.15s;
+}
+.sidebar-menu a:hover .menu-icon,
+.sidebar-menu a.active .menu-icon{
+    opacity: 1;
+}
 /* Responsive  */
 @media (max-width:800px){
     .main-content{flex-direction:column}
