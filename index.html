@@ -30,7 +30,16 @@
             <div class="container">
                 <h2>Discover restaurants near DLSU</h2>
                 <p>Share reviews and find new places to eat around De La Salle University — Manila.</p>
-                <a href="establishments.html" class="hero-btn">Browse Establishments</a>
+                <form class="hero-search" action="establishments.html" method="get">
+                    <input
+                        type="text"
+                        name="q"
+                        class="hero-search-input"
+                        placeholder="Search for restaurants, cafes, food courts…"
+                        autocomplete="off"
+                    />
+                    <button type="submit" class="hero-search-btn">Search</button>
+                </form>
             </div>
         </section>
     
