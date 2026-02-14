@@ -132,6 +132,7 @@
 
         <script>
             const writeReviewButton = document.getElementById('writeReviewButton');
+            const editReviewButton = document.getElementById('editReviewButton');
             const overlay = document.getElementById('reviewOverlayForm');
             const cancelBtn = overlay.querySelector('.cancel');
             const form = document.getElementById('reviewForm');
@@ -140,6 +141,10 @@
                 overlay.style.display = 'flex';
             });
 
+            editReviewButton.addEventListener('click', () => {
+                overlay.style.display = 'flex';
+            });
+            
             cancelBtn.addEventListener('click', () => {
                 overlay.style.display = 'none';
                 form.reset();
