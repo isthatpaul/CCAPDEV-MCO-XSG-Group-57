@@ -13,6 +13,28 @@ function getCurrentUserId() {
     return parseInt(localStorage.getItem("currentUserId"));
 }
 
+function isCurrentUserAdmin() {
+    return localStorage.getItem("isAdmin") === "true";
+}
+
+// Get the establishment detail page URL for an admin user
+function getAdminEstablishmentUrl() {
+    if (typeof admins === "undefined") {
+        return null;
+    }
+
+    const userId = getCurrentUserId();
+    const admin = admins.find(a => a.id === userId);
+
+    if (!admin || !admin.establishmentsManaged || admin.establishmentsManaged.length === 0) {
+        return null;
+    }
+
+    // Redirect to the first establishment they manage
+    const estId = admin.establishmentsManaged[0];
+    return "establishment-detail" + estId + ".html";
+}
+
 function updateNavigation() {
     // Update both .nav-menu and .sidebar-menu
     const menus = document.querySelectorAll(".nav-menu, .sidebar-menu");
@@ -25,9 +47,18 @@ function updateNavigation() {
         if (isLoggedIn()) {
             const userId = getCurrentUserId();
 
-            // Update profile link to include user ID
+            // Update profile link based on whether user is admin or regular user
             if (profileLink) {
-                profileLink.href = `profile.html?id=${userId}`;
+                if (isCurrentUserAdmin()) {
+                    // Admin: link to their managed establishment page
+                    const estUrl = getAdminEstablishmentUrl();
+                    if (estUrl) {
+                        profileLink.href = estUrl;
+                    }
+                } else {
+                    // Regular user: link to their profile page
+                    profileLink.href = "profile.html?id=" + userId;
+                }
                 profileLink.parentElement.style.display = "inline-block";
             }
 
@@ -81,6 +112,7 @@ function handleLogout(e) {
     e.preventDefault();
     localStorage.removeItem("currentUserId");
     localStorage.removeItem("currentUserName");
+    localStorage.removeItem("isAdmin");
     window.location.href = "index.html";
 }
 
@@ -95,9 +127,12 @@ function updateCurrentPageIndicator() {
         });
 
         menu.querySelectorAll('a').forEach(link => {
-            const linkPage = link.getAttribute('href')?.split('?')[0];
-            if (linkPage === currentPage) {
-                link.setAttribute('aria-current', 'page');
+            const href = link.getAttribute('href');
+            if (href) {
+                const linkPage = href.split('?')[0];
+                if (linkPage === currentPage) {
+                    link.setAttribute('aria-current', 'page');
+                }
             }
         });
     });
@@ -108,16 +143,26 @@ function updateProfileLink() {
     const menus = document.querySelectorAll(".nav-menu, .sidebar-menu");
 
     menus.forEach(menu => {
-        const profileLink = menu.querySelector('a[href^="profile.html"]');
+        let profileLink = menu.querySelector('a[href^="profile.html"]');
+        if (!profileLink) {
+            profileLink = menu.querySelector('a[href^="establishment-detail"]');
+        }
+
         if (profileLink) {
             if (isLoggedIn()) {
                 const icon = profileLink.querySelector(".menu-icon");
+
+                let linkText = " My Profile";
+                if (isCurrentUserAdmin()) {
+                    linkText = " My Establishment";
+                }
+
                 if (icon) {
                     profileLink.textContent = "";
                     profileLink.appendChild(icon);
-                    profileLink.append(" My Profile");
+                    profileLink.append(linkText);
                 } else {
-                    profileLink.textContent = "My Profile";
+                    profileLink.textContent = linkText.trim();
                 }
             }
         }

@@ -34,10 +34,17 @@ function handleLogin(event) {
         localStorage.setItem("currentUserName", user.name);
         localStorage.setItem("isAdmin", isAdmin); // Store admin status
         
-        showLoginSuccess(`Welcome, ${user.name}!`);
+        showLoginSuccess("Welcome, " + user.name + "!");
         
         setTimeout(() => {
-            window.location.href = `profile.html?id=${user.id}`;
+            if (isAdmin) {
+                // Admin: redirect to their managed establishment page
+                const estId = user.establishmentsManaged[0];
+                window.location.href = "establishment-detail" + estId + ".html";
+            } else {
+                // Regular user: redirect to their profile page
+                window.location.href = "profile.html?id=" + user.id;
+            }
         }, 1500);
     } else {
         showLoginError("Invalid email or password");
@@ -65,7 +72,6 @@ function showLoginError(message) {
         border: 1px solid #fcc;
         font-size: 14px;
     `;
-    
     loginForm.insertBefore(errorDiv, loginForm.firstChild);
 }
 
@@ -95,6 +101,6 @@ function showLoginSuccess(message) {
 
 // Demo login credentials helper - displays available test accounts
 function showDemoAccounts() {
-    const demoList = users.map(u => `${u.name}: ${u.email} / password: ${u.password}`).join("\n");
+    const demoList = users.map(u => u.name + ": " + u.email + " / password: " + u.password).join("\n");
     console.log("Demo Accounts:\n" + demoList);
 }
