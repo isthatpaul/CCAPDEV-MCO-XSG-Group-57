@@ -13,29 +13,33 @@ function handleLogin(event) {
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value.trim();
 
-    // Validate inputs
     if (!email || !password) {
         showLoginError("Please fill in all fields");
         return;
     }
 
-    // Find user in preset users array
-    const user = users.find(u => u.email === email && u.password === password);
+    // Check regular users first
+    let user = users.find(u => u.email === email && u.password === password);
+    let isAdmin = false;
+
+    // If not found in users, check admins
+    if (!user) {
+        user = admins.find(a => a.email === email && a.password === password);
+        isAdmin = true;
+    }
 
     if (user) {
         // Successful login
         localStorage.setItem("currentUserId", user.id);
         localStorage.setItem("currentUserName", user.name);
+        localStorage.setItem("isAdmin", isAdmin); // Store admin status
         
-        // Show success message
         showLoginSuccess(`Welcome, ${user.name}!`);
         
-        // Redirect to profile page after 1.5 seconds
         setTimeout(() => {
             window.location.href = `profile.html?id=${user.id}`;
         }, 1500);
     } else {
-        // Invalid credentials
         showLoginError("Invalid email or password");
         document.getElementById("loginPassword").value = "";
     }
