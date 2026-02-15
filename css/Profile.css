@@ -1,266 +1,186 @@
-/* Base styles inspired by early 2010s Facebook UI but using a green palette */
-:root{
-    --green: #00703c; 
-    --green-dark: #005a31;
-    --bg: #f1f3f2;
-    --card-bg: #ffffff;
-    --muted: #6b6f72;
-    --border: #d7d9d8;
-    --focus: rgba(0,112,60,0.25);
-}
-
-/* Reset / sensible defaults */
-*{box-sizing: border-box}
-html,body{height:100%}
-body{
-    margin:0;
-    font-family: Tahoma, "Segoe UI", Arial, sans-serif;
-    background: var(--bg);
-    color: #222;
-    -webkit-font-smoothing:antialiased;
-}
-a{color:var(--green);text-decoration:none}
-a:hover{color:var(--green-dark);text-decoration:underline}
-.container{
-    width:1000px;
-    max-width:96%;
-    margin:0 auto;
-}
-
-/* Top navigation bar similar to early Facebook */
-header, .navbar{
-    background: linear-gradient(180deg,var(--green),var(--green-dark));
-    color:#fff;
-    border-bottom:1px solid rgba(0,0,0,0.06);
-}
-/* Layout for header nav and standalone .navbar */
-header nav,
-.navbar .container{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-header nav ul,
-.navbar .nav-menu{
-    list-style:none;
-    margin:0;
-    padding:12px 0;
-    display:flex;
-    gap:18px;
-    align-items:center;
-}
-header nav ul li,
-.navbar .nav-menu li{
-    display:inline-block;
-}
-header nav a,
-.navbar a{
-    color:#fff;
-    font-weight:600;
-    padding:6px 8px;
-    border-radius:3px;
-}
-header nav a[aria-current="page"], header nav a:hover,
-.navbar a[aria-current="page"], .navbar a:hover{
-    background: rgba(255,255,255,0.08);
-}
-
-/* Logo / brand used in index.html */
-.nav-brand h1{
-    margin:0;
-    font-size:20px;
-    letter-spacing:0.4px;
-}
-.nav-brand p.tagline{
-    margin:0;
-    font-size:12px;
-    color: rgba(255,255,255,0.9);
-}
-
-/* Main layout (content + sidebar) */
-.main{
-    padding:24px 0;
-}
-.main-content{
-    display:flex;
-    gap:24px;
-    align-items:flex-start;
-}
-.main-left{
-     flex: 0 0 250px; /* fixed width for profile info */
-}
-
-.main-right{width:320px}
-
-/* Generic card/panel */
-.card, .panel{
-    background:var(--card-bg);
-    border:1px solid var(--border);
-    border-radius:4px;
-    padding:16px;
-    box-shadow:0 1px 0 rgba(0,0,0,0.03);
-}
-
-/* Forms */
-form{display:block}
-form label{display:block;margin-bottom:6px;color:var(--muted);font-size:13px}
-input[type="text"], input[type="email"], input[type="password"], textarea, select{
-    width:100%;
-    padding:8px 10px;
-    border:1px solid var(--border);
-    border-radius:3px;
-    background:#fff;
-    color:#111;
-    font-size:14px;
-}
-input:focus, textarea:focus, select:focus{outline:none;box-shadow:0 0 0 3px var(--focus);border-color:var(--green)}
-
-/* Buttons */
-button{font-family:inherit}
-button, .btn{
-    display:inline-block;
-    background:var(--green);
-    color:#fff;
-    border:none;
-    padding:8px 12px;
-    border-radius:3px;
-    cursor:pointer;
-    font-weight:600;
-}
-button:hover, .btn:hover{background:var(--green-dark)}
-.btn-secondary{background:#e9eef0;color:#222;border:1px solid var(--border)}
-
-/* Smaller utilities */
-.text-muted{color:var(--muted);font-size:13px}
-.small{font-size:13px}
-.row{display:flex;gap:12px}
-.center{display:flex;align-items:center;justify-content:center}
-
-/* Featured list and review items */
-.establishment-item, .review-item{margin-bottom:12px;padding:12px;border-radius:3px;background:linear-gradient(180deg,#fff,#fbfcfc);border:1px solid var(--border)}
-
-/* Star rating design*/
-.star-rating {
+/* Profile layout: info sidebar on left, reviews on right */
+.main-content {
     display: flex;
-    gap: 2px;
+    gap: 24px;
+    align-items: flex-start;
 }
 
-/* Footer */
-footer{padding:18px 0;text-align:center;color:var(--muted);font-size:13px}
-
-/* Responsive adjustments */
-@media (max-width:800px){
-    .main-content{flex-direction:column}
-    .main-right{width:100%}
-    .container{padding:0 12px}
-    header nav ul, .navbar .nav-menu{flex-wrap:wrap}
+.main-left {
+    flex: 0 0 300px;
 }
 
-.overlay{
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+.main-right {
+    flex: 1;
+    width: auto;
 }
 
-.overlay .popup{
-    background: var(--card-bg);
-    padding: 24px;
-    border-radius: 6px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+/* Profile info card */
+#profile-info {
+    padding: 20px;
+    border-radius: 8px;
 }
 
-.overlay .popup h2{
-    margin-top: 0;
-    color: var(--green);
-}
-
-.overlay .popup form > div{
-    margin-bottom: 12px;
-}
-
-.overlay .popup button{
-    margin-right: 8px;
-}
-
-.overlay .popup .cancel{
-    background: #e9eef0;
-    color: #222;
-}
-
-.overlay .popup .cancel:hover{
-    background: #d7d9d8;
-}
-
+/* Profile photo section */
 #profile_photo {
-    display: flex; 
+    display: flex;
     flex-direction: column;
-
+    align-items: center;
+    text-align: center;
 }
 
+#profile_photo h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    color: var(--muted);
+}
+
+/* Profile image */
+#profileImg {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--green-light, #e8f5ee);
+}
+
+/* Section headings inside profile info */
+#profile-info h3 {
+    margin: 0 0 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+#profile-info p {
+    margin: 0 0 4px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    word-break: break-word;
+}
+
+/* Edit button*/
+#edit-button {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#edit-button:hover {
+    background: var(--green-dark);
+}
+
+/* Reviews heading */
+#reviewsHeading {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green);
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--green);
+}
+
+/* Reviews container */
 #user-reviews {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0;
-}
-
-#profile-info {
-    padding: 16px;
-    border-radius: 6px;
+    gap: 12px;
 }
 
 /* Individual review cards */
-.review {
-    width: 100% !important;
-    padding: 16px !important;
-    margin-bottom: 12px !important;
-    border-radius: 6px !important;
-    background: linear-gradient(135deg, #ffffff 0%, #f8faf9 100%) !important;
-    border: 1px solid #e0e3e2 !important;
-    transition: all 0.3s ease;
+#user-reviews .review.card {
+    padding: 16px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8faf9 100%);
+    border: 1px solid #e0e3e2;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    margin: 0;
 }
 
-.review:hover {
-    box-shadow: 0 4px 12px rgba(0, 112, 60, 0.1) !important;
+/* Green elements: Title, Establishment, and Rating */
+#user-reviews .review.card h4,
+#user-reviews .review.card h4 a,
+#user-reviews .review.card p:nth-of-type(1),
+#user-reviews .review.card p:nth-of-type(2) {
+    color: var(--green) !important;
+}
+
+/* Black element: The specific review text */
+#user-reviews .review.card p:nth-of-type(3) {
+    color: #000 !important;
+}
+
+#user-reviews .review.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 112, 60, 0.1);
     transform: translateY(-2px);
-    border-color: var(--green) !important;
+    border-color: var(--green);
 }
 
-.review h4 {
-    margin: 0 0 10px 0;
-    color: var(--green);
+/* Review title link and spacing */
+#user-reviews .review h4 {
+    margin: 0 0 8px;
     font-size: 16px;
     font-weight: 600;
 }
 
-.review p {
-    margin: 6px 0;
+#user-reviews .review h4 a {
+    text-decoration: none;
+}
+
+#user-reviews .review h4 a:hover {
+    color: var(--green-dark) !important;
+}
+
+/* Review text general spacing */
+#user-reviews .review p {
+    margin: 4px 0;
     line-height: 1.5;
-    color: #333;
     font-size: 14px;
+    font-weight: 500;
 }
 
-.review strong {
-    color: var(--green-dark);
-    font-weight: 600;
-}
-
-img {
-    margin-top: 1px;
-    width: 200px;
-    height: 200px;
+/* Edit card form*/
+#edit-card {
+    margin-bottom: 24px;
     border-radius: 8px;
-    object-fit: cover;
-    align-items: left;
+}
+
+#edit-card h3 {
+    margin: 0 0 16px;
+    color: var(--green);
+    font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .main-left {
+        flex: none;
+        width: 100%;
+    }
+
+    .main-right {
+        width: 100%;
+    }
+
+    #profileImg {
+        width: 140px;
+        height: 140px;
+    }
 }
