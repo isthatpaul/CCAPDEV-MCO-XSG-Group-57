@@ -179,36 +179,9 @@
             <p>TaftBites © 2026</p>
         </footer>
         
-
-        <script>
-            const writeReviewButton = document.getElementById('writeReviewButton');
-            const editReviewButton = document.getElementById('editReviewButton');
-            const overlay = document.getElementById('reviewOverlayForm');
-            const cancelBtn = overlay.querySelector('.cancel');
-            const form = document.getElementById('reviewForm');
-
-            writeReviewButton.addEventListener('click', () => {
-                overlay.style.display = 'flex';
-            });
-
-            editReviewButton.addEventListener('click', () => {
-                overlay.style.display = 'flex';
-            });
-            
-            cancelBtn.addEventListener('click', () => {
-                overlay.style.display = 'none';
-                form.reset();
-            });
-
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                console.log('Form submitted');
-                overlay.style.display = 'none';
-                form.reset();
-            });
-        </script>
         <script src="js/admins.js"></script>
         <script src="js/Establishments.js"></script>
         <script src="JS/sidebar.js"></script>
+        <script src="JS/establishment-details.js"></script>
     </body>
 </html>
