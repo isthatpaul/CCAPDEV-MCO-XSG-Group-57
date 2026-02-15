@@ -44,3 +44,161 @@
                         </div>
 
                         <div class="main-right card">
+                            <h3>Description</h3>
+                            <p id="estDescription">...</p>
+                        </div>
+
+                        <button id="edit-button">Edit</button>
+
+                        <div class="card" id="edit-card" style="display:none;">
+                            <h3>Edit Establishment</h3>
+                            <form id="editEstablishmentForm">
+
+                                <div>
+                                    <label>Location</label>
+                                    <input type="text" id="editLocation">
+                                </div>
+
+                                <div>
+                                    <label>Contact</label>
+                                    <input type="text" id="editContact">
+                                </div>
+
+                                <div>
+                                    <label>Hours</label>
+                                    <input type="text" id="editHours">
+                                </div>
+
+                                <div>
+                                    <label>Link</label>
+                                    <input type="text" id="editLink">
+                                </div>
+
+                                <div>
+                                    <label>Description</label>
+                                    <textarea id="editDescription" rows="4"></textarea>
+                                </div>
+
+                                <div style="margin-top:10px">
+                                    <button type="submit">Save Changes</button>
+                                    <button type="button" id="cancelEditBtn">Cancel</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <button id="writeReviewButton">Write a Review</button>
+                    <button id="editReviewButton" class="btn-secondary">Edit Review</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Review Form Overlay -->
+        <div id="reviewOverlayForm" class="overlay">
+            <div class="popup">
+                <h3>Write Review</h3>
+                <form id="reviewForm">
+                    <div>
+                        <label for="reviewTitle">Title</label>
+                        <input type="text" id="reviewTitle" placeholder="Give your review a title" required>
+                    </div>
+                    <div>
+                        <label for="reviewTextBody">Your Review</label>
+                        <textarea id="reviewTextBody" rows="5" placeholder="Write your review..."></textarea>
+                    </div>
+                    <div>
+                        <label>Rating</label>
+                        <div class="star-rating">
+                            <label for="star1" title="1 star">1★</label>
+                            <input type="radio" id="star1" name="rating" value="1">
+
+                            <label for="star2" title="2 stars">2★</label>
+                            <input type="radio" id="star2" name="rating" value="2">
+
+                            <label for="star3" title="3 stars">3★</label>
+                            <input type="radio" id="star3" name="rating" value="3">
+
+                            <label for="star4" title="4 stars">4★</label>
+                            <input type="radio" id="star4" name="rating" value="4">
+
+                            <label for="star5" title="5 stars">5★</label>
+                            <input type="radio" id="star5" name="rating" value="5" required>
+                        </div>
+                    </div>
+
+                    <button type="submit">Post Review</button>
+                    <button type="button" class="cancel">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <section class="review-section">
+            <div class="container">
+                <div class="review-list">
+                    <div class="review-list-header">
+                        <h3>Reviews</h3>
+                        <span>1 review</span>
+                    </div>
+
+                    <div class="review-list-item">
+                        <div class="review-list-item-header">
+                            <div class="review-list-avatar">KC</div>
+                            <div>
+                                <h4><a href="profile.html?id=1"> <strong>luis_harold</strong> </a></h4>
+                                <span> 30 days ago</span>
+                            </div>
+                        </div>
+                        <div class="review-list-stars">★★★★☆</div>
+                        <h4>An underrated place to eat Lunch</h4>
+                        <p>Not that expensive and the food has enough variety!</p>
+                        <div class="review-actions">
+                            <button type="button" class="btn-vote">▲ Upvote</button>
+                            <button type="button" class="btn-vote">▼ Downvote</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>TaftBites © 2026</p>
+        </footer>
+        
+
+        <script>
+            const writeReviewButton = document.getElementById('writeReviewButton');
+            const editReviewButton = document.getElementById('editReviewButton');
+            const overlay = document.getElementById('reviewOverlayForm');
+            const cancelBtn = overlay.querySelector('.cancel');
+            const form = document.getElementById('reviewForm');
+
+            writeReviewButton.addEventListener('click', () => {
+                overlay.style.display = 'flex';
+            });
+
+            editReviewButton.addEventListener('click', () => {
+                overlay.style.display = 'flex';
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                overlay.style.display = 'none';
+                form.reset();
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                console.log('Form submitted');
+                overlay.style.display = 'none';
+                form.reset();
+            });
+        </script>
+        <script src="js/admins.js"></script>
+         <script src="js/Establishments.js"></script>
+    </body>
+</html>
