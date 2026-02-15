@@ -8,24 +8,30 @@
     <link rel="stylesheet" href="css/establishments.css">
 </head>
     <body>
-        <!-- Navigation Bar -->
-        <header>
-            <nav class="navbar">
-                <div class="container">
-                    <div class="nav-brand">
-                        <h1>TaftBites</h1>
-                        <p class="tagline">Discover restaurants near DLSU</p>
-                    </div>
-                    <ul class="nav-menu" id="navMenu">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="establishments.html">Establishments</a></li>
-                        <li><a href="profile.html">Profile</a></li>
-                        <li><a href="register.html">Sign Up</a></li>
-                        <li><a href="index.html" id="logoutBtn">Login</a></li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>TaftBites</h1>
+                <p class="tagline">Discover restaurants near DLSU</p>
+            </div>
+            <ul class="sidebar-menu" id="navMenu">
+                <li><a href="index.html"><img src="icons/house.png" class="menu-icon" alt=""> Home</a></li>
+                <li><a href="establishments.html" class="active"><img src="icons/utensils.png" class="menu-icon" alt=""> Establishments</a></li>
+                <li><a href="profile.html"><img src="icons/user.png" class="menu-icon" alt=""> Profile</a></li>
+                <li><a href="register.html"><img src="icons/sign up.png" class="menu-icon" alt=""> Sign Up</a></li>
+                <li><a href="login.html" id="logoutBtn"><img src="icons/login.png" class="menu-icon" alt=""> Login</a></li>
+            </ul>
+        </nav>
 
         <!-- Search Section -->
         <section class="search-section">
@@ -239,5 +245,6 @@
     <script src="JS/Users.js"></script>
     <script src="JS/admins.js"></script>
     <script src="JS/nav.js"></script>
+    <script src="JS/sidebar.js"></script>
     </body>
 </html>
