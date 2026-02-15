@@ -41,6 +41,8 @@
                     <input type="text" id="searchInput" placeholder="Search for restaurants, cuisines, or locations...">
                     <button type="submit">Search</button>
                 </form>
+                <button type="button" id="resetSearchBtn" class="reset-btn">Show All</button>
+
                 <button id="addEstablishmentBtn" class="add-est-btn">+ Add New Establishment</button>
             </div>
         </section>
@@ -215,6 +217,65 @@
                 </form>
             </div>
         </div>
+
+        <!-- search logic -->
+        <script>
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+            const establishments = document.querySelectorAll('.est-list-item');
+
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // prevent page reload
+
+                const query = searchInput.value.toLowerCase().trim();
+
+                establishments.forEach(function(item) {
+                    const textContent = item.textContent.toLowerCase();
+
+                    if (textContent.includes(query)) {
+                        item.style.display = "flex"; // or "" if flex causes issues
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+            });
+        </script>
+
+        <!-- Show all establishments view -->
+        <script>
+            const resetBtn = document.getElementById('resetSearchBtn');
+
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // prevent page reload
+
+                // considers lowercases too
+                const query = searchInput.value.toLowerCase().trim();
+
+                let anyVisible = false;
+
+                establishments.forEach(function(item) {
+                    const textContent = item.textContent.toLowerCase();
+                    if (textContent.includes(query)) { // checks if the searched item is inside
+                        item.style.display = "flex"; 
+                        anyVisible = true;
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+
+                if (query && anyVisible) {
+                    resetBtn.style.display = "inline-block"; // show back button
+                }
+               
+            });
+
+            resetBtn.addEventListener('click', function() {
+                establishments.forEach(item => item.style.display = "flex");
+                searchInput.value = ""; // clear search
+                resetBtn.style.display = "none"; // hide back button
+            });
+        </script>
+
 
         <footer class="footer">
             <p>TaftBites © 2026</p>
