@@ -218,70 +218,49 @@
             </div>
         </div>
 
-        <!-- search logic -->
+        <!-- searching logic -->
         <script>
+            function getEstablishments() {
+                return document.querySelectorAll('.est-list-item');
+            }
+
+            // search functionality
             const searchForm = document.getElementById('searchForm');
             const searchInput = document.getElementById('searchInput');
-            const establishments = document.querySelectorAll('.est-list-item');
-
-            searchForm.addEventListener('submit', function(e) {
-                e.preventDefault(); // prevent page reload
-
-                const query = searchInput.value.toLowerCase().trim();
-
-                establishments.forEach(function(item) {
-                    const textContent = item.textContent.toLowerCase();
-
-                    if (textContent.includes(query)) {
-                        item.style.display = "flex"; // or "" if flex causes issues
-                    } else {
-                        item.style.display = "none";
-                    }
-                });
-            });
-        </script>
-
-        <!-- Show all establishments view -->
-        <script>
             const resetBtn = document.getElementById('resetSearchBtn');
 
-            searchForm.addEventListener('submit', function(e) {
-                e.preventDefault(); // prevent page reload
-
-                // considers lowercases too
+            // added a lowercase checker to have more searching flexibility
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
                 const query = searchInput.value.toLowerCase().trim();
-
                 let anyVisible = false;
 
-                establishments.forEach(function(item) {
-                    const textContent = item.textContent.toLowerCase();
-                    if (textContent.includes(query)) { // checks if the searched item is inside
-                        item.style.display = "flex"; 
+                getEstablishments().forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(query)) {
+                        item.style.display = 'flex';
                         anyVisible = true;
                     } else {
-                        item.style.display = "none";
+                        item.style.display = 'none';
                     }
                 });
-
-                if (query && anyVisible) {
-                    resetBtn.style.display = "inline-block"; // show back button
-                }
-               
+                
             });
 
-            resetBtn.addEventListener('click', function() {
-                establishments.forEach(item => item.style.display = "flex");
-                searchInput.value = ""; // clear search
-                resetBtn.style.display = "none"; // hide back button
+            // reset button feature to show all establishments
+            resetBtn.addEventListener('click', () => {
+                getEstablishments().forEach(item => item.style.display = 'flex');
+                searchInput.value = '';
+                resetBtn.style.display = 'none';
             });
         </script>
-
 
         <footer class="footer">
             <p>TaftBites © 2026</p>
         </footer>
 
-        <script>
+    <!-- Adding establishments logic -->
+    <script>
         const addBtn = document.getElementById('addEstablishmentBtn');
         const overlay = document.getElementById('addEstablishmentOverlay');
         const cancelBtn = overlay.querySelector('.cancel');
@@ -298,11 +277,37 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            console.log('Form submitted');
+
+            // Get input values
+            const name = document.getElementById('estName').value;
+            const location = document.getElementById('estLocation').value;
+            const hours = document.getElementById('estHours').value;
+            const description = document.getElementById('estDescription').value;
+
+            const templateCard = document.querySelector('.est-list-item');
+            const newCard = templateCard.cloneNode(true);
+
+            newCard.querySelector('h3 a').textContent = name;
+            newCard.querySelector('h3 a').href = "#"; // placeholder link just in case
+            newCard.querySelector('.est-list-meta span:nth-child(2)').textContent = location;
+            newCard.querySelector('.est-list-meta span:nth-child(3)').textContent = hours;
+            newCard.querySelector('p').textContent = description;
+
+            // Append new card
+            document.getElementById('establishmentsList').appendChild(newCard);
+
+            // Close overlay and reset form
             overlay.style.display = 'none';
             form.reset();
+
+            // Resets the search filter so the new card is visible
+            searchInput.value = '';
+            getEstablishments().forEach(item => item.style.display = 'flex');
+            resetBtn.style.display = 'none';
         });
+
     </script>
+
     <script src="JS/Users.js"></script>
     <script src="JS/admins.js"></script>
     <script src="JS/nav.js"></script>
