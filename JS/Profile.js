@@ -110,25 +110,6 @@ function initializeProfile() {
     } else {
         reviewsContainer.innerHTML = "<p style='color: #999;'>No reviews yet.</p>";
     }
-
-    // User navigation (browse other users)
-    const userNav = document.getElementById("user-nav");
-    const prevBtn = document.getElementById("prevUserBtn");
-    const nextBtn = document.getElementById("nextUserBtn");
-
-    userNav.style.display = "block";
-
-    prevBtn.onclick = () => {
-        const viewedId = getViewedUserId();
-        const prevId = viewedId > 1 ? viewedId - 1 : users.length;
-        window.location.href = `profile.html?id=${prevId}`;
-    };
-
-    nextBtn.onclick = () => {
-        const viewedId = getViewedUserId();
-        const nextId = viewedId < users.length ? viewedId + 1 : 1;
-        window.location.href = `profile.html?id=${nextId}`;
-    };
 }
 
 function toggleEditMode() {
