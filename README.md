@@ -2,10 +2,6 @@
 
 A full-stack restaurant review web application for students and food lovers near **De La Salle University — Manila**. Discover, review, and share your favorite dining spots along Taft Avenue.
 
-## 📸 Preview
-
-![TaftBites Home](public/images/taft.jpg)
-
 ## 🚀 Features
 
 - **Browse Establishments** — View restaurants, food courts, and cafes near DLSU
@@ -23,7 +19,6 @@ A full-stack restaurant review web application for students and food lovers near
 | **Frontend** | Handlebars (`.hbs`), CSS, JavaScript |
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB with Mongoose ODM |
-| **Auth** | Express Session |
 | **Template Engine** | Express Handlebars |
 
 ## 📁 Project Structure
