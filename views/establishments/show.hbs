@@ -1,0 +1,172 @@
+<div class="establishment-det-holder">
+    <img src="/images/{{ establishment.image }}" alt="{{ establishment.name }}" style="width: 100%; height: 300px; object-fit: cover;">
+</div>
+
+<!-- Detail Section -->
+<section class="detail-header">
+    <div class="container">
+        <div id="details">
+            <h2 class="establishment-title">{{ establishment.name }}</h2>
+            <div class="main-content">
+                <div class="main-left card">
+                    <p><strong>Overall Rating:</strong> {{ stars establishment.rating }} {{ establishment.rating }}</p>
+                    <p id="estLocation"><strong>Location:</strong> {{ establishment.location }}</p>
+                    <p id="estContact"><strong>Contact:</strong> {{ establishment.contact }}</p>
+                    <p id="estHours"><strong>Hours:</strong> {{ establishment.hours }}</p>
+                    <p id="estLink"><strong>Links:</strong> <a href="{{ establishment.link }}">Facebook</a></p>
+                </div>
+
+                <div class="main-right card">
+                    <h3>Description</h3>
+                    <p id="estDescription">{{ establishment.description }}</p>
+                </div>
+
+                {{#if canEdit}}
+                <button id="edit-button">Edit</button>
+
+                <div class="card" id="edit-card" style="display:none;">
+                    <h3>Edit Establishment</h3>
+                    <form id="editEstablishmentForm" action="/establishments/{{ establishment._id }}/edit" method="POST">
+                        <div>
+                            <label>Location</label>
+                            <input type="text" id="editLocation" name="location" value="{{ establishment.location }}">
+                        </div>
+                        <div>
+                            <label>Contact</label>
+                            <input type="text" id="editContact" name="contact" value="{{ establishment.contact }}">
+                        </div>
+                        <div>
+                            <label>Hours</label>
+                            <input type="text" id="editHours" name="hours" value="{{ establishment.hours }}">
+                        </div>
+                        <div>
+                            <label>Link</label>
+                            <input type="text" id="editLink" name="link" value="{{ establishment.link }}">
+                        </div>
+                        <div>
+                            <label>Description</label>
+                            <textarea id="editDescription" name="description" rows="4">{{ establishment.description }}</textarea>
+                        </div>
+                        <div style="margin-top:10px">
+                            <button type="submit">Save Changes</button>
+                            <button type="button" id="cancelEditBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+        {{#if isLoggedIn}}
+        <div class="detail-actions">
+            <button id="writeReviewButton">Write a Review</button>
+        </div>
+        {{/if}}
+    </div>
+</section>
+
+<!-- Review Form Overlay -->
+{{#if isLoggedIn}}
+<div id="reviewOverlayForm" class="overlay" style="display:none;">
+    <div class="popup">
+        <h3>Write Review</h3>
+        <form id="reviewForm" action="/reviews" method="POST">
+            <input type="hidden" name="establishmentId" value="{{ establishment._id }}">
+            <div>
+                <label for="reviewTitle">Title</label>
+                <input type="text" id="reviewTitle" name="title" placeholder="Give your review a title" required>
+            </div>
+            <div>
+                <label for="reviewTextBody">Your Review</label>
+                <textarea id="reviewTextBody" name="comment" rows="5" placeholder="Write your review..."></textarea>
+            </div>
+            <div>
+                <label>Rating</label>
+                <div class="star-rating">
+                    <label for="star1" title="1 star">1★</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star2" title="2 stars">2★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star3" title="3 stars">3★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star4" title="4 stars">4★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star5" title="5 stars">5★</label>
+                    <input type="radio" id="star5" name="rating" value="5" required>
+                </div>
+            </div>
+            <button type="submit">Post Review</button>
+            <button type="button" class="cancel">Cancel</button>
+        </form>
+    </div>
+</div>
+{{/if}}
+
+<!-- Reviews Section -->
+<section class="review-section">
+    <div class="container">
+        <div class="review-list">
+            <div class="review-list-header">
+                <h3>Reviews</h3>
+                <span>{{ reviews.length }} review{{#unless (eq reviews.length 1)}}s{{/unless}}</span>
+            </div>
+
+            {{#each reviews}}
+            <div class="review-list-item">
+                <div class="review-list-item-header">
+                    <div class="review-list-avatar">{{ initials this.userId.name }}</div>
+                    <div>
+                        <h4><a href="/users/{{ this.userId._id }}"><strong>{{ this.userId.name }}</strong></a></h4>
+                        <span>{{ formatDate this.createdAt }}</span>
+                    </div>
+                </div>
+                <div class="review-list-stars">{{ stars this.rating }}</div>
+                <h4>{{ this.title }}</h4>
+                <p>{{ this.comment }}</p>
+
+                {{#if (eq ../currentUserId this.userId._id)}}
+                <div class="review-actions">
+                    <form action="/reviews/{{ this._id }}/delete" method="POST" style="display:inline;">
+                        <button type="submit" class="btn-vote">Delete</button>
+                    </form>
+                </div>
+                {{/if}}
+            </div>
+            {{else}}
+            <p style="color: #999; padding: 16px;">No reviews yet. Be the first to review!</p>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+<script>
+    // Edit establishment toggle
+    var editBtn = document.getElementById('edit-button');
+    var editCard = document.getElementById('edit-card');
+    var cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    if (editBtn) {
+        editBtn.addEventListener('click', function() {
+            editCard.style.display = 'block';
+        });
+    }
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener('click', function() {
+            editCard.style.display = 'none';
+        });
+    }
+
+    // Review overlay toggle
+    var writeBtn = document.getElementById('writeReviewButton');
+    var reviewOverlay = document.getElementById('reviewOverlayForm');
+
+    if (writeBtn && reviewOverlay) {
+        var cancelReview = reviewOverlay.querySelector('.cancel');
+        writeBtn.addEventListener('click', function() {
+            reviewOverlay.style.display = 'flex';
+        });
+        cancelReview.addEventListener('click', function() {
+            reviewOverlay.style.display = 'none';
+        });
+    }
+</script>
