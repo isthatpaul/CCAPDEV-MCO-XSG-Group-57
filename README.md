@@ -215,10 +215,10 @@ Browser Response (HTML)
 
 ## 👥 Group 57
 
-- Paul Martin Ryan Crisologo
-- Angelo Joaquin Barras
-- Anton Galido
-- Jonathan Bueno
+- Paul Martin Ryan A. Crisologo
+- Angelo Joaquin E. Barras
+- Anton Luis B. Galido
+- Jonathan R. Bueno
 
 ## 📝 Course
 
