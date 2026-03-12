@@ -1,8 +1,8 @@
-# TaftBites 🍴
+# TaftBites
 
 A full-stack restaurant review web application for students and food lovers near **De La Salle University — Manila**. Discover, review, and share your favorite dining spots along Taft Avenue.
 
-## 🚀 Features
+## Features
 
 - **Browse Establishments** — View restaurants, food courts, and cafes near DLSU
 - **Search** — Find establishments by name, location, or description
@@ -12,7 +12,7 @@ A full-stack restaurant review web application for students and food lovers near
 - **Admin Dashboard** — Establishment owners can edit their own listings
 - **Responsive Design** — Sidebar navigation with hamburger menu toggle
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -21,7 +21,7 @@ A full-stack restaurant review web application for students and food lovers near
 | **Database** | MongoDB with Mongoose ODM |
 | **Template Engine** | Express Handlebars |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 CCAPDEV-MCO-XSG-Group-57/
@@ -75,13 +75,13 @@ CCAPDEV-MCO-XSG-Group-57/
 └── README.md
 ```
 
-## ⚙️ Prerequisites
+## Prerequisites
 
 - [Node.js](https://nodejs.org/) (v16 or higher)
 - [MongoDB](https://www.mongodb.com/try/download/community) (running locally on port 27017)
 - [MongoDB Compass](https://www.mongodb.com/products/compass) (optional, for GUI)
 
-## 📦 Installation
+## Installation
 
 1. **Clone the repository**
 
@@ -154,7 +154,7 @@ CCAPDEV-MCO-XSG-Group-57/
 | Ivan Sunny | ivan@sunny.com | admin123 | Sunny Side Cafe |
 | Julia Brew | julia@brew.com | admin123 | Brew & Chill |
 
-## 🧪 Testing the App
+## Testing the App
 
 | Feature | How to Test |
 |---------|-------------|
@@ -170,7 +170,7 @@ CCAPDEV-MCO-XSG-Group-57/
 | **Register** | Logout → click Sign Up → create new account |
 | **Logout** | Click Logout in sidebar |
 
-## 🏗️ Architecture
+## Architecture
 
 This app follows the **MVC (Model-View-Controller)** pattern:
 
@@ -199,7 +199,7 @@ Browser Response (HTML)
 5. **Handlebars** renders HTML with the data inside `layouts/main.hbs`
 6. **Browser** receives complete HTML with CSS and images
 
-## 📚 Dependencies
+## Dependencies
 
 | Package | Purpose |
 |---------|---------|
@@ -208,19 +208,19 @@ Browser Response (HTML)
 | `mongoose` | MongoDB ODM |
 | `express-session` | Session management for authentication |
 
-## 👥 Group 57
+## Group 57
 
 - Paul Martin Ryan A. Crisologo
 - Angelo Joaquin E. Barras
 - Anton Luis B. Galido
 - Jonathan R. Bueno
 
-## 📝 Course
+## Course
 
 **CCAPDEV** — Web Application Development  
 De La Salle University — Manila  
 AY 2025–2026
 
-## 📄 License
+## License
 
 This project is for academic purposes only.
