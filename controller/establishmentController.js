@@ -100,6 +100,50 @@ const establishmentController = {
             console.error('Update error:', err);
             res.status(500).send('Update failed');
         }
+    },
+
+    async create(req, res) {
+        try {
+            const { name, location, contact, hours, link, description, image } = req.body;
+
+            const establishment = await Establishment.create({
+                name,
+                location,
+                contact: contact || '',
+                hours: hours || '',
+                link: link || '',
+                description: description || '',
+                image: image || ''
+            });
+
+            res.redirect('/establishments/' + establishment._id);
+        } catch (err) {
+            console.error('Create error:', err);
+            res.status(500).send('Failed to create establishment');
+        }
+    },
+
+    async delete(req, res) {
+        try {
+            const establishment = await Establishment.findById(req.params.id);
+            if (!establishment) return res.status(404).send('Establishment not found');
+
+            // Delete all reviews associated with this establishment
+            await Review.deleteMany({ establishmentId: req.params.id });
+
+            // Remove establishment from all users' managed lists
+            await User.updateMany(
+                { establishmentsManaged: req.params.id },
+                { $pull: { establishmentsManaged: req.params.id } }
+            );
+
+            await Establishment.findByIdAndDelete(req.params.id);
+
+            res.redirect('/establishments');
+        } catch (err) {
+            console.error('Delete error:', err);
+            res.status(500).send('Delete failed');
+        }
     }
 };
 

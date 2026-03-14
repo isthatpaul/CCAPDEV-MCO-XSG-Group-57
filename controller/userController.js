@@ -97,6 +97,30 @@ const userController = {
     logout(req, res) {
         req.session.destroy();
         res.redirect('/');
+    },
+
+    async deleteProfile(req, res) {
+        try {
+            const user = await User.findById(req.params.id);
+            if (!user) 
+                return res.status(404).send('User not found');
+
+            // Delete all reviews by this user
+            await Review.deleteMany({ userId: req.params.id });
+
+            // Delete the user
+            await User.findByIdAndDelete(req.params.id);
+
+            // Destroy session if it's their own profile
+            if (req.session.userId === req.params.id) {
+                req.session.destroy();
+            }
+
+            res.redirect('/');
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Delete failed');
+        }
     }
 };
 
