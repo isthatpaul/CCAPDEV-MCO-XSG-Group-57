@@ -154,16 +154,16 @@ CCAPDEV-MCO-XSG-Group-57/
 |------|-------|----------|
 | Luis Harold | luis_harold@gmail.com | 1234 |
 | Maria Santos | maria_santos@gmail.com | 1234 |
-| Karlie Chirk | karlie_chirk@gmail.com | 1234 |
-| Bob Builder | bob_builder@gmail.com | 1234 |
-| John Doe | john_doe@gmail.com | 1234 |
+| Karlie Chirk | karlofdachirk@gmail.com | 1234 |
+| Bob Builder | Bob@gmail.com | 1234 |
+| John Doe | John@yahoo.com | 1234 |
 
 ### Admin Users (Establishment Owners)
 
 | Name | Email | Password | Manages |
 |------|-------|----------|---------|
 | Ana Bloemen | ana@bloemen.com | admin123 | Bloemen Food Court |
-| Carlos Agno | carlos@agno.com | admin123 | Agno Food Court |
+| Carlos Agno | carlos@agnocourt.com | admin123 | Agno Food Court |
 | Diana TaftCafe | diana@taftcafe.com | admin123 | TaftCafe |
 | Edward Archer | edward@archer.com | admin123 | The Archer's Kitchen |
 | Fiona Breton | fiona@breton.com | admin123 | Cafe Breton |
