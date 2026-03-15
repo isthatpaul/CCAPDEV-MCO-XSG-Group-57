@@ -3,7 +3,7 @@ const User = require('./model/User');
 const Establishment = require('./model/Establishment');
 const Review = require('./model/Review');
 
-mongoose.connect('mongodb://localhost:27017/taftbites')
+mongoose.connect('mongodb+srv://angelobarras_db_user:apdev@ccapdev-taftbites.umiueta.mongodb.net/?appName=CCAPDEV-TaftBites')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error(err));
 

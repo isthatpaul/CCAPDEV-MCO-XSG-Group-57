@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/taftbites')
+mongoose.connect('mongodb+srv://angelobarras_db_user:apdev@ccapdev-taftbites.umiueta.mongodb.net/?appName=CCAPDEV-TaftBites')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
