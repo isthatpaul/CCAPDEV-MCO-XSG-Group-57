@@ -52,5 +52,4 @@ const uploadMultiple = multer({
 });
 
 module.exports = uploadSingle;
-module.exports.single = uploadSingle;
 module.exports.multiple = uploadMultiple;
