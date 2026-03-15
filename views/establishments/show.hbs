@@ -112,6 +112,35 @@
         </form>
     </div>
 </div>
+
+<!-- Edit Review Form Overlay -->
+<div id="editReviewOverlay" class="overlay" style="display:none;">
+    <div class="popup">
+        <h3>Edit Review</h3>
+        <form id="editReviewForm" method="POST">
+            <div>
+                <label for="editTitle">Title</label>
+                <input type="text" id="editTitle" name="title" required>
+            </div>
+            <div>
+                <label for="editComment">Your Review</label>
+                <textarea id="editComment" name="comment" rows="5" required></textarea>
+            </div>
+            <div>
+                <label>Rating</label>
+                <select id="editRating" name="rating" required>
+                    <option value="1">1★</option>
+                    <option value="2">2★</option>
+                    <option value="3">3★</option>
+                    <option value="4">4★</option>
+                    <option value="5">5★</option>
+                </select>
+            </div>
+            <button type="submit">Update Review</button>
+            <button type="button" class="cancel" onclick="closeEditOverlay()">Cancel</button>
+        </form>
+    </div>
+</div>
 {{/if}}
 
 <!-- Reviews Section -->
@@ -169,6 +198,10 @@
 
                 <div class="review-actions" style="display: flex; gap: 12px; margin-top: 8px;">
                     {{#if (eq ../currentUserId this.userId._id)}}
+                    <button type="button" class="btn-vote" style="background: #10b92f; color: white;" 
+                        onclick="openEditReview('{{this._id}}', '{{this.title}}', '{{this.comment}}', '{{this.rating}}')">
+                        Edit
+                    </button>
                     <form action="/reviews/{{ this._id }}/delete" method="POST" style="display:inline;">
                         <button type="submit" class="btn-vote" style="background: #ff6b6b; color: white;">Delete</button>
                     </form>
@@ -186,6 +219,42 @@
                         </button>
                     </form>
                     {{/if}}
+                    
+                    {{!-- Owner Reply --}}
+                    {{#if this.ownerReply.comment}}
+                    <div class="owner-reply" style="margin-left: 40px; margin-top: 10px; padding: 10px; background: #f0f7ff; border-left: 4px solid #007bff; border-radius: 4px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex-grow: 1;">
+                                <strong>Response from Owner:</strong>
+                                <p style="margin: 5px 0;">{{this.ownerReply.comment}}</p>
+                                <small style="color: #666;">{{formatDate this.ownerReply.createdAt}}</small>
+                            </div>
+
+                            {{!-- Show Delete Button only if user is authorized (canEdit) --}}
+                            {{#if ../canEdit}}
+                                <button type="button" 
+                                        style="background: #ff6b6b; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 10px;"
+                                        onclick="openDeleteReply('{{this._id}}')">
+                                    Delete
+                                </button>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    {{#if ../canEdit}} 
+                        {{#unless this.ownerReply.comment}}
+                        <button onclick="document.getElementById('reply-form-{{this._id}}').style.display='block'" class="btn-vote">Reply</button>
+                        
+                        <div id="reply-form-{{this._id}}" style="display:none; margin-top: 10px;">
+                            <form action="/reviews/{{this._id}}/reply" method="POST">
+                                <textarea name="comment" placeholder="Write your response..." required style="width:100%; padding:8px;"></textarea>
+                                <button type="submit" class="btn-vote" style="background:#007bff; color:white;">Post Reply</button>
+                                <button type="button" onclick="this.parentElement.parentElement.style.display='none'">Cancel</button>
+                            </form>
+                        </div>
+                        {{/unless}}
+                    {{/if}}
                 </div>
             </div>
             {{else}}
@@ -194,6 +263,20 @@
         </div>
     </div>
 </section>
+
+{{!-- Delete Reply Overlay --}}
+<div id="deleteReplyOverlay" class="overlay" style="display:none;">
+    <div class="popup" style="max-width: 400px; text-align: center;">
+        <h3>Delete Reply?</h3>
+        <p>Are you sure you want to remove your response? This action cannot be undone.</p>
+        <form id="deleteReplyForm" method="POST">
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button type="submit" style="background: #ff6b6b; color: white;">Yes, Delete</button>
+                <button type="button" class="cancel" onclick="closeDeleteOverlay()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <!-- Recommendations Section -->
 {{#if recommendations.length}}
@@ -251,4 +334,36 @@
             reviewOverlay.style.display = 'none';
         });
     }
+
+    // Review Edit Form Overlay
+    function openEditReview(id, title, comment, rating) {
+        const overlay = document.getElementById('editReviewOverlay');
+        const form = document.getElementById('editReviewForm');
+        
+        // Set form values
+        form.action = `/reviews/${id}/edit`;
+        document.getElementById('editTitle').value = title;
+        document.getElementById('editComment').value = comment;
+        document.getElementById('editRating').value = rating;
+        
+        overlay.style.display = 'flex';
+    }
+
+    function closeEditOverlay() {
+        document.getElementById('editReviewOverlay').style.display = 'none';
+    }
+
+    function openDeleteReply(reviewId) {
+        const overlay = document.getElementById('deleteReplyOverlay');
+        const form = document.getElementById('deleteReplyForm');
+        
+        form.action = `/reviews/${reviewId}/reply/delete`;
+        
+        overlay.style.display = 'flex';
+    }
+
+    function closeDeleteOverlay() {
+        document.getElementById('deleteReplyOverlay').style.display = 'none';
+    }
+
 </script>

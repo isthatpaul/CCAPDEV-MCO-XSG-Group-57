@@ -28,15 +28,15 @@ async function seed() {
 
     // Create establishment admins first (so we can reference them)
     const adminUsers = await User.insertMany([
-        { name: 'Ana Villanueva', email: 'ana@bloemen.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
-        { name: 'Carlos Tan', email: 'carlos@agnocourt.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
-        { name: 'Bea Rivera', email: 'bea@greenbites.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
-        { name: 'Miguel Santos', email: 'miguel@taftcafe.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
-        { name: 'Diana Lopez', email: 'diana@cafebreton.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
-        { name: 'Rico Mendoza', email: 'rico@idksdiner.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
-        { name: 'Grace Lim', email: 'grace@jollibee.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
-        { name: 'Marco Reyes', email: 'marco@sunnyside.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
-        { name: 'Sofia Cruz', email: 'sofia@brewandchill.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' }
+        { name: 'Ana Bloemen', email: 'ana@bloemen.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Carlos Agno', email: 'carlos@agnocourt.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Diana TaftCafe', email: 'diana@taftcafe.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Edward Archer', email: 'edward@archer.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Fiona Breton', email: 'fiona@breton.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'George IDK', email: 'george@idk.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Hannah Jollibee', email: 'hannah@jollibee.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Ivan Sunny', email: 'ivan@sunny.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Julia Brew', email: 'julia@brew.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' }
     ]);
 
     // Create establishments with admin references

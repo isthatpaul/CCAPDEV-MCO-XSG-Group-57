@@ -168,7 +168,44 @@ const reviewController = {
             console.error(err);
             res.status(500).send('Vote failed');
         }
+    },
+
+    async addReply(req, res) {
+        console.log("POST request received for ID:", req.params.id);
+        try {
+            const { comment } = req.body;
+            const review = await Review.findById(req.params.id);
+            
+            if (!review) return res.status(404).send('Review not found');
+
+            review.ownerReply = {
+                comment,
+                createdAt: new Date()
+            };
+
+            await review.save();
+            res.redirect(`/establishments/${review.establishmentId}`);
+        } catch (err) {
+            res.status(500).send('Failed to add reply');
+        }
+    },
+
+    async deleteReply(req, res) {
+    try {
+        const review = await Review.findById(req.params.id);
+        if (!review) return res.status(404).send('Review not found');
+
+        // Remove the ownerReply field
+        await Review.findByIdAndUpdate(req.params.id, {
+            $unset: { ownerReply: "" }
+        });
+
+        res.redirect(`/establishments/${review.establishmentId}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Failed to delete reply');
     }
+}
 };
 
 module.exports = reviewController;
