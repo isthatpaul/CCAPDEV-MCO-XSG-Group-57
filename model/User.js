@@ -16,7 +16,9 @@ const userSchema = new mongoose.Schema({
     },
     linkedEstablishment: { type: mongoose.Schema.Types.ObjectId, ref: 'Establishment', default: null },
     establishmentsManaged: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Establishment' }],
-    favorites: { type: [mongoose.Schema.Types.ObjectId], ref: 'Establishment', default: [] }
+    favorites: { type: [mongoose.Schema.Types.ObjectId], ref: 'Establishment', default: [] },
+    helpfulReviewVotes: { type: [mongoose.Schema.Types.ObjectId], ref: 'Review', default: [] },
+    unhelpfulReviewVotes: { type: [mongoose.Schema.Types.ObjectId], ref: 'Review', default: [] }
 });
 
 module.exports = mongoose.model('User', userSchema);

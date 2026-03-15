@@ -2,6 +2,7 @@ const Review = require('../model/Review');
 const User = require('../model/User');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
+const { updateEstablishmentRating } = require('../utils/businessHelpers');
 
 const reviewController = {
     // Helper function to extract public_id from Cloudinary URL
@@ -67,6 +68,9 @@ const reviewController = {
             }
 
             await Review.create(reviewData);
+            
+            // Update establishment rating
+            await updateEstablishmentRating(establishmentId);
 
             res.redirect('/establishments/' + establishmentId);
         } catch (err) {
@@ -80,6 +84,9 @@ const reviewController = {
             const { title, comment, rating } = req.body;
             const review = await Review.findById(req.params.id);
 
+            
+            // Update establishment rating
+            await updateEstablishmentRating(review.establishmentId);
             if (!review) return res.status(404).send('Review not found');
 
             await Review.findByIdAndUpdate(req.params.id, { title, comment, rating });
@@ -109,6 +116,9 @@ const reviewController = {
                         // Continue with other images even if one fails
                     }
                 }
+            
+            // Update establishment rating
+            await updateEstablishmentRating(review.establishmentId);
             }
 
             await Review.findByIdAndDelete(req.params.id);
@@ -126,18 +136,24 @@ const reviewController = {
             if (!review) return res.status(404).send('Review not found');
 
             const userId = req.session.userId;
-            const isHelpful = review.helpfulVotes.includes(userId);
-            const isUnhelpful = review.unhelpfulVotes.includes(userId);
+            const user = await User.findById(userId);
+            const isHelpful = review.helpfulVotes.some(id => id.toString() === userId);
+            const isUnhelpful = review.unhelpfulVotes.some(id => id.toString() === userId);
 
             if (isHelpful) {
                 review.helpfulVotes = review.helpfulVotes.filter(id => id.toString() !== userId);
+                user.helpfulReviewVotes = user.helpfulReviewVotes.filter(id => id.toString() !== req.params.id);
             } else {
                 review.helpfulVotes.push(userId);
+                user.helpfulReviewVotes = user.helpfulReviewVotes.filter(id => id.toString() !== req.params.id);
+                user.helpfulReviewVotes.push(req.params.id);
                 // Remove from unhelpful if it was there
                 review.unhelpfulVotes = review.unhelpfulVotes.filter(id => id.toString() !== userId);
+                user.unhelpfulReviewVotes = user.unhelpfulReviewVotes.filter(id => id.toString() !== req.params.id);
             }
 
             await review.save();
+            await user.save();
             res.redirect('/establishments/' + review.establishmentId);
         } catch (err) {
             console.error(err);
@@ -151,18 +167,24 @@ const reviewController = {
             if (!review) return res.status(404).send('Review not found');
 
             const userId = req.session.userId;
-            const isHelpful = review.helpfulVotes.includes(userId);
-            const isUnhelpful = review.unhelpfulVotes.includes(userId);
+            const user = await User.findById(userId);
+            const isHelpful = review.helpfulVotes.some(id => id.toString() === userId);
+            const isUnhelpful = review.unhelpfulVotes.some(id => id.toString() === userId);
 
             if (isUnhelpful) {
                 review.unhelpfulVotes = review.unhelpfulVotes.filter(id => id.toString() !== userId);
+                user.unhelpfulReviewVotes = user.unhelpfulReviewVotes.filter(id => id.toString() !== req.params.id);
             } else {
                 review.unhelpfulVotes.push(userId);
+                user.unhelpfulReviewVotes = user.unhelpfulReviewVotes.filter(id => id.toString() !== req.params.id);
+                user.unhelpfulReviewVotes.push(req.params.id);
                 // Remove from helpful if it was there
                 review.helpfulVotes = review.helpfulVotes.filter(id => id.toString() !== userId);
+                user.helpfulReviewVotes = user.helpfulReviewVotes.filter(id => id.toString() !== req.params.id);
             }
 
             await review.save();
+            await user.save();
             res.redirect('/establishments/' + review.establishmentId);
         } catch (err) {
             console.error(err);

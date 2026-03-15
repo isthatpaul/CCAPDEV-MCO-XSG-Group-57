@@ -65,6 +65,17 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="category">Category</label>
+                        <input 
+                            type="text" 
+                            id="category" 
+                            name="category" 
+                            placeholder="e.g., Cafe, Italian Restaurant, Fast Food"
+                        >
+                        <span class="form-hint">Type of establishment (optional)</span>
+                    </div>
+
+                    <div class="form-group">
                         <label for="image">Establishment Image *</label>
                         <input 
                             type="file" 
@@ -106,12 +117,23 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="contact">Contact Number</label>
+                        <label for="contact">Contact Email</label>
                         <input 
-                            type="tel" 
+                            type="email" 
                             id="contact" 
                             name="contact" 
-                            placeholder="e.g., (02) 5239-8200 ext. 101"
+                            placeholder="e.g., info@establishment.com"
+                        >
+                        <span class="form-hint">Email for inquiries</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone" 
+                            placeholder="e.g., (02) 5239-8200"
                         >
                         <span class="form-hint">Phone number for reservations or inquiries</span>
                     </div>

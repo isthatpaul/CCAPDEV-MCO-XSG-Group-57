@@ -71,9 +71,13 @@
                         <span>{{ this.location }}</span>
                         <span>{{ this.hours }}</span>
                         {{#if this.businessStatus}}
-                        <span style="padding: 2px 8px; background: {{#eq this.businessStatus.status "open"}}#4CAF50{{else}}{{#eq this.businessStatus.status "closing"}}#FF9800{{else}}#f44336{{/eq}}{{/eq}}; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">
-                            {{#eq this.businessStatus.status "open"}}🟢 Open{{else}}{{#eq this.businessStatus.status "closing"}}⏰ Closing{{else}}🔴 Closed{{/eq}}{{/eq}}
-                        </span>
+                        {{#if (eq this.businessStatus.status "open")}}
+                        <span style="padding: 2px 8px; background: #4CAF50; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">🟢 Open</span>
+                        {{else if (eq this.businessStatus.status "closing")}}
+                        <span style="padding: 2px 8px; background: #FF9800; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">⏰ Closing</span>
+                        {{else}}
+                        <span style="padding: 2px 8px; background: #f44336; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">🔴 Closed</span>
+                        {{/if}}
                         {{/if}}
                     </div>
                     <p>{{ this.description }}</p>

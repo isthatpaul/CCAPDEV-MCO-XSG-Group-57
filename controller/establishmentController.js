@@ -5,6 +5,42 @@ const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
 const { getBusinessStatus, getRecommendations } = require('../utils/businessHelpers');
 
+// Helper function to recalculate ratings for establishments
+async function recalculateEstablishmentRatings(establishments) {
+    try {
+        const establishmentIds = establishments.map(e => e._id);
+        const reviews = await Review.find({ establishmentId: { $in: establishmentIds } }).lean();
+        
+        // Group reviews by establishment
+        const reviewsByEst = {};
+        reviews.forEach(review => {
+            const estId = review.establishmentId.toString();
+            if (!reviewsByEst[estId]) {
+                reviewsByEst[estId] = [];
+            }
+            reviewsByEst[estId].push(review);
+        });
+        
+        // Update establishments with calculated ratings
+        establishments.forEach(est => {
+            const estId = est._id.toString();
+            const estReviews = reviewsByEst[estId] || [];
+            
+            if (estReviews.length > 0) {
+                const averageRating = estReviews.reduce((sum, review) => sum + review.rating, 0) / estReviews.length;
+                est.rating = Math.round(averageRating * 2) / 2; // Round to nearest 0.5
+            } else {
+                est.rating = 0;
+            }
+        });
+        
+        return establishments;
+    } catch (err) {
+        console.error('Error recalculating establishment ratings:', err);
+        return establishments; // Return original if there's an error
+    }
+}
+
 const establishmentController = {
     // Helper function to extract public_id from Cloudinary URL
     extractPublicIdFromUrl(url) {
@@ -33,6 +69,9 @@ const establishmentController = {
     async getHome(req, res) {
         try {
             let establishments = await Establishment.find().limit(3).lean();
+
+            // Recalculate ratings based on reviews
+            establishments = await recalculateEstablishmentRatings(establishments);
 
             // Add business status
             establishments = establishments.map(est => ({
@@ -74,11 +113,16 @@ const establishmentController = {
                 ];
             }
 
-            if (minRating > 0) {
-                filter.rating = { $gte: minRating };
-            }
-
+            // Don't filter by rating in database query - we'll recalculate and filter after
             let establishments = await Establishment.find(filter).lean();
+
+            // Recalculate ratings based on reviews
+            establishments = await recalculateEstablishmentRatings(establishments);
+
+            // Apply rating filter after recalculation
+            if (minRating > 0) {
+                establishments = establishments.filter(est => est.rating >= minRating);
+            }
 
             // Add business status to each establishment
             establishments = establishments.map(est => ({
@@ -135,15 +179,36 @@ const establishmentController = {
                 reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             }
 
+            // Calculate rating breakdown for display
+            const allReviews = await Review.find({ establishmentId: establishment._id }).lean();
+            const ratingBreakdown = {
+                'one': allReviews.filter(r => r.rating === 1).length,
+                'two': allReviews.filter(r => r.rating === 2).length,
+                'three': allReviews.filter(r => r.rating === 3).length,
+                'four': allReviews.filter(r => r.rating === 4).length,
+                'five': allReviews.filter(r => r.rating === 5).length,
+                'total': allReviews.length
+            };
+
+            // Recalculate establishment rating based on reviews
+            if (allReviews.length > 0) {
+                const averageRating = allReviews.reduce((sum, review) => sum + review.rating, 0) / allReviews.length;
+                establishment.rating = Math.round(averageRating * 2) / 2; // Round to nearest 0.5
+            } else {
+                establishment.rating = 0;
+            }
+
             // Get business status
             const businessStatus = getBusinessStatus(establishment.hours);
 
             // Get recommendations
-            const allEstablishments = await Establishment.find().lean();
+            let allEstablishments = await Establishment.find().lean();
+            allEstablishments = await recalculateEstablishmentRatings(allEstablishments);
             const recommendations = getRecommendations(establishment, allEstablishments);
 
             let canEdit = false;
             let isFavorited = false;
+            let userHasVoted = {};
 
             if (req.session.userId) {
                 const user = await User.findById(req.session.userId).lean();
@@ -158,6 +223,17 @@ const establishmentController = {
                         fav => fav.toString() === establishment._id.toString()
                     );
                 }
+                // Track user votes
+                if (user) {
+                    const helpfulIds = (user.helpfulReviewVotes || []).map(id => id.toString());
+                    const unhelpfulIds = (user.unhelpfulReviewVotes || []).map(id => id.toString());
+                    reviews.forEach(review => {
+                        userHasVoted[review._id.toString()] = {
+                            helpful: helpfulIds.includes(review._id.toString()),
+                            unhelpful: unhelpfulIds.includes(review._id.toString())
+                        };
+                    });
+                }
             }
 
             res.render('establishments/show', {
@@ -170,6 +246,8 @@ const establishmentController = {
                 recommendations,
                 ratingFilter,
                 sortBy,
+                ratingBreakdown,
+                userHasVoted,
                 extraCSS: 'establishment-detail.css',
                 extraCSS2: 'establishments.css'
             });

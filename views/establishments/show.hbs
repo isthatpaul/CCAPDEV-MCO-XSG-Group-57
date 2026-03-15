@@ -10,22 +10,79 @@
             
             <!-- Business Status Badge -->
             {{#if businessStatus}}
-            <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: {{#eq businessStatus.status "open"}}#4CAF50{{else}}{{#eq businessStatus.status "closing"}}#FF9800{{else}}#f44336{{/eq}}{{/eq}}; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">
-                {{#eq businessStatus.status "open"}}🟢 {{ businessStatus.message }}{{else}}{{#eq businessStatus.status "closing"}}⏰ {{ businessStatus.message }}{{else}}🔴 {{ businessStatus.message }}{{/eq}}{{/eq}}
-            </div>
+            {{#if (eq businessStatus.status "open")}}
+            <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: #4CAF50; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">🟢 {{ businessStatus.message }}</div>
+            {{else if (eq businessStatus.status "closing")}}
+            <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: #FF9800; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">⏰ {{ businessStatus.message }}</div>
+            {{else}}
+            <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: #f44336; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">🔴 {{ businessStatus.message }}</div>
             {{/if}}
+            {{/if}}
+
+            <!-- Rating Breakdown -->
+            <div style="margin: 20px 0; padding: 16px; background: #f9f9f9; border-radius: 8px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span style="font-size: 28px; font-weight: bold;">{{ establishment.rating }}</span>
+                    <div>
+                        <div style="font-size: 20px;">{{ stars establishment.rating }}</div>
+                        <small style="color: #666;">{{ ratingBreakdown.total }} reviews</small>
+                    </div>
+                </div>
+                {{#if ratingBreakdown.total}}
+                <div style="font-size: 12px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <span style="width: 30px;">5★</span>
+                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.five ratingBreakdown.total}}%;"></div>
+                        </div>
+                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.five }}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <span style="width: 30px;">4★</span>
+                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.four ratingBreakdown.total}}%;"></div>
+                        </div>
+                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.four }}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <span style="width: 30px;">3★</span>
+                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.three ratingBreakdown.total}}%;"></div>
+                        </div>
+                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.three }}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <span style="width: 30px;">2★</span>
+                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.two ratingBreakdown.total}}%;"></div>
+                        </div>
+                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.two }}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <span style="width: 30px;">1★</span>
+                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.one ratingBreakdown.total}}%;"></div>
+                        </div>
+                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.one }}</span>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+
             <div class="main-content">
                 <div class="main-left card">
                     <p><strong>Overall Rating:</strong> {{ stars establishment.rating }} {{ establishment.rating }}</p>
-                    <p id="estLocation"><strong>Location:</strong> {{ establishment.location }}</p>
-                    <p id="estContact"><strong>Contact:</strong> {{ establishment.contact }}</p>
-                    <p id="estHours"><strong>Hours:</strong> {{ establishment.hours }}</p>
-                    <p id="estLink"><strong>Links:</strong> <a href="{{ establishment.link }}">Facebook</a></p>
+                    {{#if establishment.category}}<p><strong>Category:</strong> {{ establishment.category }}</p>{{/if}}
+                    <p><strong>Location:</strong> {{#if establishment.location}}{{ establishment.location }}{{else}}<em>Not provided</em>{{/if}}</p>
+                    <p><strong>Contact:</strong> {{#if establishment.contact}}{{ establishment.contact }}{{else}}<em>Not provided</em>{{/if}}</p>
+                    {{#if establishment.phone}}<p><strong>Phone:</strong> <a href="tel:{{ establishment.phone }}" style="color: #007bff;">{{ formatPhone establishment.phone }}</a></p>{{/if}}
+                    <p><strong>Hours:</strong> {{#if establishment.hours}}{{ establishment.hours }}{{else}}<em>Not provided</em>{{/if}}</p>
+                    {{#if establishment.link}}<p><strong>Links:</strong> <a href="{{ establishment.link }}" target="_blank" rel="noopener noreferrer" style="color: #007bff;">Facebook ↗</a></p>{{/if}}
                 </div>
 
                 <div class="main-right card">
                     <h3>Description</h3>
-                    <p id="estDescription">{{ establishment.description }}</p>
+                    <p id="estDescription">{{#if establishment.description}}{{ establishment.description }}{{else}}<em>No description provided</em>{{/if}}</p>
                 </div>
 
                 {{#if canEdit}}
@@ -33,22 +90,39 @@
 
                 <div class="card" id="edit-card" style="display:none;">
                     <h3>Edit Establishment</h3>
-                    <form id="editEstablishmentForm" action="/establishments/{{ establishment._id }}/edit" method="POST">
+                    <form id="editEstablishmentForm" action="/establishments/{{ establishment._id }}/edit" method="POST" enctype="multipart/form-data">
+                        <div>
+                            <label>Establishment Name</label>
+                            <input type="text" name="name" value="{{ establishment.name }}" required>
+                        </div>
+                        <div>
+                            <label>Category</label>
+                            <input type="text" name="category" value="{{ establishment.category }}" placeholder="e.g., Cafe, Italian Restaurant, Fast Food">
+                        </div>
                         <div>
                             <label>Location</label>
                             <input type="text" id="editLocation" name="location" value="{{ establishment.location }}">
                         </div>
                         <div>
-                            <label>Contact</label>
+                            <label>Contact Email</label>
                             <input type="text" id="editContact" name="contact" value="{{ establishment.contact }}">
                         </div>
                         <div>
-                            <label>Hours</label>
-                            <input type="text" id="editHours" name="hours" value="{{ establishment.hours }}">
+                            <label>Phone Number</label>
+                            <input type="tel" name="phone" value="{{ establishment.phone }}" placeholder="e.g., (02) 123-4567">
                         </div>
                         <div>
-                            <label>Link</label>
-                            <input type="text" id="editLink" name="link" value="{{ establishment.link }}">
+                            <label>Hours</label>
+                            <input type="text" id="editHours" name="hours" value="{{ establishment.hours }}" placeholder="e.g., 7:00 AM - 9:00 PM">
+                        </div>
+                        <div>
+                            <label>Facebook Link</label>
+                            <input type="url" id="editLink" name="link" value="{{ establishment.link }}" placeholder="https://facebook.com/...">
+                        </div>
+                        <div>
+                            <label>Image</label>
+                            <input type="file" name="image" accept="image/*">
+                            {{#if establishment.image}}<small style="display: block; margin-top: 4px; color: #666;">Current image: {{ establishment.image }}</small>{{/if}}
                         </div>
                         <div>
                             <label>Description</label>
@@ -196,6 +270,14 @@
                 <h4>{{ this.title }}</h4>
                 <p>{{ this.comment }}</p>
 
+                {{#if this.images}}
+                <div style="display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap;">
+                    {{#each this.images}}
+                    <img src="{{ this }}" alt="Review image" style="max-width: 100px; max-height: 100px; border-radius: 4px; object-fit: cover; cursor: pointer;" onclick="openImageOverlay('{{ this }}')">
+                    {{/each}}
+                </div>
+                {{/if}}
+
                 <div class="review-actions" style="display: flex; gap: 12px; margin-top: 8px;">
                     {{#if (eq ../currentUserId this.userId._id)}}
                     <button type="button" class="btn-vote" style="background: #10b92f; color: white;" 
@@ -209,12 +291,12 @@
                     
                     {{#if ../isLoggedIn}}
                     <form action="/reviews/{{ this._id }}/helpful" method="POST" style="display:inline;">
-                        <button type="submit" class="btn-vote" style="background: #4CAF50; color: white;">
+                        <button type="submit" class="btn-vote review-vote-btn" data-review-id="{{ this._id }}" data-vote-type="helpful" style="background: #4CAF50; color: white;">
                             👍 Helpful ({{ this.helpfulVotes.length }})
                         </button>
                     </form>
                     <form action="/reviews/{{ this._id }}/unhelpful" method="POST" style="display:inline;">
-                        <button type="submit" class="btn-vote" style="background: #f44336; color: white;">
+                        <button type="submit" class="btn-vote review-vote-btn" data-review-id="{{ this._id }}" data-vote-type="unhelpful" style="background: #f44336; color: white;">
                             👎 Unhelpful ({{ this.unhelpfulVotes.length }})
                         </button>
                     </form>
@@ -365,5 +447,36 @@
     function closeDeleteOverlay() {
         document.getElementById('deleteReplyOverlay').style.display = 'none';
     }
+
+    // Image overlay for review images
+    function openImageOverlay(imageSrc) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1000;';
+        overlay.onclick = function() { overlay.remove(); };
+        
+        const img = document.createElement('img');
+        img.src = imageSrc;
+        img.style.cssText = 'max-width:90%;max-height:90%;border-radius:8px;';
+        
+        overlay.appendChild(img);
+        document.body.appendChild(overlay);
+    }
+
+    // Handle vote button state management
+    const userHasVoted = {{{ json userHasVoted }}};
+    document.querySelectorAll('.review-vote-btn').forEach(btn => {
+        const reviewId = btn.getAttribute('data-review-id');
+        const voteType = btn.getAttribute('data-vote-type');
+        
+        if (userHasVoted[reviewId]) {
+            if (voteType === 'helpful' && userHasVoted[reviewId].helpful) {
+                btn.style.background = '#2e7d32';
+                btn.disabled = true;
+            } else if (voteType === 'unhelpful' && userHasVoted[reviewId].unhelpful) {
+                btn.style.background = '#c62828';
+                btn.disabled = true;
+            }
+        }
+    });
 
 </script>

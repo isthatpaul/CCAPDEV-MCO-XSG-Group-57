@@ -49,6 +49,25 @@ app.engine('hbs', engine({
                 return imagePath; // It's a Cloudinary URL
             }
             return '/images/' + imagePath; // It's a local filename
+        },
+        formatPhone: function(phone) {
+            if (!phone) return '';
+            // Format as (XXX) XXX-XXXX
+            const cleaned = phone.replace(/\D/g, '');
+            if (cleaned.length === 10) {
+                return `(${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6)}`;
+            }
+            return phone;
+        },
+        pluralize: function(count, singular, plural) {
+            return count === 1 ? singular : plural;
+        },
+        ratingPercentage: function(count, total) {
+            if (total === 0) return 0;
+            return Math.round((count / total) * 100);
+        },
+        json: function(obj) {
+            return JSON.stringify(obj);
         }
     }
 }));

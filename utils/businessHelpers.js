@@ -90,8 +90,31 @@ const getRecommendations = (establishment, allEstablishments, limit = 3) => {
     return recommendations;
 };
 
+const updateEstablishmentRating = async (establishmentId) => {
+    const Review = require('../model/Review');
+    const Establishment = require('../model/Establishment');
+    
+    try {
+        const reviews = await Review.find({ establishmentId }).lean();
+        
+        if (reviews.length === 0) {
+            // No reviews, set rating to 0
+            await Establishment.findByIdAndUpdate(establishmentId, { rating: 0 });
+        } else {
+            // Calculate average rating
+            const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+            const roundedRating = Math.round(averageRating * 2) / 2; // Round to nearest 0.5
+            
+            await Establishment.findByIdAndUpdate(establishmentId, { rating: roundedRating });
+        }
+    } catch (err) {
+        console.error('Error updating establishment rating:', err);
+    }
+};
+
 module.exports = {
     parseHours,
     getBusinessStatus,
-    getRecommendations
+    getRecommendations,
+    updateEstablishmentRating
 };
