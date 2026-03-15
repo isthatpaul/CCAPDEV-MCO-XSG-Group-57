@@ -219,6 +219,42 @@
                         </button>
                     </form>
                     {{/if}}
+                    
+                    {{!-- Owner Reply --}}
+                    {{#if this.ownerReply.comment}}
+                    <div class="owner-reply" style="margin-left: 40px; margin-top: 10px; padding: 10px; background: #f0f7ff; border-left: 4px solid #007bff; border-radius: 4px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex-grow: 1;">
+                                <strong>Response from Owner:</strong>
+                                <p style="margin: 5px 0;">{{this.ownerReply.comment}}</p>
+                                <small style="color: #666;">{{formatDate this.ownerReply.createdAt}}</small>
+                            </div>
+
+                            {{!-- Show Delete Button only if user is authorized (canEdit) --}}
+                            {{#if ../canEdit}}
+                                <button type="button" 
+                                        style="background: #ff6b6b; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 10px;"
+                                        onclick="openDeleteReply('{{this._id}}')">
+                                    Delete
+                                </button>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    {{#if ../canEdit}} 
+                        {{#unless this.ownerReply.comment}}
+                        <button onclick="document.getElementById('reply-form-{{this._id}}').style.display='block'" class="btn-vote">Reply</button>
+                        
+                        <div id="reply-form-{{this._id}}" style="display:none; margin-top: 10px;">
+                            <form action="/reviews/{{this._id}}/reply" method="POST">
+                                <textarea name="comment" placeholder="Write your response..." required style="width:100%; padding:8px;"></textarea>
+                                <button type="submit" class="btn-vote" style="background:#007bff; color:white;">Post Reply</button>
+                                <button type="button" onclick="this.parentElement.parentElement.style.display='none'">Cancel</button>
+                            </form>
+                        </div>
+                        {{/unless}}
+                    {{/if}}
                 </div>
             </div>
             {{else}}
@@ -227,6 +263,20 @@
         </div>
     </div>
 </section>
+
+{{!-- Delete Reply Overlay --}}
+<div id="deleteReplyOverlay" class="overlay" style="display:none;">
+    <div class="popup" style="max-width: 400px; text-align: center;">
+        <h3>Delete Reply?</h3>
+        <p>Are you sure you want to remove your response? This action cannot be undone.</p>
+        <form id="deleteReplyForm" method="POST">
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button type="submit" style="background: #ff6b6b; color: white;">Yes, Delete</button>
+                <button type="button" class="cancel" onclick="closeDeleteOverlay()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <!-- Recommendations Section -->
 {{#if recommendations.length}}
@@ -302,4 +352,18 @@
     function closeEditOverlay() {
         document.getElementById('editReviewOverlay').style.display = 'none';
     }
+
+    function openDeleteReply(reviewId) {
+        const overlay = document.getElementById('deleteReplyOverlay');
+        const form = document.getElementById('deleteReplyForm');
+        
+        form.action = `/reviews/${reviewId}/reply/delete`;
+        
+        overlay.style.display = 'flex';
+    }
+
+    function closeDeleteOverlay() {
+        document.getElementById('deleteReplyOverlay').style.display = 'none';
+    }
+
 </script>

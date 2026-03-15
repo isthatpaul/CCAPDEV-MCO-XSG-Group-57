@@ -9,7 +9,8 @@ const reviewSchema = new mongoose.Schema({
     images:          { type: [String], default: [] }, // Array of Cloudinary URLs
     createdAt:       { type: Date, default: Date.now },
     helpfulVotes:    { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] },
-    unhelpfulVotes:  { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] }
+    unhelpfulVotes:  { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] },
+    ownerReply:      { comment: String, createdAt: { type: Date, default: Date.now }}
 });
 
 module.exports = mongoose.model('Review', reviewSchema);
