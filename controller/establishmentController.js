@@ -153,7 +153,11 @@ const establishmentController = {
                         canEdit = true;
                     }
                 }
-                isFavorited = user && user.favorites && user.favorites.includes(establishment._id);
+                if (user && user.favorites) {
+                    isFavorited = user.favorites.some(
+                        fav => fav.toString() === establishment._id.toString()
+                    );
+                }
             }
 
             res.render('establishments/show', {
