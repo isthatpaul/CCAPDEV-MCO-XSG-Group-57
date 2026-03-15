@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const { engine } = require('express-handlebars');
 const mongoose = require('mongoose');
@@ -42,6 +43,12 @@ app.engine('hbs', engine({
                 return options.fn(this);
             }
             return options.inverse(this);
+        },
+        imageUrl: function(imagePath) {
+            if (imagePath && imagePath.startsWith('http')) {
+                return imagePath; // It's a Cloudinary URL
+            }
+            return '/images/' + imagePath; // It's a local filename
         }
     }
 }));

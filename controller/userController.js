@@ -1,5 +1,8 @@
 const User = require('../model/User');
 const Review = require('../model/Review');
+const cloudinary = require('../config/cloudinary');
+const fs = require('fs');
+const path = require('path');
 
 const userController = {
     async getProfile(req, res) {
@@ -29,7 +32,33 @@ const userController = {
     async updateProfile(req, res) {
         try {
             const { bio, email, phone } = req.body;
-            await User.findByIdAndUpdate(req.params.id, { bio, email, phone });
+            const updateData = { bio, email, phone };
+
+            // If a file was uploaded, handle image upload to Cloudinary
+            if (req.file) {
+                try {
+                    // Upload to Cloudinary
+                    const result = await cloudinary.uploader.upload(req.file.path, {
+                        folder: 'taftbites/profile_pictures',
+                        resource_type: 'auto'
+                    });
+
+                    // Update with Cloudinary URL
+                    updateData.image = result.secure_url;
+
+                    // Delete the temporary file
+                    fs.unlinkSync(req.file.path);
+                } catch (cloudinaryErr) {
+                    console.error('Cloudinary upload error:', cloudinaryErr);
+                    // Delete temporary file even if upload fails
+                    if (req.file && req.file.path) {
+                        fs.unlinkSync(req.file.path);
+                    }
+                    return res.status(500).send('Image upload failed');
+                }
+            }
+
+            await User.findByIdAndUpdate(req.params.id, updateData);
             res.redirect('/users/' + req.params.id);
         } catch (err) {
             console.error(err);

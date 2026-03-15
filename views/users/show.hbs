@@ -5,7 +5,7 @@
                 <div class="card" id="profile-info">
                     <div id="profile_photo" class="card center">
                         <h3>Profile Photo</h3>
-                        <img id="profileImg" src="/images/{{ user.image }}" alt="Profile photo.">
+                        <img id="profileImg" src="{{ imageUrl user.image }}" alt="Profile photo.">
                     </div>
                     <div id="join_date" style="margin-top:12px">
                         <h3 id="member-since">Member Since:</h3>
@@ -31,7 +31,7 @@
                 {{#if isOwnProfile}}
                 <div class="card" id="edit-card" style="display:none;">
                     <h3>Edit Profile</h3>
-                    <form id="editProfileForm" action="/users/{{ user._id }}/edit" method="POST">
+                    <form id="editProfileForm" action="/users/{{ user._id }}/edit" method="POST" enctype="multipart/form-data">
                         <div>
                             <label for="editBio">Update Bio</label>
                             <textarea id="editBio" name="bio" rows="4" placeholder="Tell other users about yourself...">{{ user.bio }}</textarea>

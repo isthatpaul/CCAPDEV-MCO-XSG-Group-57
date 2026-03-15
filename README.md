@@ -96,7 +96,25 @@ CCAPDEV-MCO-XSG-Group-57/
    npm install
    ```
 
-3. **Make sure MongoDB is running**
+3. **Set up environment variables**
+
+   Create a `.env` file in the root directory:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Then edit `.env` and add your Cloudinary credentials:
+
+   ```
+   CLOUDINARY_CLOUD_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
+
+   Get these from your [Cloudinary Dashboard](https://cloudinary.com/console/settings/api-keys).
+
+4. **Make sure MongoDB is running**
 
    Open MongoDB Compass or run:
 
@@ -104,7 +122,7 @@ CCAPDEV-MCO-XSG-Group-57/
    mongod
    ```
 
-4. **Seed the database**
+5. **Seed the database**
 
    ```bash
    node seed.js
@@ -116,13 +134,13 @@ CCAPDEV-MCO-XSG-Group-57/
    - 9 establishments
    - 15 reviews
 
-5. **Start the server**
+6. **Start the server**
 
    ```bash
    node server.js
    ```
 
-6. **Open in browser**
+7. **Open in browser**
 
    ```
    http://localhost:3000
