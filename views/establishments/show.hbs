@@ -112,6 +112,35 @@
         </form>
     </div>
 </div>
+
+<!-- Edit Review Form Overlay -->
+<div id="editReviewOverlay" class="overlay" style="display:none;">
+    <div class="popup">
+        <h3>Edit Review</h3>
+        <form id="editReviewForm" method="POST">
+            <div>
+                <label for="editTitle">Title</label>
+                <input type="text" id="editTitle" name="title" required>
+            </div>
+            <div>
+                <label for="editComment">Your Review</label>
+                <textarea id="editComment" name="comment" rows="5" required></textarea>
+            </div>
+            <div>
+                <label>Rating</label>
+                <select id="editRating" name="rating" required>
+                    <option value="1">1★</option>
+                    <option value="2">2★</option>
+                    <option value="3">3★</option>
+                    <option value="4">4★</option>
+                    <option value="5">5★</option>
+                </select>
+            </div>
+            <button type="submit">Update Review</button>
+            <button type="button" class="cancel" onclick="closeEditOverlay()">Cancel</button>
+        </form>
+    </div>
+</div>
 {{/if}}
 
 <!-- Reviews Section -->
@@ -169,6 +198,10 @@
 
                 <div class="review-actions" style="display: flex; gap: 12px; margin-top: 8px;">
                     {{#if (eq ../currentUserId this.userId._id)}}
+                    <button type="button" class="btn-vote" style="background: #10b92f; color: white;" 
+                        onclick="openEditReview('{{this._id}}', '{{this.title}}', '{{this.comment}}', '{{this.rating}}')">
+                        Edit
+                    </button>
                     <form action="/reviews/{{ this._id }}/delete" method="POST" style="display:inline;">
                         <button type="submit" class="btn-vote" style="background: #ff6b6b; color: white;">Delete</button>
                     </form>
@@ -250,5 +283,23 @@
         cancelReview.addEventListener('click', function() {
             reviewOverlay.style.display = 'none';
         });
+    }
+
+    // Review Edit Form Overlay
+    function openEditReview(id, title, comment, rating) {
+        const overlay = document.getElementById('editReviewOverlay');
+        const form = document.getElementById('editReviewForm');
+        
+        // Set form values
+        form.action = `/reviews/${id}/edit`;
+        document.getElementById('editTitle').value = title;
+        document.getElementById('editComment').value = comment;
+        document.getElementById('editRating').value = rating;
+        
+        overlay.style.display = 'flex';
+    }
+
+    function closeEditOverlay() {
+        document.getElementById('editReviewOverlay').style.display = 'none';
     }
 </script>
