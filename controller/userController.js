@@ -61,8 +61,12 @@ const userController = {
             // If a file was uploaded, handle image upload to Cloudinary
             if (req.file) {
                 try {
-                    // Get the current user to check for old image
+                    // Get the current user to check for old image and get email
                     const user = await User.findById(req.params.id);
+                    
+                    if (!user) {
+                        return res.status(404).send('User not found');
+                    }
                     
                     // Delete old profile image from Cloudinary if it exists
                     if (user && user.image && user.image.startsWith('https://res.cloudinary.com')) {
@@ -78,11 +82,10 @@ const userController = {
                         }
                     }
 
-                    // Upload new image to Cloudinary with user-organized folder structure
-                    // Using buffer from memory storage
+                    // Upload new image to Cloudinary using user email as folder identifier
                     const result = await new Promise((resolve, reject) => {
                         cloudinary.uploader.upload_stream({
-                            folder: `cloudinary/users/${req.params.id}/profile_pictures`,
+                            folder: `cloudinary/users/${user.email}/profile_pictures`,
                             resource_type: 'auto'
                         }, (error, uploadResult) => {
                             if (error) reject(error);

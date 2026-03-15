@@ -219,10 +219,16 @@ const establishmentController = {
             let imageUrl = '';
             if (req.file) {
                 try {
-                    // Upload using buffer from memory storage
+                    // Get user to get their email for folder structure
+                    const uploadUser = await User.findById(userId);
+                    if (!uploadUser) {
+                        return res.status(404).send('User not found');
+                    }
+
+                    // Upload using buffer from memory storage with user email as identifier
                     const result = await new Promise((resolve, reject) => {
                         cloudinary.uploader.upload_stream({
-                            folder: `cloudinary/users/${userId}/establishment_images`,
+                            folder: `cloudinary/users/${uploadUser.email}/establishment_images`,
                             resource_type: 'auto'
                         }, (error, uploadResult) => {
                             if (error) reject(error);

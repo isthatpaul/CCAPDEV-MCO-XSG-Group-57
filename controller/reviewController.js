@@ -1,4 +1,5 @@
 const Review = require('../model/Review');
+const User = require('../model/User');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
 
@@ -27,6 +28,12 @@ const reviewController = {
         try {
             const { title, comment, rating, establishmentId } = req.body;
 
+            // Get user to access their email for folder structure
+            const reviewUser = await User.findById(req.session.userId);
+            if (!reviewUser) {
+                return res.status(401).send('User not found');
+            }
+
             const reviewData = {
                 title,
                 comment,
@@ -40,10 +47,10 @@ const reviewController = {
             if (req.files && req.files.length > 0) {
                 try {
                     for (const file of req.files) {
-                        // Upload using buffer from memory storage
+                        // Upload using buffer from memory storage with user email as identifier
                         const uploadResult = await new Promise((resolve, reject) => {
                             cloudinary.uploader.upload_stream({
-                                folder: `cloudinary/users/${req.session.userId}/reviews/${establishmentId}`,
+                                folder: `cloudinary/users/${reviewUser.email}/reviews/${establishmentId}`,
                                 resource_type: 'auto'
                             }, (error, result) => {
                                 if (error) reject(error);
