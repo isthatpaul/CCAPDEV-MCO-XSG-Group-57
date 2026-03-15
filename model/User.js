@@ -9,7 +9,14 @@ const userSchema = new mongoose.Schema({
     phone:    { type: String, default: '' },
     image:    { type: String, default: 'sample_profile.jpg' },
     isAdmin:  { type: Boolean, default: false },
-    establishmentsManaged: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Establishment' }]
+    adminType: { 
+        type: String, 
+        enum: ['user', 'establishment_admin', 'database_admin'], 
+        default: 'user' 
+    },
+    linkedEstablishment: { type: mongoose.Schema.Types.ObjectId, ref: 'Establishment', default: null },
+    establishmentsManaged: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Establishment' }],
+    favorites: { type: [mongoose.Schema.Types.ObjectId], ref: 'Establishment', default: [] }
 });
 
 module.exports = mongoose.model('User', userSchema);

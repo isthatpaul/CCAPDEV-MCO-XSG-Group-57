@@ -1,0 +1,73 @@
+<main class="main">
+    <div class="container">
+        <div style="margin-bottom: 24px;">
+            <h1>Admin Dashboard</h1>
+            <p style="color: #666; margin-top: 8px;">Welcome, {{userName}}! Here's an overview of your establishments.</p>
+        </div>
+
+        {{#each stats}}
+        <div class="card" style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                <div>
+                    <h2 style="margin: 0;"><a href="/establishments/{{ this.establishment._id }}" style="text-decoration: none; color: #333;">{{ this.establishment.name }}</a></h2>
+                    <p style="color: #666; margin: 4px 0 0 0;">{{ this.establishment.location }} • {{ this.establishment.hours }}</p>
+                </div>
+                <a href="/establishments/{{ this.establishment._id }}/edit" style="padding: 8px 16px; background: #4CAF50; color: white; border-radius: 4px; text-decoration: none; font-weight: 600;">Edit</a>
+            </div>
+
+            <!-- Stats Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                <div style="text-align: center;">
+                    <div style="font-size: 28px; font-weight: bold; color: #FF6B6B;">{{ this.totalReviews }}</div>
+                    <div style="color: #666; font-size: 14px;">Total Reviews</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 28px; font-weight: bold; color: #4CAF50;">{{#if (eq this.avgRating "N/A")}}—{{else}}{{ this.avgRating }}⭐{{/if}}</div>
+                    <div style="color: #666; font-size: 14px;">Average Rating</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 28px; font-weight: bold; color: #2196F3;">{{ this.totalHelpful }}</div>
+                    <div style="color: #666; font-size: 14px;">Helpful Votes</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 28px; font-weight: bold; color: #FF9800;">{{ this.recentReviews }}</div>
+                    <div style="color: #666; font-size: 14px;">This Week</div>
+                </div>
+            </div>
+
+            <!-- Recent Reviews -->
+            <div style="margin-top: 16px;">
+                <h3 style="margin-top: 0; margin-bottom: 12px;">Recent Reviews</h3>
+                {{#if this.reviews.length}}
+                <div style="max-height: 400px; overflow-y: auto;">
+                    {{#each this.reviews}}
+                    <div style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <strong>{{ this.title }}</strong>
+                                <div style="color: #666; font-size: 13px; margin-top: 2px;">
+                                    {{ stars this.rating }} • {{ formatDate this.createdAt }}
+                                </div>
+                            </div>
+                            <div style="color: #999; font-size: 12px;">
+                                👍 {{ this.helpfulVotes.length }}
+                            </div>
+                        </div>
+                        <p style="margin: 6px 0 0 0; color: #555;">{{ this.comment }}</p>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else}}
+                <p style="color: #999; font-size: 14px;">No reviews yet.</p>
+                {{/if}}
+            </div>
+        </div>
+        {{/each}}
+
+        {{#unless stats.length}}
+        <div class="card" style="text-align: center; padding: 40px;">
+            <p style="color: #999; font-size: 16px;">You don't manage any establishments yet.</p>
+        </div>
+        {{/unless}}
+    </div>
+</main>

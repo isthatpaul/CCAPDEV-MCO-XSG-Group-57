@@ -19,6 +19,9 @@
         <li><a href="/establishments"><img src="/icons/utensils.png" class="menu-icon" alt=""> Establishments</a></li>
         {{#if isLoggedIn}}
             <li><a href="/users/{{ currentUserId }}"><img src="/icons/user.png" class="menu-icon" alt=""> Profile</a></li>
+            {{#if isAdmin}}
+            <li><a href="/admin/dashboard"><img src="/icons/utensils.png" class="menu-icon" alt=""> Admin Dashboard</a></li>
+            {{/if}}
             <li><a href="/users/logout" id="logoutBtn"><img src="/icons/login.png" class="menu-icon" alt=""> Logout</a></li>
         {{else}}
             <li><a href="/users/register"><img src="/icons/sign up.png" class="menu-icon" alt=""> Sign Up</a></li>

@@ -7,6 +7,13 @@
     <div class="container">
         <div id="details">
             <h2 class="establishment-title">{{ establishment.name }}</h2>
+            
+            <!-- Business Status Badge -->
+            {{#if businessStatus}}
+            <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: {{#eq businessStatus.status "open"}}#4CAF50{{else}}{{#eq businessStatus.status "closing"}}#FF9800{{else}}#f44336{{/eq}}{{/eq}}; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">
+                {{#eq businessStatus.status "open"}}🟢 {{ businessStatus.message }}{{else}}{{#eq businessStatus.status "closing"}}⏰ {{ businessStatus.message }}{{else}}🔴 {{ businessStatus.message }}{{/eq}}{{/eq}}
+            </div>
+            {{/if}}
             <div class="main-content">
                 <div class="main-left card">
                     <p><strong>Overall Rating:</strong> {{ stars establishment.rating }} {{ establishment.rating }}</p>
@@ -60,6 +67,11 @@
         {{#if isLoggedIn}}
         <div class="detail-actions">
             <button id="writeReviewButton">Write a Review</button>
+            <form action="/establishments/{{ establishment._id }}/favorites/toggle" method="POST" style="display:inline;">
+                <button type="submit" class="btn-favorite {{#if isFavorited}}favorited{{/if}}" style="background: {{#if isFavorited}}#FF6B6B{{else}}#f0f0f0{{/if}}; color: {{#if isFavorited}}white{{else}}#333{{/if}};">
+                    {{#if isFavorited}}★ Favorited{{else}}☆ Add to Favorites{{/if}}
+                </button>
+            </form>
         </div>
         {{/if}}
     </div>
@@ -111,10 +123,41 @@
                 <span>{{ reviews.length }} review{{#unless (eq reviews.length 1)}}s{{/unless}}</span>
             </div>
 
+            <!-- Review Filters & Sorting -->
+            <div style="margin-bottom: 16px; padding: 12px; background: #f9f9f9; border-radius: 4px;">
+                <form method="GET" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <div>
+                        <label for="filter-rating" style="font-size: 14px;">Filter by Rating:</label>
+                        <select id="filter-rating" name="rating" onchange="this.form.submit()" style="padding: 6px; border-radius: 4px; border: 1px solid #ddd;">
+                            <option value="">All Ratings</option>
+                            <option value="5" {{#if (eq ratingFilter 5)}}selected{{/if}}>⭐⭐⭐⭐⭐ 5 Star</option>
+                            <option value="4" {{#if (eq ratingFilter 4)}}selected{{/if}}>⭐⭐⭐⭐ 4 Star</option>
+                            <option value="3" {{#if (eq ratingFilter 3)}}selected{{/if}}>⭐⭐⭐ 3 Star</option>
+                            <option value="2" {{#if (eq ratingFilter 2)}}selected{{/if}}>⭐⭐ 2 Star</option>
+                            <option value="1" {{#if (eq ratingFilter 1)}}selected{{/if}}>⭐ 1 Star</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="sort-by" style="font-size: 14px;">Sort by:</label>
+                        <select id="sort-by" name="sort" onchange="this.form.submit()" style="padding: 6px; border-radius: 4px; border: 1px solid #ddd;">
+                            <option value="newest" {{#if (eq sortBy "newest")}}selected{{/if}}>Newest</option>
+                            <option value="highest-rated" {{#if (eq sortBy "highest-rated")}}selected{{/if}}>Highest Rated</option>
+                            <option value="lowest-rated" {{#if (eq sortBy "lowest-rated")}}selected{{/if}}>Lowest Rated</option>
+                            <option value="most-helpful" {{#if (eq sortBy "most-helpful")}}selected{{/if}}>Most Helpful</option>
+                        </select>
+                    </div>
+                    {{#if ratingFilter}}
+                    <div>
+                        <a href="/establishments/{{ ../establishment._id }}" style="padding: 6px 12px; background: #f0f0f0; border-radius: 4px; text-decoration: none; font-size: 14px;">Clear Filters</a>
+                    </div>
+                    {{/if}}
+                </form>
+            </div>
+
             {{#each reviews}}
             <div class="review-list-item">
                 <div class="review-list-item-header">
-                    <div class="review-list-avatar">{{ initials this.userId.name }}</div>
+                    <img src="{{ imageUrl this.userId.image }}" alt="{{ this.userId.name }}" class="review-list-avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                     <div>
                         <h4><a href="/users/{{ this.userId._id }}"><strong>{{ this.userId.name }}</strong></a></h4>
                         <span>{{ formatDate this.createdAt }}</span>
@@ -124,13 +167,26 @@
                 <h4>{{ this.title }}</h4>
                 <p>{{ this.comment }}</p>
 
-                {{#if (eq ../currentUserId this.userId._id)}}
-                <div class="review-actions">
+                <div class="review-actions" style="display: flex; gap: 12px; margin-top: 8px;">
+                    {{#if (eq ../currentUserId this.userId._id)}}
                     <form action="/reviews/{{ this._id }}/delete" method="POST" style="display:inline;">
-                        <button type="submit" class="btn-vote">Delete</button>
+                        <button type="submit" class="btn-vote" style="background: #ff6b6b; color: white;">Delete</button>
                     </form>
+                    {{/if}}
+                    
+                    {{#if ../isLoggedIn}}
+                    <form action="/reviews/{{ this._id }}/helpful" method="POST" style="display:inline;">
+                        <button type="submit" class="btn-vote" style="background: #4CAF50; color: white;">
+                            👍 Helpful ({{ this.helpfulVotes.length }})
+                        </button>
+                    </form>
+                    <form action="/reviews/{{ this._id }}/unhelpful" method="POST" style="display:inline;">
+                        <button type="submit" class="btn-vote" style="background: #f44336; color: white;">
+                            👎 Unhelpful ({{ this.unhelpfulVotes.length }})
+                        </button>
+                    </form>
+                    {{/if}}
                 </div>
-                {{/if}}
             </div>
             {{else}}
             <p style="color: #999; padding: 16px;">No reviews yet. Be the first to review!</p>
@@ -138,6 +194,32 @@
         </div>
     </div>
 </section>
+
+<!-- Recommendations Section -->
+{{#if recommendations.length}}
+<section style="background: #f9f9f9; padding: 40px 0; border-top: 1px solid #eee; margin-top: 40px;">
+    <div class="container">
+        <h2 style="margin-top: 0; margin-bottom: 24px;">People Also Liked 👍</h2>
+        <div class="card-grid">
+            {{#each recommendations}}
+            <a href="/establishments/{{ this._id }}" class="est-card">
+                <div class="est-card-img">
+                    <img src="/images/{{ this.image }}" alt="{{ this.name }}" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div class="est-card-body">
+                    <h3>{{ this.name }}</h3>
+                    <div class="est-card-rating">
+                        <span class="stars">{{ stars this.rating }}</span>
+                        <span class="rating-num">{{ this.rating }}</span>
+                    </div>
+                    <p>{{ this.description }}</p>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+</section>
+{{/if}}
 
 <script>
     // Edit establishment toggle

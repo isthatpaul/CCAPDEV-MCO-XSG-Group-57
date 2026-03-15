@@ -45,6 +45,56 @@ const reviewController = {
         } catch (err) {
             res.status(500).send('Delete failed');
         }
+    },
+
+    async toggleHelpful(req, res) {
+        try {
+            const review = await Review.findById(req.params.id);
+            if (!review) return res.status(404).send('Review not found');
+
+            const userId = req.session.userId;
+            const isHelpful = review.helpfulVotes.includes(userId);
+            const isUnhelpful = review.unhelpfulVotes.includes(userId);
+
+            if (isHelpful) {
+                review.helpfulVotes = review.helpfulVotes.filter(id => id.toString() !== userId);
+            } else {
+                review.helpfulVotes.push(userId);
+                // Remove from unhelpful if it was there
+                review.unhelpfulVotes = review.unhelpfulVotes.filter(id => id.toString() !== userId);
+            }
+
+            await review.save();
+            res.redirect('/establishments/' + review.establishmentId);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Vote failed');
+        }
+    },
+
+    async toggleUnhelpful(req, res) {
+        try {
+            const review = await Review.findById(req.params.id);
+            if (!review) return res.status(404).send('Review not found');
+
+            const userId = req.session.userId;
+            const isHelpful = review.helpfulVotes.includes(userId);
+            const isUnhelpful = review.unhelpfulVotes.includes(userId);
+
+            if (isUnhelpful) {
+                review.unhelpfulVotes = review.unhelpfulVotes.filter(id => id.toString() !== userId);
+            } else {
+                review.unhelpfulVotes.push(userId);
+                // Remove from helpful if it was there
+                review.helpfulVotes = review.helpfulVotes.filter(id => id.toString() !== userId);
+            }
+
+            await review.save();
+            res.redirect('/establishments/' + review.establishmentId);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Vote failed');
+        }
     }
 };
 

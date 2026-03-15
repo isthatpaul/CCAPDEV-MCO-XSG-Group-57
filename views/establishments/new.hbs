@@ -1,0 +1,295 @@
+<section class="create-establishment-section">
+    <div class="container">
+        <div class="create-establishment-wrapper">
+            <div class="create-header">
+                <h1>Add a New Establishment</h1>
+                <p>Help others discover amazing places to eat around DLSU</p>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="progress-step active" id="step1Indicator">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Basic Info</span>
+                    </div>
+                    <div class="progress-step" id="step2Indicator">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Location & Contact</span>
+                    </div>
+                    <div class="progress-step" id="step3Indicator">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Hours</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form id="createEstablishmentForm" action="/establishments" method="POST" enctype="multipart/form-data" class="multi-step-form">
+                
+                <!-- STEP 1: BASIC INFORMATION -->
+                <div class="form-step active" id="step1">
+                    <div class="step-title">
+                        <h2>📍 Basic Information</h2>
+                        <p>Tell us about the establishment</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Establishment Name *</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            placeholder="e.g., The Daily Grind Café"
+                            required
+                        >
+                        <span class="form-hint">The name of the restaurant or café</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            placeholder="Describe this establishment... What makes it special? What do they serve?"
+                            rows="5"
+                            maxlength="500"
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="charCount">0</span> / 500
+                        </div>
+                        <span class="form-hint">Brief description to help others know what to expect</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Establishment Image *</label>
+                        <input 
+                            type="file" 
+                            id="image" 
+                            name="image" 
+                            accept="image/*"
+                            required
+                        >
+                        <div class="image-preview" id="imagePreview" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview">
+                            <button type="button" class="btn-small" onclick="clearImagePreview()">Remove</button>
+                        </div>
+                        <span class="form-hint">Upload a photo of the establishment (JPG, PNG, GIF - Max 5MB)</span>
+                    </div>
+
+                    <div class="step-controls">
+                        <button type="button" class="btn-secondary" disabled>← Back</button>
+                        <button type="button" class="btn" onclick="goToStep(2)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: LOCATION & CONTACT -->
+                <div class="form-step" id="step2">
+                    <div class="step-title">
+                        <h2>📍 Location & Contact</h2>
+                        <p>Help customers find you</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location *</label>
+                        <input 
+                            type="text" 
+                            id="location" 
+                            name="location" 
+                            placeholder="e.g., 2nd Floor, College of Computer Studies Building"
+                            required
+                        >
+                        <span class="form-hint">Specific location or building at DLSU</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact">Contact Number</label>
+                        <input 
+                            type="tel" 
+                            id="contact" 
+                            name="contact" 
+                            placeholder="e.g., (02) 5239-8200 ext. 101"
+                        >
+                        <span class="form-hint">Phone number for reservations or inquiries</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="link">Facebook Page Link</label>
+                        <input 
+                            type="url" 
+                            id="link" 
+                            name="link" 
+                            placeholder="https://www.facebook.com/yourpage"
+                        >
+                        <span class="form-hint">Link to Facebook page for more information</span>
+                    </div>
+
+                    <div class="step-controls">
+                        <button type="button" class="btn-secondary" onclick="goToStep(1)">← Back</button>
+                        <button type="button" class="btn" onclick="goToStep(3)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: OPERATING HOURS -->
+                <div class="form-step" id="step3">
+                    <div class="step-title">
+                        <h2>🕐 Operating Hours</h2>
+                        <p>When is it open?</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hours">Operating Hours *</label>
+                        <input 
+                            type="text" 
+                            id="hours" 
+                            name="hours" 
+                            placeholder="e.g., 7:00 AM - 8:00 PM (Monday - Friday)"
+                            required
+                        >
+                        <span class="form-hint">Format: Start Time - End Time (Days of Operation)</span>
+                    </div>
+
+                    <div class="hours-examples">
+                        <h4>Example Formats:</h4>
+                        <ul>
+                            <li>7:00 AM - 10:00 PM (Daily)</li>
+                            <li>10:00 AM - 6:00 PM (Monday - Friday)</li>
+                            <li>Closed on Sundays</li>
+                        </ul>
+                    </div>
+
+                    <div class="review-summary">
+                        <h3>✓ Summary</h3>
+                        <div class="summary-item">
+                            <strong>Name:</strong> <span id="summaryName"></span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>Location:</strong> <span id="summaryLocation"></span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>Hours:</strong> <span id="summaryHours"></span>
+                        </div>
+                    </div>
+
+                    <div class="step-controls">
+                        <button type="button" class="btn-secondary" onclick="goToStep(2)">← Back</button>
+                        <button type="submit" class="btn btn-success">✓ Create Establishment</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    function goToStep(step) {
+        // Validate current step before moving forward
+        if (step > currentStep && !validateStep(currentStep)) {
+            return;
+        }
+
+        // Hide current step
+        document.getElementById(`step${currentStep}`).classList.remove('active');
+        document.getElementById(`step${currentStep}Indicator`).classList.remove('active');
+
+        // Show next step
+        currentStep = step;
+        document.getElementById(`step${currentStep}`).classList.add('active');
+        document.getElementById(`step${currentStep}Indicator`).classList.add('active');
+
+        // Update progress bar
+        updateProgressBar();
+
+        // Update back button state
+        updateBackButton();
+
+        // Update summary on step 3
+        if (currentStep === 3) {
+            updateSummary();
+        }
+
+        // Scroll to top
+        document.querySelector('.create-establishment-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateProgressBar() {
+        const progress = (currentStep / totalSteps) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+    }
+
+    function updateBackButton() {
+        const backButtons = document.querySelectorAll('.step-controls .btn-secondary');
+        backButtons.forEach(btn => {
+            btn.disabled = currentStep === 1;
+        });
+    }
+
+    function validateStep(step) {
+        if (step === 1) {
+            const name = document.getElementById('name').value.trim();
+            if (!name) {
+                alert('Please enter the establishment name');
+                return false;
+            }
+        } else if (step === 2) {
+            const location = document.getElementById('location').value.trim();
+            if (!location) {
+                alert('Please enter the location');
+                return false;
+            }
+        } else if (step === 3) {
+            const hours = document.getElementById('hours').value.trim();
+            if (!hours) {
+                alert('Please enter the operating hours');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function updateSummary() {
+        document.getElementById('summaryName').textContent = document.getElementById('name').value || 'Not entered';
+        document.getElementById('summaryLocation').textContent = document.getElementById('location').value || 'Not entered';
+        document.getElementById('summaryHours').textContent = document.getElementById('hours').value || 'Not entered';
+    }
+
+    // Image preview for file upload
+    document.getElementById('image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('previewImg').src = event.target.result;
+                document.getElementById('imagePreview').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function clearImagePreview() {
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('image').value = '';
+    }
+
+    // Character counter for description
+    document.getElementById('description').addEventListener('input', function(e) {
+        document.getElementById('charCount').textContent = e.target.value.length;
+    });
+
+    // Initialize
+    updateProgressBar();
+    updateBackButton();
+
+    // Form submission
+    document.getElementById('createEstablishmentForm').addEventListener('submit', function(e) {
+        if (!validateStep(3)) {
+            e.preventDefault();
+        }
+    });
+</script>

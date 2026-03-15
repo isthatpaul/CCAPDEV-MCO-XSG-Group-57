@@ -1,12 +1,50 @@
 <!-- Search Section -->
 <section class="search-section">
     <div class="container">
-        <h1>Find Establishments</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px;">
+            <h1 style="margin: 0;">Find Establishments</h1>
+            <a href="/establishments/new" class="btn" style="display: inline-block; padding: 12px 20px; text-decoration: none;">+ Add New</a>
+        </div>
         <form id="searchForm" class="search-form" action="/establishments" method="get">
             <input type="text" id="searchInput" name="q" placeholder="Search for restaurants, cuisines, or locations..." value="{{ query }}">
             <button type="submit">Search</button>
         </form>
         <a href="/establishments"><button type="button" id="resetSearchBtn" class="reset-btn">Show All</button></a>
+    </div>
+</section>
+
+<!-- Filters Section -->
+<section style="background: #f9f9f9; padding: 16px 0; border-bottom: 1px solid #eee;">
+    <div class="container">
+        <form method="GET" style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+            <input type="hidden" name="q" value="{{ query }}">
+            
+            <div>
+                <label for="rating-filter" style="font-weight: 600; margin-right: 8px;">Minimum Rating:</label>
+                <select id="rating-filter" name="rating" onchange="this.form.submit()" style="padding: 8px 12px; border-radius: 4px; border: 1px solid #ddd;">
+                    <option value="">All Ratings</option>
+                    <option value="4.5" {{#if (eq minRating 4.5)}}selected{{/if}}>4.5+ ⭐</option>
+                    <option value="4" {{#if (eq minRating 4)}}selected{{/if}}>4.0+ ⭐</option>
+                    <option value="3.5" {{#if (eq minRating 3.5)}}selected{{/if}}>3.5+ ⭐</option>
+                    <option value="3" {{#if (eq minRating 3)}}selected{{/if}}>3.0+ ⭐</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="sort-filter" style="font-weight: 600; margin-right: 8px;">Sort by:</label>
+                <select id="sort-filter" name="sort" onchange="this.form.submit()" style="padding: 8px 12px; border-radius: 4px; border: 1px solid #ddd;">
+                    <option value="newest" {{#if (eq sortBy "newest")}}selected{{/if}}>Newest</option>
+                    <option value="rating-high" {{#if (eq sortBy "rating-high")}}selected{{/if}}>Highest Rating</option>
+                    <option value="rating-low" {{#if (eq sortBy "rating-low")}}selected{{/if}}>Lowest Rating</option>
+                </select>
+            </div>
+
+            {{#if minRating}}
+            <div>
+                <a href="/establishments?q={{ query }}" style="padding: 8px 12px; background: #ff6b6b; color: white; border-radius: 4px; text-decoration: none; font-size: 14px;">Clear Filters</a>
+            </div>
+            {{/if}}
+        </form>
     </div>
 </section>
 
@@ -26,6 +64,11 @@
                         <span class="est-list-rating">{{ stars this.rating }}</span>
                         <span>{{ this.location }}</span>
                         <span>{{ this.hours }}</span>
+                        {{#if this.businessStatus}}
+                        <span style="padding: 2px 8px; background: {{#eq this.businessStatus.status "open"}}#4CAF50{{else}}{{#eq this.businessStatus.status "closing"}}#FF9800{{else}}#f44336{{/eq}}{{/eq}}; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">
+                            {{#eq this.businessStatus.status "open"}}🟢 Open{{else}}{{#eq this.businessStatus.status "closing"}}⏰ Closing{{else}}🔴 Closed{{/eq}}{{/eq}}
+                        </span>
+                        {{/if}}
                     </div>
                     <p>{{ this.description }}</p>
                 </div>

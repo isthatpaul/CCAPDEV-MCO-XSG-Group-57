@@ -8,6 +8,7 @@ const establishmentSchema = new mongoose.Schema({
     link:        { type: String, default: '' },
     description: { type: String, default: '' },
     image:       { type: String, default: '' },
+    admin:       { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     rating:      { type: Number, default: 0 }
 });
 

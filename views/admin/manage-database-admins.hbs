@@ -1,0 +1,360 @@
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-wrapper">
+            <div class="admin-header">
+                <h1>🔐 Manage Database Admins</h1>
+                <p>Create and manage database administrator accounts</p>
+                <a href="/admin/dashboard" class="btn-secondary">← Back to Dashboard</a>
+            </div>
+
+            <!-- Create New Admin Form -->
+            <div class="admin-card">
+                <h2>➕ Add New Database Admin</h2>
+                <form id="createAdminForm" class="admin-form">
+                    <div class="form-group">
+                        <label for="adminName">Full Name *</label>
+                        <input 
+                            type="text" 
+                            id="adminName" 
+                            name="name" 
+                            placeholder="e.g., John Doe"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminEmail">Email Address *</label>
+                        <input 
+                            type="email" 
+                            id="adminEmail" 
+                            name="email" 
+                            placeholder="admin@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminPassword">Password *</label>
+                        <input 
+                            type="password" 
+                            id="adminPassword" 
+                            name="password" 
+                            placeholder="Minimum 4 characters"
+                            minlength="4"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Create Database Admin</button>
+                    <span id="formMessage" style="display: none; margin-left: 12px; font-weight: 600;"></span>
+                </form>
+            </div>
+
+            <!-- Current Database Admins -->
+            <div class="admin-card">
+                <h2>👥 Current Database Admins</h2>
+                
+                {{#if admins}}
+                    <div class="admins-grid">
+                        {{#each admins}}
+                            <div class="admin-item">
+                                <div class="admin-info">
+                                    <h3>{{this.name}}</h3>
+                                    <p class="admin-email">{{this.email}}</p>
+                                    <p class="admin-date">
+                                        Joined: {{formatDate this.joinDate}}
+                                    </p>
+                                </div>
+                                <div class="admin-actions">
+                                    {{#unless (eq this._id ../currentUserId)}}
+                                        <button 
+                                            class="btn-danger btn-small" 
+                                            onclick="deleteAdmin('{{this._id}}', '{{this.name}}')"
+                                        >
+                                            🗑️ Delete
+                                        </button>
+                                    {{else}}
+                                        <span class="badge-primary">Your Account</span>
+                                    {{/unless}}
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                {{else}}
+                    <p class="empty-message">No database admins found</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .admin-section {
+        padding: 48px 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+
+    .admin-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .admin-header {
+        margin-bottom: 32px;
+    }
+
+    .admin-header h1 {
+        font-size: 36px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: var(--green-dark);
+    }
+
+    .admin-header p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 16px;
+    }
+
+    .admin-card {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow-md);
+    }
+
+    .admin-card h2 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: var(--green-dark);
+    }
+
+    .admin-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        align-items: end;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: var(--transition);
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+
+    .admin-form button {
+        grid-column: 1 / 2;
+    }
+
+    .admins-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+    }
+
+    .admin-item {
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: var(--transition);
+    }
+
+    .admin-item:hover {
+        border-color: var(--green);
+        box-shadow: var(--shadow-md);
+    }
+
+    .admin-info {
+        margin-bottom: 16px;
+    }
+
+    .admin-info h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--green-dark);
+        margin-bottom: 4px;
+    }
+
+    .admin-email {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+        word-break: break-all;
+    }
+
+    .admin-date {
+        font-size: 12px;
+        color: #999;
+    }
+
+    .admin-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-small {
+        padding: 6px 12px;
+        font-size: 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .btn-danger {
+        background: #ff6b6b;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #ff5252;
+        transform: translateY(-2px);
+    }
+
+    .badge-primary {
+        background: var(--green);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .empty-message {
+        text-align: center;
+        color: #999;
+        padding: 32px 16px;
+        font-size: 14px;
+    }
+
+    #formMessage {
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 6px;
+    }
+
+    #formMessage.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    #formMessage.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    @media (max-width: 768px) {
+        .admin-form {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-form button {
+            grid-column: 1;
+        }
+
+        .admins-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    const createAdminForm = document.getElementById('createAdminForm');
+    const formMessage = document.getElementById('formMessage');
+
+    createAdminForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            name: document.getElementById('adminName').value,
+            email: document.getElementById('adminEmail').value,
+            password: document.getElementById('adminPassword').value
+        };
+
+        try {
+            const response = await fetch('/admin/create-database-admin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                formMessage.textContent = '✓ Admin created successfully! Refreshing...';
+                formMessage.className = 'success';
+                formMessage.style.display = 'inline-block';
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                formMessage.textContent = '✗ ' + data.message;
+                formMessage.className = 'error';
+                formMessage.style.display = 'inline-block';
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            formMessage.textContent = '✗ Failed to create admin. Try again.';
+            formMessage.className = 'error';
+            formMessage.style.display = 'inline-block';
+        }
+    });
+
+    async function deleteAdmin(adminId, adminName) {
+        if (!confirm(`Are you sure you want to delete ${adminName}? This cannot be undone.`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/admin/delete-database-admin/${adminId}`, {
+                method: 'DELETE'
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Admin deleted successfully. Refreshing...');
+                window.location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Failed to delete admin');
+        }
+    }
+</script>

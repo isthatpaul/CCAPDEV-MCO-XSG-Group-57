@@ -82,6 +82,7 @@ const userController = {
             req.session.userId = user._id.toString();
             req.session.userName = user.name;
             req.session.isAdmin = user.isAdmin;
+            req.session.adminType = user.adminType;
 
             if (user.isAdmin && user.establishmentsManaged && user.establishmentsManaged.length > 0) {
                 res.redirect('/establishments/' + user.establishmentsManaged[0]);

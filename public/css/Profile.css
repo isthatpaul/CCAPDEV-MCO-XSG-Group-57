@@ -1,12 +1,12 @@
 /* Profile layout: info sidebar on left, reviews on right */
 .main-content {
     display: flex;
-    gap: 24px;
+    gap: 28px;
     align-items: flex-start;
 }
 
 .main-left {
-    flex: 0 0 300px;
+    flex: 0 0 320px;
 }
 
 .main-right {
@@ -16,8 +16,16 @@
 
 /* Profile info card */
 #profile-info {
-    padding: 20px;
-    border-radius: 8px;
+    padding: 28px;
+    border-radius: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+#profile-info:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--green-light);
 }
 
 /* Profile photo section */
@@ -26,12 +34,18 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--divider);
 }
 
 #profile_photo h3 {
-    margin: 0 0 12px;
-    font-size: 15px;
+    margin: 0 0 16px;
+    font-size: 13px;
     color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
 }
 
 /* Profile image */
@@ -40,56 +54,71 @@
     height: 180px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--green-light, #e8f5ee);
+    border: 4px solid var(--green-light);
+    margin-bottom: 12px;
+    transition: var(--transition);
+}
+#profileImg:hover {
+    transform: scale(1.05);
+    border-color: var(--green);
 }
 
 /* Section headings inside profile info */
 #profile-info h3 {
-    margin: 0 0 6px;
-    font-size: 14px;
+    margin: 16px 0 8px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--green);
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
+}
+
+#profile-info h3:first-of-type {
+    margin-top: 0;
 }
 
 #profile-info p {
-    margin: 0 0 4px;
+    margin: 0 0 6px;
     font-size: 14px;
     line-height: 1.5;
     color: #333;
     word-break: break-word;
+    font-weight: 500;
 }
 
 /* Edit button*/
 #edit-button {
     display: block;
     width: 100%;
-    margin-top: 16px;
-    padding: 10px 12px;
+    margin-top: 20px;
+    padding: 12px 16px;
     text-align: center;
     font-size: 14px;
-    font-weight: 600;
-    border-radius: 6px;
+    font-weight: 700;
+    border-radius: 8px;
     background: var(--green);
     color: #fff;
     border: none;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
 }
 
 #edit-button:hover {
     background: var(--green-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 /* Reviews heading */
 #reviewsHeading {
-    margin: 0 0 12px;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--green);
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--green);
+    margin: 0 0 20px;
+    font-size: 24px;
+    font-weight: 800;
+    color: #222;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--divider);
+    letter-spacing: -0.3px;
 }
 
 /* Reviews container */
@@ -97,17 +126,24 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 /* Individual review cards */
 #user-reviews .review.card {
-    padding: 16px;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #ffffff 0%, #f8faf9 100%);
-    border: 1px solid #e0e3e2;
-    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    border: 1px solid var(--border);
+    transition: var(--transition);
     margin: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+#user-reviews .review.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-color: var(--green-light);
 }
 
 /* Green elements: Title, Establishment, and Rating */
@@ -121,23 +157,19 @@
 /* Black element: The specific review text */
 #user-reviews .review.card p:nth-of-type(3) {
     color: #000 !important;
-}
-
-#user-reviews .review.card:hover {
-    box-shadow: 0 4px 12px rgba(0, 112, 60, 0.1);
-    transform: translateY(-2px);
-    border-color: var(--green);
+    font-weight: 500;
 }
 
 /* Review title link and spacing */
 #user-reviews .review h4 {
     margin: 0 0 8px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 #user-reviews .review h4 a {
     text-decoration: none;
+    transition: color 0.2s;
 }
 
 #user-reviews .review h4 a:hover {
@@ -147,7 +179,7 @@
 /* Review text general spacing */
 #user-reviews .review p {
     margin: 4px 0;
-    line-height: 1.5;
+    line-height: 1.6;
     font-size: 14px;
     font-weight: 500;
 }
@@ -155,19 +187,25 @@
 /* Edit card form*/
 #edit-card {
     margin-bottom: 24px;
-    border-radius: 8px;
+    border-radius: 12px;
+    padding: 24px;
+    background: linear-gradient(135deg, #fff 0%, #f8faf9 100%);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
 }
 
 #edit-card h3 {
     margin: 0 0 16px;
     color: var(--green);
     font-size: 18px;
+    font-weight: 700;
 }
 
 /* Responsive */
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .main-content {
         flex-direction: column;
+        gap: 24px;
     }
 
     .main-left {

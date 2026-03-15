@@ -72,6 +72,7 @@ app.use((req, res, next) => {
     res.locals.currentUserId = req.session.userId || null;
     res.locals.currentUserName = req.session.userName || null;
     res.locals.isAdmin = req.session.isAdmin || false;
+    res.locals.adminType = req.session.adminType || 'user';
     res.locals.isLoggedIn = !!req.session.userId;
     next();
 });
