@@ -237,6 +237,11 @@
                 alert('Please enter the establishment name');
                 return false;
             }
+            const imageInput = document.getElementById('image');
+            if (!imageInput.files || imageInput.files.length === 0) {
+                alert('Please upload an establishment image');
+                return false;
+            }
         } else if (step === 2) {
             const location = document.getElementById('location').value.trim();
             if (!location) {
@@ -286,10 +291,26 @@
     updateProgressBar();
     updateBackButton();
 
-    // Form submission
+    // Form submission - validate all required fields
     document.getElementById('createEstablishmentForm').addEventListener('submit', function(e) {
-        if (!validateStep(3)) {
+        console.log('Form submission started');
+        
+        // Validate all steps before submitting
+        const step1Valid = validateStep(1);
+        console.log('Step 1 valid:', step1Valid);
+        
+        const step2Valid = validateStep(2);
+        console.log('Step 2 valid:', step2Valid);
+        
+        const step3Valid = validateStep(3);
+        console.log('Step 3 valid:', step3Valid);
+        
+        if (!step1Valid || !step2Valid || !step3Valid) {
+            console.log('Validation failed, preventing submission');
             e.preventDefault();
+            return false;
         }
+        
+        console.log('All validation passed, allowing form submission');
     });
 </script>

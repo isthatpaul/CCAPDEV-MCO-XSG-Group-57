@@ -3,7 +3,13 @@
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px;">
             <h1 style="margin: 0;">Find Establishments</h1>
+            {{#if (eq adminType "establishment_admin")}}
             <a href="/establishments/new" class="btn" style="display: inline-block; padding: 12px 20px; text-decoration: none;">+ Add New</a>
+            {{else}}
+                {{#if (eq adminType "database_admin")}}
+                <a href="/establishments/new" class="btn" style="display: inline-block; padding: 12px 20px; text-decoration: none;">+ Add New</a>
+                {{/if}}
+            {{/if}}
         </div>
         <form id="searchForm" class="search-form" action="/establishments" method="get">
             <input type="text" id="searchInput" name="q" placeholder="Search for restaurants, cuisines, or locations..." value="{{ query }}">

@@ -170,15 +170,34 @@ const userController = {
 
     async deleteProfile(req, res) {
         try {
+            // Security check: ensure user can only delete their own account
+            if (req.session.userId !== req.params.id) {
+                return res.status(403).send('You can only delete your own account');
+            }
+
             const user = await User.findById(req.params.id);
             if (!user) 
                 return res.status(404).send('User not found');
 
-            // Delete all user's files from Cloudinary folder when account is deleted
+            // Delete all user's files and folders from Cloudinary when account is deleted
             try {
                 // Delete all resources in the user's cloudinary folder
                 await cloudinary.api.delete_resources_by_prefix(`cloudinary/users/${user.email}`);
                 console.log('✓ Deleted all Cloudinary resources for user:', user.email);
+                
+                // Delete the folder and subfolders
+                try {
+                    // Delete subfolder structures first (profile_pictures, establishment_images, reviews)
+                    await cloudinary.api.delete_folder(`cloudinary/users/${user.email}/profile_pictures`).catch(() => {});
+                    await cloudinary.api.delete_folder(`cloudinary/users/${user.email}/establishment_images`).catch(() => {});
+                    await cloudinary.api.delete_folder(`cloudinary/users/${user.email}/reviews`).catch(() => {});
+                    // Delete the main user folder
+                    await cloudinary.api.delete_folder(`cloudinary/users/${user.email}`);
+                    console.log('✓ Deleted Cloudinary folder structure for user:', user.email);
+                } catch (folderErr) {
+                    console.warn('Warning: Could not delete empty folders in Cloudinary:', folderErr.message);
+                    // Continue anyway - files are already deleted
+                }
             } catch (cloudinaryErr) {
                 console.error('Error deleting Cloudinary resources:', cloudinaryErr);
                 // Continue with user deletion even if folder deletion fails
@@ -190,10 +209,8 @@ const userController = {
             // Delete the user
             await User.findByIdAndDelete(req.params.id);
 
-            // Destroy session if it's their own profile
-            if (req.session.userId === req.params.id) {
-                req.session.destroy();
-            }
+            // Destroy session
+            req.session.destroy();
 
             res.redirect('/');
         } catch (err) {
