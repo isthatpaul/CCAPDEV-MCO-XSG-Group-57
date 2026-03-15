@@ -219,19 +219,20 @@ const establishmentController = {
             let imageUrl = '';
             if (req.file) {
                 try {
-                    const result = await cloudinary.uploader.upload(req.file.path, {
-                        folder: 'taftbites/establishment_images',
-                        resource_type: 'auto'
+                    // Upload using buffer from memory storage
+                    const result = await new Promise((resolve, reject) => {
+                        cloudinary.uploader.upload_stream({
+                            folder: `cloudinary/users/${userId}/establishment_images`,
+                            resource_type: 'auto'
+                        }, (error, uploadResult) => {
+                            if (error) reject(error);
+                            else resolve(uploadResult);
+                        }).end(req.file.buffer);
                     });
-                    imageUrl = result.secure_url;
 
-                    // Delete temporary file
-                    fs.unlinkSync(req.file.path);
+                    imageUrl = result.secure_url;
                 } catch (uploadErr) {
                     console.error('Cloudinary upload error:', uploadErr);
-                    if (req.file && req.file.path) {
-                        try { fs.unlinkSync(req.file.path); } catch (e) {}
-                    }
                     return res.status(500).send('Failed to upload image');
                 }
             }

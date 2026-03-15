@@ -79,22 +79,20 @@ const userController = {
                     }
 
                     // Upload new image to Cloudinary with user-organized folder structure
-                    const result = await cloudinary.uploader.upload(req.file.path, {
-                        folder: `cloudinary/users/${req.params.id}/profile_pictures`,
-                        resource_type: 'auto'
+                    // Using buffer from memory storage
+                    const result = await new Promise((resolve, reject) => {
+                        cloudinary.uploader.upload_stream({
+                            folder: `cloudinary/users/${req.params.id}/profile_pictures`,
+                            resource_type: 'auto'
+                        }, (error, uploadResult) => {
+                            if (error) reject(error);
+                            else resolve(uploadResult);
+                        }).end(req.file.buffer);
                     });
 
-                    // Update with Cloudinary URL
                     updateData.image = result.secure_url;
-
-                    // Delete the temporary file
-                    fs.unlinkSync(req.file.path);
                 } catch (cloudinaryErr) {
                     console.error('Cloudinary upload error:', cloudinaryErr);
-                    // Delete temporary file even if upload fails
-                    if (req.file && req.file.path) {
-                        fs.unlinkSync(req.file.path);
-                    }
                     return res.status(500).send('Image upload failed');
                 }
             }

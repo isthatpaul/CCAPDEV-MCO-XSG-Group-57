@@ -40,21 +40,21 @@ const reviewController = {
             if (req.files && req.files.length > 0) {
                 try {
                     for (const file of req.files) {
-                        const result = await cloudinary.uploader.upload(file.path, {
-                            folder: `cloudinary/users/${req.session.userId}/reviews/${establishmentId}`,
-                            resource_type: 'auto'
+                        // Upload using buffer from memory storage
+                        const uploadResult = await new Promise((resolve, reject) => {
+                            cloudinary.uploader.upload_stream({
+                                folder: `cloudinary/users/${req.session.userId}/reviews/${establishmentId}`,
+                                resource_type: 'auto'
+                            }, (error, result) => {
+                                if (error) reject(error);
+                                else resolve(result);
+                            }).end(file.buffer);
                         });
-                        reviewData.images.push(result.secure_url);
-                        
-                        // Delete temporary file
-                        try { fs.unlinkSync(file.path); } catch (e) {}
+
+                        reviewData.images.push(uploadResult.secure_url);
                     }
                 } catch (uploadErr) {
                     console.error('Cloudinary upload error:', uploadErr);
-                    // Clean up any temp files
-                    req.files.forEach(file => {
-                        try { fs.unlinkSync(file.path); } catch (e) {}
-                    });
                     return res.status(500).send('Failed to upload images');
                 }
             }

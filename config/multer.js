@@ -1,15 +1,8 @@
 const multer = require('multer');
 const path = require('path');
 
-// Set up storage for temporary files
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
+// Use memory storage since files are uploaded to Cloudinary immediately
+const storage = multer.memoryStorage();
 
 // Filter for image files only (for profile pictures)
 const imageFileFilter = (req, file, cb) => {
