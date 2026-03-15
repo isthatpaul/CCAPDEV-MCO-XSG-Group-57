@@ -11,8 +11,8 @@ const storage = multer.diskStorage({
     }
 });
 
-// Filter for image files only
-const fileFilter = (req, file, cb) => {
+// Filter for image files only (for profile pictures)
+const imageFileFilter = (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
@@ -24,10 +24,33 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const upload = multer({
+// Filter for images and videos (for reviews)
+const mediaFileFilter = (req, file, cb) => {
+    const allowedImageTypes = /jpeg|jpg|png|gif/;
+    const allowedVideoTypes = /mp4|avi|mov|mkv|webm/;
+    const extname = path.extname(file.originalname).toLowerCase().substring(1);
+    const isImage = allowedImageTypes.test(file.mimetype);
+    const isVideo = allowedVideoTypes.test(file.mimetype) || allowedVideoTypes.test(extname);
+
+    if (isImage || isVideo) {
+        return cb(null, true);
+    } else {
+        cb(new Error('Only image and video files are allowed!'));
+    }
+};
+
+const uploadSingle = multer({
     storage: storage,
-    fileFilter: fileFilter,
+    fileFilter: imageFileFilter,
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
-module.exports = upload;
+const uploadMultiple = multer({
+    storage: storage,
+    fileFilter: mediaFileFilter,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB per file
+});
+
+module.exports = uploadSingle;
+module.exports.single = uploadSingle;
+module.exports.multiple = uploadMultiple;

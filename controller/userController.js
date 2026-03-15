@@ -5,6 +5,30 @@ const fs = require('fs');
 const path = require('path');
 
 const userController = {
+    // Helper function to extract public_id from Cloudinary URL
+    extractPublicIdFromUrl(url) {
+        if (!url || !url.startsWith('https://res.cloudinary.com')) {
+            return null;
+        }
+        try {
+            // URL format: https://res.cloudinary.com/cloud_name/image/upload/v123/folder/filename.ext
+            // We need: folder/filename (without extension)
+            const parts = url.split('/upload/');
+            if (parts.length < 2) return null;
+            
+            const pathParts = parts[1].split('/');
+            // Remove version number if present (v123456)
+            let startIdx = pathParts[0].startsWith('v') ? 1 : 0;
+            
+            // Join remaining parts and remove file extension
+            const publicId = pathParts.slice(startIdx).join('/');
+            return publicId.split('.')[0]; // Remove file extension
+        } catch (err) {
+            console.error('Error extracting public_id:', err);
+            return null;
+        }
+    },
+
     async getProfile(req, res) {
         try {
             const user = await User.findById(req.params.id).lean();
@@ -37,9 +61,26 @@ const userController = {
             // If a file was uploaded, handle image upload to Cloudinary
             if (req.file) {
                 try {
-                    // Upload to Cloudinary
+                    // Get the current user to check for old image
+                    const user = await User.findById(req.params.id);
+                    
+                    // Delete old profile image from Cloudinary if it exists
+                    if (user && user.image && user.image.startsWith('https://res.cloudinary.com')) {
+                        try {
+                            const oldPublicId = this.extractPublicIdFromUrl(user.image);
+                            if (oldPublicId) {
+                                await cloudinary.uploader.destroy(oldPublicId);
+                                console.log('✓ Deleted old Cloudinary image:', oldPublicId);
+                            }
+                        } catch (destroyErr) {
+                            console.error('Error deleting old image:', destroyErr);
+                            // Continue with new upload even if old deletion fails
+                        }
+                    }
+
+                    // Upload new image to Cloudinary with user-organized folder structure
                     const result = await cloudinary.uploader.upload(req.file.path, {
-                        folder: 'taftbites/profile_pictures',
+                        folder: `cloudinary/users/${req.params.id}/profile_pictures`,
                         resource_type: 'auto'
                     });
 
@@ -134,6 +175,20 @@ const userController = {
             const user = await User.findById(req.params.id);
             if (!user) 
                 return res.status(404).send('User not found');
+
+            // Delete profile image from Cloudinary if it exists
+            if (user.image && user.image.startsWith('https://res.cloudinary.com')) {
+                try {
+                    const publicId = this.extractPublicIdFromUrl(user.image);
+                    if (publicId) {
+                        await cloudinary.uploader.destroy(publicId);
+                        console.log('✓ Deleted Cloudinary image:', publicId);
+                    }
+                } catch (cloudinaryErr) {
+                    console.error('Error deleting Cloudinary image:', cloudinaryErr);
+                    // Continue with user deletion even if image deletion fails
+                }
+            }
 
             // Delete all reviews by this user
             await Review.deleteMany({ userId: req.params.id });

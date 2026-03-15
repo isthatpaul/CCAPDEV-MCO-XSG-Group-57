@@ -6,6 +6,30 @@ const fs = require('fs');
 const { getBusinessStatus, getRecommendations } = require('../utils/businessHelpers');
 
 const establishmentController = {
+    // Helper function to extract public_id from Cloudinary URL
+    extractPublicIdFromUrl(url) {
+        if (!url || !url.startsWith('https://res.cloudinary.com')) {
+            return null;
+        }
+        try {
+            // URL format: https://res.cloudinary.com/cloud_name/image/upload/v123/folder/filename.ext
+            // We need: folder/filename (without extension)
+            const parts = url.split('/upload/');
+            if (parts.length < 2) return null;
+            
+            const pathParts = parts[1].split('/');
+            // Remove version number if present (v123456)
+            let startIdx = pathParts[0].startsWith('v') ? 1 : 0;
+            
+            // Join remaining parts and remove file extension
+            const publicId = pathParts.slice(startIdx).join('/');
+            return publicId.split('.')[0]; // Remove file extension
+        } catch (err) {
+            console.error('Error extracting public_id:', err);
+            return null;
+        }
+    },
+
     async getHome(req, res) {
         try {
             let establishments = await Establishment.find().limit(3).lean();
@@ -243,6 +267,20 @@ const establishmentController = {
         try {
             const establishment = await Establishment.findById(req.params.id);
             if (!establishment) return res.status(404).send('Establishment not found');
+
+            // Delete establishment image from Cloudinary if it exists
+            if (establishment.image && establishment.image.startsWith('https://res.cloudinary.com')) {
+                try {
+                    const publicId = this.extractPublicIdFromUrl(establishment.image);
+                    if (publicId) {
+                        await cloudinary.uploader.destroy(publicId);
+                        console.log('✓ Deleted Cloudinary image:', publicId);
+                    }
+                } catch (cloudinaryErr) {
+                    console.error('Error deleting Cloudinary image:', cloudinaryErr);
+                    // Continue with establishment deletion even if image deletion fails
+                }
+            }
 
             // Delete all reviews associated with this establishment
             await Review.deleteMany({ establishmentId: req.params.id });

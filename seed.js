@@ -3,7 +3,7 @@ const User = require('./model/User');
 const Establishment = require('./model/Establishment');
 const Review = require('./model/Review');
 
-mongoose.connect('mongodb+srv://angelobarras_db_user:apdev@ccapdev-taftbites.umiueta.mongodb.net/?appName=CCAPDEV-TaftBites')
+mongoose.connect('mongodb://angelobarras_db_user:apdev@ac-0vk9nij-shard-00-00.umiueta.mongodb.net:27017,ac-0vk9nij-shard-00-01.umiueta.mongodb.net:27017,ac-0vk9nij-shard-00-02.umiueta.mongodb.net:27017/?ssl=true&replicaSet=atlas-cb3ity-shard-0&authSource=admin&appName=CCAPDEV-TaftBites')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error(err));
 
@@ -13,18 +13,50 @@ async function seed() {
     await Establishment.deleteMany({});
     await Review.deleteMany({});
 
-    // Create establishments
-    const establishments = await Establishment.insertMany([
-        { name: 'Bloemen Food Court', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '9:00 AM - 8:00 PM', link: '#', description: 'Bloemen canteen inside DLSU', image: 'sample_estab1.jpg', rating: 4.5 },
-        { name: 'Agno Food Court', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '7:00 AM - 9:00 PM', link: '#', description: 'Agno canteen near Gokongwei Building', image: 'sample_estab2.jpg', rating: 4.0 },
-        { name: 'GreenBites', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '9:00 AM - 8:00 PM', link: '#', description: 'GreenBites where everything is green', image: 'sample_estab3.jpg', rating: 4.5 },
-        { name: 'TaftCafe', location: 'Taft Ave, Manila', contact: '0924 456 7433', hours: '7:00 AM - 9:00 PM', link: '#', description: 'Best coffee and pastries near campus', image: 'sample_estab4.jpg', rating: 4.8 },
-        { name: 'Cafe Breton', location: 'Taft Ave, Manila', contact: '0967 325 4489', hours: '10:00 AM - 5:00 PM', link: '#', description: 'A cozy cafe offering pastries and coffee', image: 'sample_estab5.jpg', rating: 4.2 },
-        { name: "IDK's Diner", location: 'Taft Ave, Manila', contact: '0981 134 7235', hours: '7:00 AM - 7:00 PM', link: '#', description: 'A reliable diner near campus', image: 'sample_estab6.jpg', rating: 4.1 },
-        { name: 'Jollibee', location: 'Taft Ave, Manila', contact: '87000', hours: '24/7', link: '#', description: 'Filipino staple fast food', image: 'sample_estab7.jpg', rating: 4.0 },
-        { name: 'Sunny Side Cafe', location: 'Taft Ave, Manila', contact: '0952 123 8367', hours: '7:00 AM - 9:00 PM', link: '#', description: 'A cozy breakfast spot', image: 'sample_estab8.jpg', rating: 4.0 },
-        { name: 'Brew & Chill', location: 'Taft Ave, Manila', contact: '0969 355 4321', hours: '7:00 AM - 8:00 PM', link: '#', description: 'Coffee shop with a chill atmosphere', image: 'sample_estab9.jpg', rating: 4.0 }
+    // Create database admin first (no establishments needed)
+    const databaseAdmin = await User.create({
+        name: 'Admin Master',
+        email: 'admin@taftbites.com',
+        password: 'admin123',
+        joinDate: new Date(),
+        bio: 'Database Administrator',
+        isAdmin: true,
+        adminType: 'database_admin'
+    });
+
+    console.log('✓ Database admin created:', databaseAdmin.email);
+
+    // Create establishment admins first (so we can reference them)
+    const adminUsers = await User.insertMany([
+        { name: 'Ana Villanueva', email: 'ana@bloemen.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Carlos Tan', email: 'carlos@agnocourt.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Bea Rivera', email: 'bea@greenbites.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Miguel Santos', email: 'miguel@taftcafe.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Diana Lopez', email: 'diana@cafebreton.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Rico Mendoza', email: 'rico@idksdiner.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Grace Lim', email: 'grace@jollibee.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Marco Reyes', email: 'marco@sunnyside.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
+        { name: 'Sofia Cruz', email: 'sofia@brewandchill.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' }
     ]);
+
+    // Create establishments with admin references
+    const establishments = await Establishment.insertMany([
+        { name: 'Bloemen Food Court', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '9:00 AM - 8:00 PM', link: '#', description: 'Bloemen canteen inside DLSU', image: 'sample_estab1.jpg', rating: 4.5, admin: adminUsers[0]._id },
+        { name: 'Agno Food Court', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '7:00 AM - 9:00 PM', link: '#', description: 'Agno canteen near Gokongwei Building', image: 'sample_estab2.jpg', rating: 4.0, admin: adminUsers[1]._id },
+        { name: 'GreenBites', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '9:00 AM - 8:00 PM', link: '#', description: 'GreenBites where everything is green', image: 'sample_estab3.jpg', rating: 4.5, admin: adminUsers[2]._id },
+        { name: 'TaftCafe', location: 'Taft Ave, Manila', contact: '0924 456 7433', hours: '7:00 AM - 9:00 PM', link: '#', description: 'Best coffee and pastries near campus', image: 'sample_estab4.jpg', rating: 4.8, admin: adminUsers[3]._id },
+        { name: 'Cafe Breton', location: 'Taft Ave, Manila', contact: '0967 325 4489', hours: '10:00 AM - 5:00 PM', link: '#', description: 'A cozy cafe offering pastries and coffee', image: 'sample_estab5.jpg', rating: 4.2, admin: adminUsers[4]._id },
+        { name: "IDK's Diner", location: 'Taft Ave, Manila', contact: '0981 134 7235', hours: '7:00 AM - 7:00 PM', link: '#', description: 'A reliable diner near campus', image: 'sample_estab6.jpg', rating: 4.1, admin: adminUsers[5]._id },
+        { name: 'Jollibee', location: 'Taft Ave, Manila', contact: '87000', hours: '24/7', link: '#', description: 'Filipino staple fast food', image: 'sample_estab7.jpg', rating: 4.0, admin: adminUsers[6]._id },
+        { name: 'Sunny Side Cafe', location: 'Taft Ave, Manila', contact: '0952 123 8367', hours: '7:00 AM - 9:00 PM', link: '#', description: 'A cozy breakfast spot', image: 'sample_estab8.jpg', rating: 4.0, admin: adminUsers[7]._id },
+        { name: 'Brew & Chill', location: 'Taft Ave, Manila', contact: '0969 355 4321', hours: '7:00 AM - 8:00 PM', link: '#', description: 'Coffee shop with a chill atmosphere', image: 'sample_estab9.jpg', rating: 4.0, admin: adminUsers[8]._id }
+    ]);
+
+    // Update admin users with their managed establishments
+    for (let i = 0; i < adminUsers.length; i++) {
+        adminUsers[i].establishmentsManaged = [establishments[i]._id];
+        await adminUsers[i].save();
+    }
 
     // Create regular users
     const users = await User.insertMany([
@@ -33,19 +65,6 @@ async function seed() {
         { name: 'Karlie Chirk', email: 'karlofdachirk@gmail.com', password: '1234', joinDate: new Date('2024-04-01'), bio: 'Food lover :)', phone: '09097623483', image: 'sample_profile3.png' },
         { name: 'Bob Builder', email: 'Bob@gmail.com', password: '1234', joinDate: new Date('2026-01-01'), bio: 'Hello...', phone: '09251185412', image: 'sample_profile4.jpg' },
         { name: 'John Doe', email: 'John@yahoo.com', password: '1234', joinDate: new Date('2025-12-01'), bio: 'Nice nice', phone: '09332145678', image: 'sample_profile5.webp' }
-    ]);
-
-    // Create admin users
-    await User.insertMany([
-        { name: 'Ana Villanueva', email: 'ana@bloemen.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[0]._id] },
-        { name: 'Carlos Tan', email: 'carlos@agnocourt.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[1]._id] },
-        { name: 'Bea Rivera', email: 'bea@greenbites.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[2]._id] },
-        { name: 'Miguel Santos', email: 'miguel@taftcafe.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[3]._id] },
-        { name: 'Diana Lopez', email: 'diana@cafebreton.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[4]._id] },
-        { name: 'Rico Mendoza', email: 'rico@idksdiner.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[5]._id] },
-        { name: 'Grace Lim', email: 'grace@jollibee.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[6]._id] },
-        { name: 'Marco Reyes', email: 'marco@sunnyside.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[7]._id] },
-        { name: 'Sofia Cruz', email: 'sofia@brewandchill.com', password: 'admin123', isAdmin: true, establishmentsManaged: [establishments[8]._id] }
     ]);
 
     // Create reviews
@@ -68,6 +87,11 @@ async function seed() {
     ]);
 
     console.log('Database seeded successfully!');
+    console.log('✓ Database Admin - Email: admin@taftbites.com | Password: admin123');
+    console.log('✓ 9 Establishment Admins created');
+    console.log('✓ 5 Regular users created');
+    console.log('✓ 9 Establishments created');
+    console.log('✓ 15 Reviews created');
     mongoose.connection.close();
 }
 

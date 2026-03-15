@@ -1,20 +1,69 @@
 const Review = require('../model/Review');
+const cloudinary = require('../config/cloudinary');
+const fs = require('fs');
 
 const reviewController = {
+    // Helper function to extract public_id from Cloudinary URL
+    extractPublicIdFromUrl(url) {
+        if (!url || !url.startsWith('https://res.cloudinary.com')) {
+            return null;
+        }
+        try {
+            const parts = url.split('/upload/');
+            if (parts.length < 2) return null;
+            
+            const pathParts = parts[1].split('/');
+            let startIdx = pathParts[0].startsWith('v') ? 1 : 0;
+            
+            const publicId = pathParts.slice(startIdx).join('/');
+            return publicId.split('.')[0];
+        } catch (err) {
+            console.error('Error extracting public_id:', err);
+            return null;
+        }
+    },
+
     async create(req, res) {
         try {
             const { title, comment, rating, establishmentId } = req.body;
 
-            await Review.create({
+            const reviewData = {
                 title,
                 comment,
                 rating: parseInt(rating),
                 userId: req.session.userId,
-                establishmentId
-            });
+                establishmentId,
+                images: []
+            };
+
+            // Handle file uploads if any
+            if (req.files && req.files.length > 0) {
+                try {
+                    for (const file of req.files) {
+                        const result = await cloudinary.uploader.upload(file.path, {
+                            folder: `cloudinary/users/${req.session.userId}/reviews/${establishmentId}`,
+                            resource_type: 'auto'
+                        });
+                        reviewData.images.push(result.secure_url);
+                        
+                        // Delete temporary file
+                        try { fs.unlinkSync(file.path); } catch (e) {}
+                    }
+                } catch (uploadErr) {
+                    console.error('Cloudinary upload error:', uploadErr);
+                    // Clean up any temp files
+                    req.files.forEach(file => {
+                        try { fs.unlinkSync(file.path); } catch (e) {}
+                    });
+                    return res.status(500).send('Failed to upload images');
+                }
+            }
+
+            await Review.create(reviewData);
 
             res.redirect('/establishments/' + establishmentId);
         } catch (err) {
+            console.error(err);
             res.status(500).send('Failed to create review');
         }
     },
@@ -39,10 +88,27 @@ const reviewController = {
             const review = await Review.findById(req.params.id);
             if (!review) return res.status(404).send('Review not found');
 
+            // Delete all associated images from Cloudinary
+            if (review.images && review.images.length > 0) {
+                for (const imageUrl of review.images) {
+                    try {
+                        const publicId = this.extractPublicIdFromUrl(imageUrl);
+                        if (publicId) {
+                            await cloudinary.uploader.destroy(publicId);
+                            console.log('✓ Deleted review image from Cloudinary:', publicId);
+                        }
+                    } catch (deleteErr) {
+                        console.error('Error deleting image:', deleteErr);
+                        // Continue with other images even if one fails
+                    }
+                }
+            }
+
             await Review.findByIdAndDelete(req.params.id);
 
             res.redirect('/establishments/' + review.establishmentId);
         } catch (err) {
+            console.error(err);
             res.status(500).send('Delete failed');
         }
     },
