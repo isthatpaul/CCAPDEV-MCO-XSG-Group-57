@@ -2,8 +2,8 @@ const Establishment = require('../model/Establishment');
 const Review = require('../model/Review');
 const User = require('../model/User');
 const cloudinary = require('../config/cloudinary');
-const fs = require('fs');
 const { getBusinessStatus, getRecommendations } = require('../utils/businessHelpers');
+const { extractPublicIdFromUrl } = require('../utils/cloudinaryHelpers');
 
 // Helper function to recalculate ratings for establishments
 async function recalculateEstablishmentRatings(establishments) {
@@ -42,29 +42,6 @@ async function recalculateEstablishmentRatings(establishments) {
 }
 
 const establishmentController = {
-    // Helper function to extract public_id from Cloudinary URL
-    extractPublicIdFromUrl(url) {
-        if (!url || !url.startsWith('https://res.cloudinary.com')) {
-            return null;
-        }
-        try {
-            // URL format: https://res.cloudinary.com/cloud_name/image/upload/v123/folder/filename.ext
-            // We need: folder/filename (without extension)
-            const parts = url.split('/upload/');
-            if (parts.length < 2) return null;
-            
-            const pathParts = parts[1].split('/');
-            // Remove version number if present (v123456)
-            let startIdx = pathParts[0].startsWith('v') ? 1 : 0;
-            
-            // Join remaining parts and remove file extension
-            const publicId = pathParts.slice(startIdx).join('/');
-            return publicId.split('.')[0]; // Remove file extension
-        } catch (err) {
-            console.error('Error extracting public_id:', err);
-            return null;
-        }
-    },
 
     async getHome(req, res) {
         try {
@@ -181,14 +158,12 @@ const establishmentController = {
 
             // Calculate rating breakdown for display
             const allReviews = await Review.find({ establishmentId: establishment._id }).lean();
-            const ratingBreakdown = {
-                'one': allReviews.filter(r => r.rating === 1).length,
-                'two': allReviews.filter(r => r.rating === 2).length,
-                'three': allReviews.filter(r => r.rating === 3).length,
-                'four': allReviews.filter(r => r.rating === 4).length,
-                'five': allReviews.filter(r => r.rating === 5).length,
-                'total': allReviews.length
-            };
+            const ratingNames = ['one', 'two', 'three', 'four', 'five'];
+            const ratingBreakdown = allReviews.reduce((acc, r) => {
+                const key = ratingNames[r.rating - 1];
+                if (key) acc[key]++;
+                return acc;
+            }, { one: 0, two: 0, three: 0, four: 0, five: 0, total: allReviews.length });
 
             // Recalculate establishment rating based on reviews
             if (allReviews.length > 0) {
@@ -259,27 +234,52 @@ const establishmentController = {
 
     async update(req, res) {
         try {
-            const { name, location, contact, hours, link, description } = req.body;
+            const { name, location, contact, hours, link, description, category, phone } = req.body;
             const establishment = await Establishment.findById(req.params.id);
             if (!establishment) return res.status(404).send('Establishment not found');
 
-            if (req.session.userId) {
-                const user = await User.findById(req.session.userId).lean();
-                if (user && user.isAdmin) {
-                    const managedIds = user.establishmentsManaged.map(id => id.toString());
-                    if (!managedIds.includes(establishment._id.toString())) {
-                        return res.status(403).send('You do not have permission to edit this establishment');
-                    }
-                } else {
-                    return res.status(403).send('You do not have permission to edit this establishment');
-                }
-            } else {
-                return res.status(401).send('Unauthorized');
+            if (!req.session.userId) return res.status(401).send('Unauthorized');
+            const user = await User.findById(req.session.userId).lean();
+            const managedIds = (user?.establishmentsManaged || []).map(id => id.toString());
+            if (!user?.isAdmin || !managedIds.includes(establishment._id.toString())) {
+                return res.status(403).send('You do not have permission to edit this establishment');
             }
 
-            await Establishment.findByIdAndUpdate(req.params.id, {
-                name, location, contact, hours, link, description
-            });
+            // Transform hours from form format to schema format
+            const hoursArray = [];
+            for (let i = 0; i < 7; i++) {
+                const dayHours = {
+                    dayOfWeek: i,
+                    openTime: hours?.[i]?.openTime || '09:00',
+                    closeTime: hours?.[i]?.closeTime || '17:00',
+                    isClosed: hours?.[i]?.isClosed === 'on' || false
+                };
+                hoursArray.push(dayHours);
+            }
+
+            // Handle image replacement
+            const updateData = { name, location, contact, phone, hours: hoursArray, link, description, category };
+            if (req.file) {
+                // Upload new image to Cloudinary
+                const result = await new Promise((resolve, reject) => {
+                    const uploadStream = cloudinary.uploader.upload_stream({
+                        folder: `cloudinary/establishments/${name}`,
+                        resource_type: 'auto'
+                    }, (error, uploadResult) => {
+                        if (error) reject(error);
+                        else resolve(uploadResult);
+                    });
+                    uploadStream.end(req.file.buffer);
+                });
+                // Delete old Cloudinary image if it exists
+                if (establishment.image && establishment.image.startsWith('https://res.cloudinary.com')) {
+                    const publicId = extractPublicIdFromUrl(establishment.image);
+                    if (publicId) await cloudinary.uploader.destroy(publicId).catch(() => {});
+                }
+                updateData.image = result.secure_url;
+            }
+
+            await Establishment.findByIdAndUpdate(req.params.id, updateData);
             res.redirect('/establishments/' + req.params.id);
         } catch (err) {
             console.error('Update error:', err);
@@ -301,7 +301,7 @@ const establishmentController = {
 
     async create(req, res) {
         try {
-            const { name, location, contact, hours, link, description } = req.body;
+            const { name, location, contact, hours, link, description, category, phone } = req.body;
             const userId = req.session.userId;
 
             if (!userId) {
@@ -314,41 +314,67 @@ const establishmentController = {
                 return res.status(403).send('You do not have permission to create establishments');
             }
 
+            console.log('File received:', req.file ? 'Yes' : 'No');
+            if (req.file) {
+                console.log('File name:', req.file.originalname);
+                console.log('File size:', req.file.size);
+                console.log('File mimetype:', req.file.mimetype);
+            }
+
             // Handle image upload to Cloudinary
             let imageUrl = '';
             if (req.file) {
                 try {
-                    // Get user to get their email for folder structure
-                    const uploadUser = await User.findById(userId);
-                    if (!uploadUser) {
-                        return res.status(404).send('User not found');
-                    }
-
-                    // Upload using buffer from memory storage with user email as identifier
+                    console.log('Starting Cloudinary upload...');
+                    
+                    // Upload using buffer from memory storage with establishment name as folder
                     const result = await new Promise((resolve, reject) => {
-                        cloudinary.uploader.upload_stream({
-                            folder: `cloudinary/users/${uploadUser.email}/establishment_images`,
+                        const uploadStream = cloudinary.uploader.upload_stream({
+                            folder: `cloudinary/establishments/${name}`,
                             resource_type: 'auto'
                         }, (error, uploadResult) => {
-                            if (error) reject(error);
-                            else resolve(uploadResult);
-                        }).end(req.file.buffer);
+                            if (error) {
+                                console.error('Cloudinary error:', error);
+                                reject(error);
+                            } else {
+                                console.log('Cloudinary upload successful:', uploadResult.secure_url);
+                                resolve(uploadResult);
+                            }
+                        });
+                        uploadStream.end(req.file.buffer);
                     });
 
                     imageUrl = result.secure_url;
+                    console.log('Image URL set to:', imageUrl);
                 } catch (uploadErr) {
-                    console.error('Cloudinary upload error:', uploadErr);
-                    return res.status(500).send('Failed to upload image');
+                    console.error('Cloudinary upload failed:', uploadErr);
+                    return res.status(500).send('Failed to upload image: ' + uploadErr.message);
                 }
+            } else {
+                console.log('No file in request');
+            }
+
+            // Transform hours from form format to schema format
+            const hoursArray = [];
+            for (let i = 0; i < 7; i++) {
+                const dayHours = {
+                    dayOfWeek: i,
+                    openTime: hours?.[i]?.openTime || '09:00',
+                    closeTime: hours?.[i]?.closeTime || '17:00',
+                    isClosed: hours?.[i]?.isClosed === 'on' || false
+                };
+                hoursArray.push(dayHours);
             }
 
             const establishment = await Establishment.create({
                 name,
                 location,
                 contact: contact || '',
-                hours: hours || '',
+                phone: phone || '',
+                hours: hoursArray,
                 link: link || '',
                 description: description || '',
+                category: category || '',
                 image: imageUrl,
                 admin: userId
             });
@@ -362,9 +388,6 @@ const establishmentController = {
             res.redirect('/establishments/' + establishment._id);
         } catch (err) {
             console.error('Create error:', err);
-            if (req.file && req.file.path) {
-                try { fs.unlinkSync(req.file.path); } catch (e) {}
-            }
             res.status(500).send('Failed to create establishment');
         }
     },
@@ -374,24 +397,17 @@ const establishmentController = {
             const establishment = await Establishment.findById(req.params.id);
             if (!establishment) return res.status(404).send('Establishment not found');
 
-            if (req.session.userId) {
-                const user = await User.findById(req.session.userId).lean();
-                if (user && user.isAdmin) {
-                    const managedIds = user.establishmentsManaged.map(id => id.toString());
-                    if (!managedIds.includes(establishment._id.toString())) {
-                        return res.status(403).send('You do not have permission to delete this establishment');
-                    }
-                } else {
-                    return res.status(403).send('You do not have permission to delete this establishment');
-                }
-            } else {
-                return res.status(401).send('Unauthorized');
+            if (!req.session.userId) return res.status(401).send('Unauthorized');
+            const user = await User.findById(req.session.userId).lean();
+            const managedIds = (user?.establishmentsManaged || []).map(id => id.toString());
+            if (!user?.isAdmin || !managedIds.includes(establishment._id.toString())) {
+                return res.status(403).send('You do not have permission to delete this establishment');
             }
 
             // Delete establishment image from Cloudinary if it exists
             if (establishment.image && establishment.image.startsWith('https://res.cloudinary.com')) {
                 try {
-                    const publicId = this.extractPublicIdFromUrl(establishment.image);
+                    const publicId = extractPublicIdFromUrl(establishment.image);
                     if (publicId) {
                         await cloudinary.uploader.destroy(publicId);
                         console.log('✓ Deleted Cloudinary image:', publicId);

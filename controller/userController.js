@@ -1,32 +1,7 @@
 const User = require('../model/User');
 const Review = require('../model/Review');
 const cloudinary = require('../config/cloudinary');
-const fs = require('fs');
 const path = require('path');
-
-// Helper function to extract public_id from Cloudinary URL
-function extractPublicIdFromUrl(url) {
-    if (!url || !url.startsWith('https://res.cloudinary.com')) {
-        return null;
-    }
-    try {
-        // URL format: https://res.cloudinary.com/cloud_name/image/upload/v123/folder/filename.ext
-        // We need: folder/filename (without extension)
-        const parts = url.split('/upload/');
-        if (parts.length < 2) return null;
-        
-        const pathParts = parts[1].split('/');
-        // Remove version number if present (v123456)
-        let startIdx = pathParts[0].startsWith('v') ? 1 : 0;
-        
-        // Join remaining parts and remove file extension
-        const publicId = pathParts.slice(startIdx).join('/');
-        return publicId.split('.')[0]; // Remove file extension
-    } catch (err) {
-        console.error('Error extracting public_id:', err);
-        return null;
-    }
-}
 
 const userController = {
 
@@ -216,6 +191,76 @@ const userController = {
         } catch (err) {
             console.error(err);
             res.status(500).send('Delete failed');
+        }
+    },
+
+    async changePassword(req, res) {
+        try {
+            // Security check: ensure user can only change their own password
+            if (req.session.userId !== req.params.id) {
+                return res.status(403).json({ success: false, message: 'You can only change your own password' });
+            }
+
+            const { currentPassword, newPassword } = req.body;
+
+            if (!currentPassword || !newPassword) {
+                return res.status(400).json({ success: false, message: 'Please provide both current and new password' });
+            }
+
+            if (newPassword.length < 4) {
+                return res.status(400).json({ success: false, message: 'Password must be at least 4 characters' });
+            }
+
+            const user = await User.findById(req.params.id);
+            if (!user) {
+                return res.status(404).json({ success: false, message: 'User not found' });
+            }
+
+            // Verify current password
+            if (user.password !== currentPassword) {
+                return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+            }
+
+            // Update password
+            user.password = newPassword;
+            await user.save();
+
+            res.json({ success: true, message: 'Password changed successfully' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ success: false, message: 'Error changing password' });
+        }
+    },
+
+    async changeName(req, res) {
+        try {
+            // Security check: ensure user can only change their own name
+            if (req.session.userId !== req.params.id) {
+                return res.status(403).json({ success: false, message: 'You can only change your own name' });
+            }
+
+            const { newName } = req.body;
+
+            if (!newName || !newName.trim()) {
+                return res.status(400).json({ success: false, message: 'Please provide a valid name' });
+            }
+
+            const user = await User.findById(req.params.id);
+            if (!user) {
+                return res.status(404).json({ success: false, message: 'User not found' });
+            }
+
+            // Update name
+            user.name = newName.trim();
+            await user.save();
+
+            // Update session
+            req.session.userName = newName.trim();
+
+            res.json({ success: true, message: 'Name changed successfully' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ success: false, message: 'Error changing name' });
         }
     }
 };

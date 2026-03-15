@@ -3,12 +3,8 @@
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px;">
             <h1 style="margin: 0;">Find Establishments</h1>
-            {{#if (eq adminType "establishment_admin")}}
+            {{#if (eq adminType "database_admin")}}
             <a href="/establishments/new" class="btn" style="display: inline-block; padding: 12px 20px; text-decoration: none;">+ Add New</a>
-            {{else}}
-                {{#if (eq adminType "database_admin")}}
-                <a href="/establishments/new" class="btn" style="display: inline-block; padding: 12px 20px; text-decoration: none;">+ Add New</a>
-                {{/if}}
             {{/if}}
         </div>
         <form id="searchForm" class="search-form" action="/establishments" method="get">
@@ -62,22 +58,16 @@
             {{#each establishments}}
             <div class="est-list-item">
                 <div class="est-list-icon">
-                    <img src="/images/{{ this.image }}" alt="{{ this.name }}" style="width:60px; height:60px; object-fit:cover; border-radius:8px;">
+                    <img src="{{ imageUrl this.image }}" alt="{{ this.name }}" style="width:60px; height:60px; object-fit:cover; border-radius:8px;">
                 </div>
                 <div class="est-list-info">
                     <h3><a href="/establishments/{{ this._id }}">{{ this.name }}</a></h3>
                     <div class="est-list-meta">
                         <span class="est-list-rating">{{ stars this.rating }}</span>
                         <span>{{ this.location }}</span>
-                        <span>{{ this.hours }}</span>
+                        <span>{{ formatAllHours this.hours }}</span>
                         {{#if this.businessStatus}}
-                        {{#if (eq this.businessStatus.status "open")}}
-                        <span style="padding: 2px 8px; background: #4CAF50; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">🟢 Open</span>
-                        {{else if (eq this.businessStatus.status "closing")}}
-                        <span style="padding: 2px 8px; background: #FF9800; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">⏰ Closing</span>
-                        {{else}}
-                        <span style="padding: 2px 8px; background: #f44336; color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">🔴 Closed</span>
-                        {{/if}}
+                        <span class="status-badge" style="background: {{statusColor this.businessStatus.status}}; color: white;">{{statusEmoji this.businessStatus.status}} {{statusLabel this.businessStatus.status}}</span>
                         {{/if}}
                     </div>
                     <p>{{ this.description }}</p>

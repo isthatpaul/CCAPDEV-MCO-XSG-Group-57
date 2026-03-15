@@ -1,30 +1,10 @@
 const Review = require('../model/Review');
 const User = require('../model/User');
 const cloudinary = require('../config/cloudinary');
-const fs = require('fs');
 const { updateEstablishmentRating } = require('../utils/businessHelpers');
+const { extractPublicIdFromUrl } = require('../utils/cloudinaryHelpers');
 
 const reviewController = {
-    // Helper function to extract public_id from Cloudinary URL
-    extractPublicIdFromUrl(url) {
-        if (!url || !url.startsWith('https://res.cloudinary.com')) {
-            return null;
-        }
-        try {
-            const parts = url.split('/upload/');
-            if (parts.length < 2) return null;
-            
-            const pathParts = parts[1].split('/');
-            let startIdx = pathParts[0].startsWith('v') ? 1 : 0;
-            
-            const publicId = pathParts.slice(startIdx).join('/');
-            return publicId.split('.')[0];
-        } catch (err) {
-            console.error('Error extracting public_id:', err);
-            return null;
-        }
-    },
-
     async create(req, res) {
         try {
             const { title, comment, rating, establishmentId } = req.body;
@@ -106,7 +86,7 @@ const reviewController = {
             if (review.images && review.images.length > 0) {
                 for (const imageUrl of review.images) {
                     try {
-                        const publicId = this.extractPublicIdFromUrl(imageUrl);
+                        const publicId = extractPublicIdFromUrl(imageUrl);
                         if (publicId) {
                             await cloudinary.uploader.destroy(publicId);
                             console.log('✓ Deleted review image from Cloudinary:', publicId);

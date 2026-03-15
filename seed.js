@@ -7,6 +7,20 @@ mongoose.connect('mongodb://angelobarras_db_user:apdev@ac-0vk9nij-shard-00-00.um
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error(err));
 
+// Helper function to create standard hours array
+function createHours(openTime = '09:00', closeTime = '17:00', closedDays = []) {
+    const hours = [];
+    for (let i = 0; i < 7; i++) {
+        hours.push({
+            dayOfWeek: i,
+            openTime,
+            closeTime,
+            isClosed: closedDays.includes(i)
+        });
+    }
+    return hours;
+}
+
 async function seed() {
     // Clear existing data
     await User.deleteMany({});
@@ -41,15 +55,15 @@ async function seed() {
 
     // Create establishments with admin references
     const establishments = await Establishment.insertMany([
-        { name: 'Bloemen Food Court', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '9:00 AM - 8:00 PM', link: '#', description: 'Bloemen canteen inside DLSU', image: 'sample_estab1.jpg', rating: 4.5, admin: adminUsers[0]._id },
-        { name: 'Agno Food Court', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '7:00 AM - 9:00 PM', link: '#', description: 'Agno canteen near Gokongwei Building', image: 'sample_estab2.jpg', rating: 4.0, admin: adminUsers[1]._id },
-        { name: 'GreenBites', location: 'Taft Ave, Manila', contact: '0912 123 2367', hours: '9:00 AM - 8:00 PM', link: '#', description: 'GreenBites where everything is green', image: 'sample_estab3.jpg', rating: 4.5, admin: adminUsers[2]._id },
-        { name: 'TaftCafe', location: 'Taft Ave, Manila', contact: '0924 456 7433', hours: '7:00 AM - 9:00 PM', link: '#', description: 'Best coffee and pastries near campus', image: 'sample_estab4.jpg', rating: 4.8, admin: adminUsers[3]._id },
-        { name: 'Cafe Breton', location: 'Taft Ave, Manila', contact: '0967 325 4489', hours: '10:00 AM - 5:00 PM', link: '#', description: 'A cozy cafe offering pastries and coffee', image: 'sample_estab5.jpg', rating: 4.2, admin: adminUsers[4]._id },
-        { name: "IDK's Diner", location: 'Taft Ave, Manila', contact: '0981 134 7235', hours: '7:00 AM - 7:00 PM', link: '#', description: 'A reliable diner near campus', image: 'sample_estab6.jpg', rating: 4.1, admin: adminUsers[5]._id },
-        { name: 'Jollibee', location: 'Taft Ave, Manila', contact: '87000', hours: '24/7', link: '#', description: 'Filipino staple fast food', image: 'sample_estab7.jpg', rating: 4.0, admin: adminUsers[6]._id },
-        { name: 'Sunny Side Cafe', location: 'Taft Ave, Manila', contact: '0952 123 8367', hours: '7:00 AM - 9:00 PM', link: '#', description: 'A cozy breakfast spot', image: 'sample_estab8.jpg', rating: 4.0, admin: adminUsers[7]._id },
-        { name: 'Brew & Chill', location: 'Taft Ave, Manila', contact: '0969 355 4321', hours: '7:00 AM - 8:00 PM', link: '#', description: 'Coffee shop with a chill atmosphere', image: 'sample_estab9.jpg', rating: 4.0, admin: adminUsers[8]._id }
+        { name: 'Bloemen Food Court', location: 'Taft Ave, Manila', contact: 'info@bloemen.com', category: 'Food Court', phone: '0912-123-2367', hours: createHours('09:00', '20:00'), link: '#', description: 'Bloemen canteen inside DLSU', image: 'sample_estab1.jpg', rating: 4.5, admin: adminUsers[0]._id },
+        { name: 'Agno Food Court', location: 'Taft Ave, Manila', contact: 'info@agnocourt.com', category: 'Food Court', phone: '0912-123-2367', hours: createHours('07:00', '21:00'), link: '#', description: 'Agno canteen near Gokongwei Building', image: 'sample_estab2.jpg', rating: 4.0, admin: adminUsers[1]._id },
+        { name: 'GreenBites', location: 'Taft Ave, Manila', contact: 'hello@greenbites.com', category: 'Healthy Food', phone: '0912-123-2367', hours: createHours('09:00', '20:00'), link: '#', description: 'GreenBites where everything is green', image: 'sample_estab3.jpg', rating: 4.5, admin: adminUsers[2]._id },
+        { name: 'TaftCafe', location: 'Taft Ave, Manila', contact: 'contact@taftcafe.com', category: 'Cafe', phone: '0924-456-7433', hours: createHours('07:00', '21:00'), link: '#', description: 'Best coffee and pastries near campus', image: 'sample_estab4.jpg', rating: 4.8, admin: adminUsers[3]._id },
+        { name: 'Cafe Breton', location: 'Taft Ave, Manila', contact: 'hello@cafebreton.com', category: 'Cafe', phone: '0967-325-4489', hours: createHours('10:00', '17:00'), link: '#', description: 'A cozy cafe offering pastries and coffee', image: 'sample_estab5.jpg', rating: 4.2, admin: adminUsers[4]._id },
+        { name: "IDK's Diner", location: 'Taft Ave, Manila', contact: 'info@idksdiner.com', category: 'Diner', phone: '0981-134-7235', hours: createHours('07:00', '19:00'), link: '#', description: 'A reliable diner near campus', image: 'sample_estab6.jpg', rating: 4.1, admin: adminUsers[5]._id },
+        { name: 'Jollibee', location: 'Taft Ave, Manila', contact: 'taft@jollibee.com', category: 'Fast Food', phone: '0800-087-000', hours: createHours('06:00', '23:00'), link: '#', description: 'Filipino staple fast food', image: 'sample_estab7.jpg', rating: 4.0, admin: adminUsers[6]._id },
+        { name: 'Sunny Side Cafe', location: 'Taft Ave, Manila', contact: 'hello@sunnysidecafe.com', category: 'Cafe', phone: '0952-123-8367', hours: createHours('07:00', '21:00'), link: '#', description: 'A cozy breakfast spot', image: 'sample_estab8.jpg', rating: 4.0, admin: adminUsers[7]._id },
+        { name: 'Brew & Chill', location: 'Taft Ave, Manila', contact: 'contact@brewandchill.com', category: 'Cafe', phone: '0969-355-4321', hours: createHours('07:00', '20:00'), link: '#', description: 'Coffee shop with a chill atmosphere', image: 'sample_estab9.jpg', rating: 4.0, admin: adminUsers[8]._id }
     ]);
 
     // Update admin users with their managed establishments

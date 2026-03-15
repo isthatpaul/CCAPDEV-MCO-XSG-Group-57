@@ -652,6 +652,52 @@ button:active, .btn:active{
     padding: 6px 0;
 }
 
+/* Drag Rating Slider */
+.drag-rating-slider {
+    margin: 12px 0;
+}
+
+.stars-container {
+    display: flex;
+    gap: 8px;
+    user-select: none;
+    cursor: grab;
+    padding: 12px 0;
+}
+
+.stars-container:active {
+    cursor: grabbing;
+}
+
+.stars-container .star {
+    font-size: 32px;
+    color: #ddd;
+    transition: color 0.1s ease, text-shadow 0.1s ease;
+    cursor: pointer;
+}
+
+.stars-container .star:hover {
+    color: #FFB800;
+    text-shadow: 0 0 8px rgba(255, 184, 0, 0.5);
+}
+
+.stars-container .star.active {
+    color: #FFB800;
+    text-shadow: 0 0 8px rgba(255, 184, 0, 0.7);
+}
+
+.rating-display {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.rating-display span {
+    font-weight: 700;
+    color: #FFB800;
+}
+
 /* Smaller utilities */
 .text-muted{color:var(--muted);font-size:13px}
 .small{font-size:13px}

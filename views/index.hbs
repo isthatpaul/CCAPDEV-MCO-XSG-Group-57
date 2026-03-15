@@ -26,28 +26,7 @@
         </div>
         <div class="card-grid">
             {{#each establishments}}
-            <a href="/establishments/{{ this._id }}" class="est-card" style="position: relative;">
-                {{#if this.businessStatus}}
-                {{#if (eq this.businessStatus.status "open")}}
-                <div style="position: absolute; top: 8px; right: 8px; padding: 4px 8px; background: #4CAF50; color: white; border-radius: 3px; font-size: 11px; font-weight: 600; z-index: 10;">🟢</div>
-                {{else if (eq this.businessStatus.status "closing")}}
-                <div style="position: absolute; top: 8px; right: 8px; padding: 4px 8px; background: #FF9800; color: white; border-radius: 3px; font-size: 11px; font-weight: 600; z-index: 10;">⏰</div>
-                {{else}}
-                <div style="position: absolute; top: 8px; right: 8px; padding: 4px 8px; background: #f44336; color: white; border-radius: 3px; font-size: 11px; font-weight: 600; z-index: 10;">🔴</div>
-                {{/if}}
-                {{/if}}
-                <div class="est-card-img">
-                    <img src="/images/{{ this.image }}" alt="{{ this.name }}" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                <div class="est-card-body">
-                    <h3>{{ this.name }}</h3>
-                    <div class="est-card-rating">
-                        <span class="stars">{{ stars this.rating }}</span>
-                        <span class="rating-num">{{ this.rating }}</span>
-                    </div>
-                    <p>{{ this.description }}</p>
-                </div>
-            </a>
+            {{> est-card}}
             {{/each}}
         </div>
     </div>

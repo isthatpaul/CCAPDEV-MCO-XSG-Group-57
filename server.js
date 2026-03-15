@@ -4,6 +4,7 @@ const { engine } = require('express-handlebars');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const path = require('path');
+const { formatTime, formatDayHours, formatAllHours } = require('./utils/businessHelpers');
 
 const app = express();
 
@@ -26,6 +27,9 @@ app.engine('hbs', engine({
         },
         eq: function(a, b) {
             return a?.toString() === b?.toString();
+        },
+        ne: function(a, b) {
+            return a?.toString() !== b?.toString();
         },
         formatDate: function(date) {
             if (!date) return 'Unknown';
@@ -68,6 +72,34 @@ app.engine('hbs', engine({
         },
         json: function(obj) {
             return JSON.stringify(obj);
+        },
+        formatTime: function(timeStr) {
+            return formatTime(timeStr);
+        },
+        formatDayHours: function(dayHours) {
+            return formatDayHours(dayHours);
+        },
+        formatAllHours: function(hoursArray) {
+            return formatAllHours(hoursArray);
+        },
+        getHoursByDay: function(hoursArray, dayOfWeek) {
+            if (!hoursArray || hoursArray.length === 0) return {};
+            return hoursArray.find(h => h.dayOfWeek === dayOfWeek) || {};
+        },
+        statusColor: function(status) {
+            if (status === 'open') return '#4CAF50';
+            if (status === 'closing') return '#FF9800';
+            return '#f44336';
+        },
+        statusEmoji: function(status) {
+            if (status === 'open') return '🟢';
+            if (status === 'closing') return '⏰';
+            return '🔴';
+        },
+        statusLabel: function(status) {
+            if (status === 'open') return 'Open';
+            if (status === 'closing') return 'Closing';
+            return 'Closed';
         }
     }
 }));
@@ -98,6 +130,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/', require('./routes/establishments'));
+app.use('/admin', require('./routes/admin'));
 app.use('/users', require('./routes/users'));
 app.use('/reviews', require('./routes/reviews'));
 

@@ -1,0 +1,186 @@
+<main class="main">
+    <div class="container">
+        <div style="margin-bottom: 24px;">
+            <h1>Manage Users</h1>
+            <p style="color: #666; margin-top: 8px;">Edit user information and manage user accounts.</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Name</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Email</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Role</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Phone</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr style="border-bottom: 1px solid #eee;" class="user-row" data-id="{{ this._id }}">
+                        <td style="padding: 12px;">
+                            <strong>{{ this.name }}</strong>
+                        </td>
+                        <td style="padding: 12px;">{{ this.email }}</td>
+                        <td style="padding: 12px;">
+                            <span style="background: {{#if (eq this.adminType 'database_admin')}}#f44336{{else if (eq this.adminType 'establishment_admin')}}#FF9800{{else}}#2196F3{{/if}}; color: white; padding: 4px 12px; border-radius: 4px; font-size: 13px;">
+                                {{#if (eq this.adminType 'database_admin')}}Database Admin{{else if (eq this.adminType 'establishment_admin')}}Establishment Admin{{else}}User{{/if}}
+                            </span>
+                        </td>
+                        <td style="padding: 12px;">{{ this.phone }}</td>
+                        <td style="padding: 12px;">
+                            <button class="btn-edit" onclick="openEditModal('{{ this._id }}', '{{ this.name }}', '{{ this.email }}', '{{ this.phone }}', '{{ this.bio }}')">
+                                ✏️ Edit
+                            </button>
+                            <button class="btn-delete" onclick="deleteUser('{{ this._id }}', '{{ this.name }}')" style="margin-left: 8px;">
+                                🗑️ Delete
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        {{#unless users.length}}
+        <div class="card" style="text-align: center; padding: 40px;">
+            <p style="color: #999; font-size: 16px;">No users found.</p>
+        </div>
+        {{/unless}}
+    </div>
+</main>
+
+<!-- Edit User Modal -->
+<div id="editUserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 8px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        <h2 style="margin-top: 0;">Edit User</h2>
+        <form id="editUserForm">
+            <div>
+                <label for="editUserName">Full Name</label>
+                <input type="text" id="editUserName" placeholder="Full name" required>
+            </div>
+            <div>
+                <label for="editUserEmail">Email</label>
+                <input type="email" id="editUserEmail" placeholder="Email" required>
+            </div>
+            <div>
+                <label for="editUserPhone">Phone Number</label>
+                <input type="tel" id="editUserPhone" placeholder="Phone number">
+            </div>
+            <div>
+                <label for="editUserBio">Bio</label>
+                <textarea id="editUserBio" placeholder="Bio" rows="4"></textarea>
+            </div>
+            <div style="margin-top: 20px; display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" id="cancelEditBtn" style="padding: 10px 20px; background: #999; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Cancel</button>
+                <button type="submit" style="padding: 10px 20px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .btn-edit {
+        padding: 8px 12px;
+        background: #2196F3;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .btn-edit:hover {
+        background: #0b7dda;
+    }
+    .btn-delete {
+        padding: 8px 12px;
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .btn-delete:hover {
+        background: #da190b;
+    }
+</style>
+
+<script>
+    let currentUserId = null;
+
+    function openEditModal(userId, name, email, phone, bio) {
+        currentUserId = userId;
+        document.getElementById('editUserName').value = name;
+        document.getElementById('editUserEmail').value = email;
+        document.getElementById('editUserPhone').value = phone;
+        document.getElementById('editUserBio').value = bio;
+        document.getElementById('editUserModal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        document.getElementById('editUserModal').style.display = 'none';
+        currentUserId = null;
+    }
+
+    document.getElementById('cancelEditBtn').addEventListener('click', closeEditModal);
+
+    document.getElementById('editUserModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
+    });
+
+    document.getElementById('editUserForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const data = {
+            name: document.getElementById('editUserName').value,
+            email: document.getElementById('editUserEmail').value,
+            phone: document.getElementById('editUserPhone').value,
+            bio: document.getElementById('editUserBio').value
+        };
+
+        fetch(`/admin/users/${currentUserId}/update`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('❌ ' + (data.message || 'Failed to update user'));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('❌ Error updating user');
+        });
+    });
+
+    function deleteUser(userId, userName) {
+        if (confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
+            fetch(`/admin/users/${userId}/delete`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('❌ ' + (data.message || 'Failed to delete user'));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('❌ Error deleting user');
+            });
+        }
+    }
+</script>

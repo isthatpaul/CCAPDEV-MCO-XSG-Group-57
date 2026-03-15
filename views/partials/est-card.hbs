@@ -1,0 +1,16 @@
+<a href="/establishments/{{ this._id }}" class="est-card"{{#if this.businessStatus}} style="position: relative;"{{/if}}>
+    {{#if this.businessStatus}}
+    <div style="position: absolute; top: 8px; right: 8px; padding: 4px 8px; background: {{statusColor this.businessStatus.status}}; color: white; border-radius: 3px; font-size: 11px; font-weight: 600; z-index: 10;">{{statusEmoji this.businessStatus.status}}</div>
+    {{/if}}
+    <div class="est-card-img">
+        <img src="{{ imageUrl this.image }}" alt="{{ this.name }}" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+    <div class="est-card-body">
+        <h3>{{ this.name }}</h3>
+        <div class="est-card-rating">
+            <span class="stars">{{ stars this.rating }}</span>
+            <span class="rating-num">{{ this.rating }}</span>
+        </div>
+        <p>{{ this.description }}</p>
+    </div>
+</a>

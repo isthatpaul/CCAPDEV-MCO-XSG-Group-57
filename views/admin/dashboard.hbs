@@ -5,14 +5,24 @@
             <p style="color: #666; margin-top: 8px;">Welcome, {{userName}}! Here's an overview of your establishments.</p>
         </div>
 
+        <!-- Admin Navigation Menu -->
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+            <a href="/admin/dashboard" style="padding: 10px 16px; background: #2196F3; color: white; border-radius: 4px; text-decoration: none; font-weight: 500;">📊 Dashboard</a>
+            {{#if (eq adminType "database_admin")}}
+            <a href="/admin/manage-establishment-admins" style="padding: 10px 16px; background: #FF9800; color: white; border-radius: 4px; text-decoration: none; font-weight: 500;">🏢 Manage Establishment Admins</a>
+            <a href="/admin/manage-users" style="padding: 10px 16px; background: #9C27B0; color: white; border-radius: 4px; text-decoration: none; font-weight: 500;">👤 Manage Users</a>
+            <a href="/admin/database-admins" style="padding: 10px 16px; background: #f44336; color: white; border-radius: 4px; text-decoration: none; font-weight: 500;">🔐 Database Admins</a>
+            {{/if}}
+        </div>
+
         {{#each stats}}
         <div class="card" style="margin-bottom: 24px;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
                 <div>
                     <h2 style="margin: 0;"><a href="/establishments/{{ this.establishment._id }}" style="text-decoration: none; color: #333;">{{ this.establishment.name }}</a></h2>
-                    <p style="color: #666; margin: 4px 0 0 0;">{{ this.establishment.location }} • {{ this.establishment.hours }}</p>
+                    <p style="color: #666; margin: 4px 0 0 0;">{{ this.establishment.location }} • {{ formatAllHours this.establishment.hours }}</p>
                 </div>
-                <a href="/establishments/{{ this.establishment._id }}/edit" style="padding: 8px 16px; background: #4CAF50; color: white; border-radius: 4px; text-decoration: none; font-weight: 600;">Edit</a>
+                <a href="/establishments/{{ this.establishment._id }}" style="padding: 8px 16px; background: #4CAF50; color: white; border-radius: 4px; text-decoration: none; font-weight: 600;">Edit</a>
             </div>
 
             <!-- Stats Grid -->

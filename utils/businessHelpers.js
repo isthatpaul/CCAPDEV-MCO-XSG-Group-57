@@ -1,45 +1,41 @@
 // Helper functions for business hours and recommendations
 
-const parseHours = (hoursStr) => {
-    // Parse format like "7:00 AM - 9:00 PM" or "24/7"
-    if (!hoursStr || hoursStr === '24/7') {
-        return { open: 0, close: 24 };
-    }
-
-    try {
-        const [openStr, closeStr] = hoursStr.split('-').map(s => s.trim());
-        
-        const parseTime = (timeStr) => {
-            const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
-            if (!match) return null;
-            
-            let hours = parseInt(match[1]);
-            const minutes = parseInt(match[2]);
-            const meridiem = match[3].toUpperCase();
-            
-            if (meridiem === 'PM' && hours !== 12) hours += 12;
-            if (meridiem === 'AM' && hours === 12) hours = 0;
-            
-            return hours + minutes / 60;
-        };
-
-        const open = parseTime(openStr);
-        const close = parseTime(closeStr);
-
-        return { open, close };
-    } catch (err) {
+const parseHours = (hoursArray) => {
+    // Parse structured hours array for current day
+    if (!hoursArray || hoursArray.length === 0) {
         return null;
     }
+
+    const now = new Date();
+    const manilaTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+    const currentDayOfWeek = manilaTime.getDay();
+
+    const todayHours = hoursArray.find(h => h.dayOfWeek === currentDayOfWeek);
+    if (!todayHours || todayHours.isClosed) {
+        return null;
+    }
+
+    const parseTime = (timeStr) => {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours + minutes / 60;
+    };
+
+    return {
+        open: parseTime(todayHours.openTime),
+        close: parseTime(todayHours.closeTime),
+        dayHours: todayHours
+    };
 };
 
-const getBusinessStatus = (hoursStr) => {
+const getBusinessStatus = (hoursArray) => {
     // Get current time in Manila (UTC+8)
     const now = new Date();
     const manilaTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
     const currentHour = manilaTime.getHours() + manilaTime.getMinutes() / 60;
+    const currentDayOfWeek = manilaTime.getDay();
 
-    const hours = parseHours(hoursStr);
-    if (!hours) return { status: 'unknown', message: 'Hours not specified' };
+    const hours = parseHours(hoursArray);
+    if (!hours) return { status: 'closed', message: 'Closed today' };
 
     const isOpen = currentHour >= hours.open && currentHour < hours.close;
     const timeUntilClose = hours.close - currentHour;
@@ -51,8 +47,31 @@ const getBusinessStatus = (hoursStr) => {
         }
         return { status: 'open', message: 'Open now' };
     } else {
-        const nextOpen = timeUntilOpen > 0 ? timeUntilOpen : 24 + timeUntilOpen;
-        return { status: 'closed', message: `Opens in ${Math.round(nextOpen * 60)} mins` };
+        // Find next opening time
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        let nextDayOffset = 0;
+        let nextDayHours = null;
+        
+        // Search for next open day
+        for (let i = 1; i <= 7; i++) {
+            const searchDay = (currentDayOfWeek + i) % 7;
+            const dayHours = hoursArray.find(h => h.dayOfWeek === searchDay);
+            if (dayHours && !dayHours.isClosed) {
+                nextDayOffset = i;
+                nextDayHours = dayHours;
+                break;
+            }
+        }
+        
+        if (!nextDayHours) {
+            return { status: 'closed', message: 'No opening hours found' };
+        }
+        
+        const nextDay = (currentDayOfWeek + nextDayOffset) % 7;
+        const timeStr = formatTime(nextDayHours.openTime);
+        const dayStr = nextDayOffset === 0 ? 'today' : (nextDayOffset === 1 ? 'tomorrow' : dayNames[nextDay]);
+        
+        return { status: 'closed', message: `Opens at ${timeStr}` };
     }
 };
 
@@ -112,9 +131,68 @@ const updateEstablishmentRating = async (establishmentId) => {
     }
 };
 
+// Helper function to convert 24-hour time to 12-hour format
+const formatTime = (timeStr) => {
+    if (!timeStr) return '';
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const meridiem = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${meridiem}`;
+};
+
+// Helper function to format hours for a single day
+const formatDayHours = (dayHours) => {
+    if (!dayHours || dayHours.isClosed) {
+        return 'Closed';
+    }
+    return `${formatTime(dayHours.openTime)} - ${formatTime(dayHours.closeTime)}`;
+};
+
+// Helper function to format all hours for display
+const formatAllHours = (hoursArray) => {
+    if (!hoursArray || hoursArray.length === 0) {
+        return 'Hours not specified';
+    }
+
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const hoursByDay = {};
+    
+    hoursArray.forEach(h => {
+        hoursByDay[h.dayOfWeek] = h;
+    });
+
+    // Group consecutive days with same hours
+    const groups = [];
+    let currentGroup = null;
+
+    for (let i = 0; i < 7; i++) {
+        const dayHours = hoursByDay[i];
+        const hoursStr = formatDayHours(dayHours);
+
+        if (currentGroup && currentGroup.hours === hoursStr) {
+            currentGroup.days.push(dayNames[i]);
+        } else {
+            if (currentGroup) groups.push(currentGroup);
+            currentGroup = { days: [dayNames[i]], hours: hoursStr };
+        }
+    }
+    if (currentGroup) groups.push(currentGroup);
+
+    // Format as "Mon-Fri 9:00 AM - 5:00 PM, Sat-Sun 10:00 AM - 4:00 PM"
+    return groups.map(g => {
+        const dayRange = g.days.length === 1 
+            ? g.days[0] 
+            : `${g.days[0]}-${g.days[g.days.length - 1]}`;
+        return `${dayRange} ${g.hours}`;
+    }).join(', ');
+};
+
 module.exports = {
     parseHours,
     getBusinessStatus,
     getRecommendations,
-    updateEstablishmentRating
+    updateEstablishmentRating,
+    formatTime,
+    formatDayHours,
+    formatAllHours
 };

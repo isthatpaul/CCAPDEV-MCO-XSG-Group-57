@@ -1,0 +1,219 @@
+<main class="main">
+    <div class="container">
+        <div style="margin-bottom: 24px;">
+            <h1>Manage Establishment Admins</h1>
+            <p style="color: #666; margin-top: 8px;">Assign establishment admins to manage individual establishments.</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Establishment Name</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Location</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Current Admin</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each establishments}}
+                    <tr style="border-bottom: 1px solid #eee;" class="establishment-row" data-id="{{ this._id }}">
+                        <td style="padding: 12px;">
+                            <strong>{{ this.name }}</strong>
+                        </td>
+                        <td style="padding: 12px;">{{ this.location }}</td>
+                        <td style="padding: 12px;">
+                            {{#if this.assignedAdmin}}
+                            <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 12px; border-radius: 4px; font-size: 14px;">
+                                {{ this.assignedAdmin.name }}
+                            </span>
+                            {{else}}
+                            <span style="color: #999; font-size: 14px; font-style: italic;">Not assigned</span>
+                            {{/if}}
+                        </td>
+                        <td style="padding: 12px;">
+                            <button class="btn-assign" onclick="openAssignModal('{{ this._id }}', '{{ this.name }}')">
+                                {{#if this.assignedAdmin}}Change Admin{{else}}Assign Admin{{/if}}
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        {{#unless establishments.length}}
+        <div class="card" style="text-align: center; padding: 40px;">
+            <p style="color: #999; font-size: 16px;">No establishments found.</p>
+        </div>
+        {{/unless}}
+    </div>
+</main>
+
+<!-- Assign Admin Modal -->
+<div id="assignModal" class="overlay" style="display: none;">
+    <div class="popup">
+        <h3>Assign Admin to Establishment</h3>
+        <p style="color: #666; margin-bottom: 16px;">Choose an existing admin or create a new one.</p>
+        
+        <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+            <h4 style="margin-bottom: 12px;">Existing Admins</h4>
+            <div id="existingAdminsList" style="margin-bottom: 12px; max-height: 200px; overflow-y: auto;">
+                {{#each establishmentAdmins}}
+                <button type="button" class="admin-option" onclick="assignExistingAdmin('{{ this._id }}')">
+                    <div style="text-align: left;">
+                        <strong>{{ this.name }}</strong>
+                        <div style="font-size: 12px; color: #666;">{{ this.email }}</div>
+                        <div style="font-size: 11px; color: #999; margin-top: 4px;">
+                            Manages {{#if this.establishmentsManaged}}{{this.establishmentsManaged.length}} establishment{{#if (ne this.establishmentsManaged.length 1)}}s{{/if}}{{else}}0 establishments{{/if}}
+                        </div>
+                    </div>
+                </button>
+                {{/each}}
+                {{#unless establishmentAdmins.length}}
+                <p style="color: #999; font-size: 14px;">No existing admins found.</p>
+                {{/unless}}
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4 style="margin-bottom: 12px;">Create New Admin</h4>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Full Name</label>
+                <input type="text" id="newAdminName" placeholder="e.g., John Smith" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px;">
+                
+                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Email</label>
+                <input type="email" id="newAdminEmail" placeholder="e.g., admin@establishment.com" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px;">
+                
+                <button type="button" onclick="createAndAssignAdmin()" class="btn" style="background: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                    Create & Assign
+                </button>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+            <button type="button" class="btn-secondary" onclick="closeAssignModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentEstablishmentId = null;
+    let currentEstablishmentName = null;
+
+    function openAssignModal(estId, estName) {
+        currentEstablishmentId = estId;
+        currentEstablishmentName = estName;
+        document.getElementById('assignModal').style.display = 'flex';
+        document.getElementById('newAdminName').value = '';
+        document.getElementById('newAdminEmail').value = '';
+    }
+
+    function closeAssignModal() {
+        document.getElementById('assignModal').style.display = 'none';
+        currentEstablishmentId = null;
+    }
+
+    function assignExistingAdmin(adminId) {
+        if (!currentEstablishmentId) return;
+
+        fetch('/admin/assign-establishment-admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                establishmentId: currentEstablishmentId,
+                adminId: adminId
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('Admin assigned successfully!');
+                location.reload();
+            } else {
+                alert('Error: ' + (data.message || 'Failed to assign admin'));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Error assigning admin');
+        });
+    }
+
+    function createAndAssignAdmin() {
+        const name = document.getElementById('newAdminName').value.trim();
+        const email = document.getElementById('newAdminEmail').value.trim();
+
+        if (!name) {
+            alert('Please enter a name');
+            return;
+        }
+        if (!email || !email.includes('@')) {
+            alert('Please enter a valid email');
+            return;
+        }
+
+        fetch('/admin/create-and-assign-establishment-admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                establishmentId: currentEstablishmentId
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('Admin created and assigned successfully! They can log in with their email and password.');
+                location.reload();
+            } else {
+                alert('Error: ' + (data.message || 'Failed to create and assign admin'));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Error creating and assigning admin');
+        });
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('assignModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeAssignModal();
+        }
+    });
+
+    // Style for admin option buttons
+    const style = document.createElement('style');
+    style.textContent = `
+        .admin-option {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .admin-option:hover {
+            background: #f5f5f5;
+            border-color: #4CAF50;
+        }
+        .btn-assign {
+            padding: 8px 16px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-assign:hover {
+            background: #0b7dda;
+        }
+    `;
+    document.head.appendChild(style);
+</script>

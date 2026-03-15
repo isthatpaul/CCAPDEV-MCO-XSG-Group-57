@@ -71,51 +71,23 @@ const adminController = {
         }
     },
 
-    async getAdminManagement(req, res) {
+    async getManageUsers(req, res) {
         try {
-            if (!req.session.userId) {
-                return res.status(401).send('Not logged in');
-            }
+            const users = await User.find().lean();
 
-            const user = await User.findById(req.session.userId)
-                .populate('linkedEstablishment')
-                .lean();
-            
-            if (!user || user.adminType !== 'database_admin') {
-                return res.status(403).send('Only database admins can access this page');
-            }
-
-            const allEstablishments = await Establishment.find()
-                .populate('admin', 'name email')
-                .lean();
-            
-            const establishmentAdmins = await User.find({ adminType: 'establishment_admin' })
-                .populate('linkedEstablishment', 'name')
-                .lean();
-
-            res.render('admin/manage-admins', {
-                title: 'Manage Establishment Admins',
-                establishments: allEstablishments,
-                admins: establishmentAdmins,
+            res.render('admin/manage-users', {
+                title: 'Manage Users',
+                users,
                 extraCSS: 'establishments.css'
             });
         } catch (err) {
             console.error(err);
-            res.status(500).send('Error loading admin management page');
+            res.status(500).send('Error loading user management page');
         }
     },
 
     async createEstablishmentAdmin(req, res) {
         try {
-            if (!req.session.userId) {
-                return res.status(401).send('Not logged in');
-            }
-
-            const databaseAdmin = await User.findById(req.session.userId);
-            if (!databaseAdmin || databaseAdmin.adminType !== 'database_admin') {
-                return res.status(403).send('Only database admins can create establishment admins');
-            }
-
             const { name, email, password, establishmentId } = req.body;
 
             // Validate inputs
@@ -175,15 +147,6 @@ const adminController = {
 
     async deleteEstablishmentAdmin(req, res) {
         try {
-            if (!req.session.userId) {
-                return res.status(401).send('Not logged in');
-            }
-
-            const databaseAdmin = await User.findById(req.session.userId);
-            if (!databaseAdmin || databaseAdmin.adminType !== 'database_admin') {
-                return res.status(403).send('Only database admins can delete establishment admins');
-            }
-
             const { adminId } = req.params;
 
             const admin = await User.findById(adminId);
@@ -215,15 +178,6 @@ const adminController = {
 
     async getManageDatabaseAdmins(req, res) {
         try {
-            if (!req.session.userId) {
-                return res.status(401).send('Not logged in');
-            }
-
-            const currentAdmin = await User.findById(req.session.userId);
-            if (!currentAdmin || currentAdmin.adminType !== 'database_admin') {
-                return res.status(403).send('Only database admins can access this page');
-            }
-
             const databaseAdmins = await User.find({ adminType: 'database_admin' }).lean();
 
             res.render('admin/manage-database-admins', {
@@ -239,15 +193,6 @@ const adminController = {
 
     async createDatabaseAdmin(req, res) {
         try {
-            if (!req.session.userId) {
-                return res.status(401).send('Not logged in');
-            }
-
-            const currentAdmin = await User.findById(req.session.userId);
-            if (!currentAdmin || currentAdmin.adminType !== 'database_admin') {
-                return res.status(403).send('Only database admins can create other database admins');
-            }
-
             const { name, email, password } = req.body;
 
             // Validate inputs
@@ -300,15 +245,6 @@ const adminController = {
 
     async deleteDatabaseAdmin(req, res) {
         try {
-            if (!req.session.userId) {
-                return res.status(401).send('Not logged in');
-            }
-
-            const currentAdmin = await User.findById(req.session.userId);
-            if (!currentAdmin || currentAdmin.adminType !== 'database_admin') {
-                return res.status(403).send('Only database admins can delete other database admins');
-            }
-
             const { adminId } = req.params;
 
             // Check if trying to delete themselves
@@ -319,16 +255,13 @@ const adminController = {
                 });
             }
 
-            const admin = await User.findById(adminId);
+            const admin = await User.findByIdAndDelete(adminId);
             if (!admin || admin.adminType !== 'database_admin') {
                 return res.status(404).json({ 
                     success: false, 
                     message: 'Database admin not found' 
                 });
             }
-
-            // Delete the admin user
-            await User.findByIdAndDelete(adminId);
 
             res.status(200).json({ 
                 success: true, 
@@ -340,6 +273,204 @@ const adminController = {
                 success: false, 
                 message: 'Failed to delete database admin' 
             });
+        }
+    },
+
+    async getManageEstablishmentAdmins(req, res) {
+        try {
+            const establishments = await Establishment.find({}).lean();
+            
+            const establishmentData = [];
+            for (const est of establishments) {
+                // Find admin assigned to this establishment
+                const assignedAdmin = await User.findOne({ 
+                    establishmentsManaged: est._id,
+                    adminType: 'establishment_admin'
+                }).lean();
+
+                establishmentData.push({
+                    ...est,
+                    assignedAdmin: assignedAdmin || null
+                });
+            }
+
+            // Get all establishment admins
+            const establishmentAdmins = await User.find({
+                adminType: 'establishment_admin'
+            }).lean();
+
+            res.render('admin/manage-establishment-admins', {
+                title: 'Manage Establishment Admins',
+                establishments: establishmentData,
+                establishmentAdmins: establishmentAdmins
+            });
+        } catch (err) {
+            console.error('Error getting establishment admins:', err);
+            res.status(500).send('Server error');
+        }
+    },
+
+    async assignEstablishmentAdmin(req, res) {
+        try {
+            const { establishmentId, adminId } = req.body;
+
+            // Validate inputs
+            if (!establishmentId || !adminId) {
+                return res.status(400).json({ success: false, message: 'Missing required fields' });
+            }
+
+            // Get the establishment admin
+            const admin = await User.findById(adminId);
+            if (!admin || admin.adminType !== 'establishment_admin') {
+                return res.status(404).json({ success: false, message: 'Admin not found' });
+            }
+
+            // Get the establishment
+            const establishment = await Establishment.findById(establishmentId);
+            if (!establishment) {
+                return res.status(404).json({ success: false, message: 'Establishment not found' });
+            }
+
+            // Check if admin already manages this establishment
+            if (admin.establishmentsManaged.includes(establishmentId)) {
+                return res.status(400).json({ success: false, message: 'Admin already assigned to this establishment' });
+            }
+
+            // Add establishment to admin's managed list
+            admin.establishmentsManaged.push(establishmentId);
+            await admin.save();
+
+            res.json({ 
+                success: true, 
+                message: 'Establishment admin assigned successfully',
+                adminName: admin.name
+            });
+        } catch (err) {
+            console.error('Error assigning admin:', err);
+            res.status(500).json({ success: false, message: 'Failed to assign admin' });
+        }
+    },
+
+    async createAndAssignEstablishmentAdmin(req, res) {
+        try {
+            const { name, email, establishmentId } = req.body;
+
+            // Validate inputs
+            if (!name || !email || !establishmentId) {
+                return res.status(400).json({ success: false, message: 'Missing required fields' });
+            }
+
+            // Check if email already exists
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ success: false, message: 'Email already in use' });
+            }
+
+            // Check if establishment exists
+            const establishment = await Establishment.findById(establishmentId);
+            if (!establishment) {
+                return res.status(404).json({ success: false, message: 'Establishment not found' });
+            }
+
+            // Create new establishment admin
+            const newAdmin = new User({
+                name,
+                email,
+                password: 'admin123',
+                adminType: 'establishment_admin',
+                isAdmin: true,
+                establishmentsManaged: [establishmentId]
+            });
+
+            await newAdmin.save();
+
+            res.json({ 
+                success: true, 
+                message: 'Establishment admin created and assigned successfully',
+                admin: { id: newAdmin._id, name: newAdmin.name, email: newAdmin.email }
+            });
+        } catch (err) {
+            console.error('Error creating and assigning admin:', err);
+            res.status(500).json({ success: false, message: 'Failed to create and assign admin' });
+        }
+    },
+
+    async removeEstablishmentAdmin(req, res) {
+        try {
+            const { adminId, establishmentId } = req.body;
+
+            // Get the admin
+            const admin = await User.findById(adminId);
+            if (!admin) {
+                return res.status(404).json({ success: false, message: 'Admin not found' });
+            }
+
+            // Remove establishment from admin's managed list
+            admin.establishmentsManaged = admin.establishmentsManaged.filter(
+                id => id.toString() !== establishmentId
+            );
+            await admin.save();
+
+            res.json({ 
+                success: true, 
+                message: 'Admin removed from establishment successfully'
+            });
+        } catch (err) {
+            console.error('Error removing admin:', err);
+            res.status(500).json({ success: false, message: 'Failed to remove admin' });
+        }
+    },
+
+    async updateUser(req, res) {
+        try {
+            const { name, email, phone, bio } = req.body;
+            const userId = req.params.userId;
+
+            // Validate inputs
+            if (!name || !email) {
+                return res.status(400).json({ success: false, message: 'Name and email are required' });
+            }
+
+            // Check if email is already taken by another user
+            const existingUser = await User.findOne({ email, _id: { $ne: userId } });
+            if (existingUser) {
+                return res.status(400).json({ success: false, message: 'Email already in use' });
+            }
+
+            // Update user
+            await User.findByIdAndUpdate(userId, {
+                name,
+                email,
+                phone: phone || '',
+                bio: bio || ''
+            });
+
+            res.json({ success: true, message: 'User updated successfully' });
+        } catch (err) {
+            console.error('Error updating user:', err);
+            res.status(500).json({ success: false, message: 'Failed to update user' });
+        }
+    },
+
+    async deleteUser(req, res) {
+        try {
+            const userId = req.params.userId;
+
+            // Prevent deleting the current logged in user
+            if (userId === req.session.userId) {
+                return res.status(400).json({ success: false, message: 'You cannot delete your own account' });
+            }
+
+            // Delete all reviews by this user
+            await Review.deleteMany({ userId });
+
+            // Delete the user
+            await User.findByIdAndDelete(userId);
+
+            res.json({ success: true, message: 'User deleted successfully' });
+        } catch (err) {
+            console.error('Error deleting user:', err);
+            res.status(500).json({ success: false, message: 'Failed to delete user' });
         }
     }
 };

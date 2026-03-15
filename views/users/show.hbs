@@ -22,7 +22,9 @@
                     </div>
 
                     {{#if isOwnProfile}}
-                    <button id="edit-button">Edit Profile</button>
+                    <button id="edit-profile-btn" style="display: block; width: 100%; margin-top: 12px; padding: 10px; background: #2196F3; color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">
+                        ✏️ Edit Profile
+                    </button>
                     <a href="/users/{{ user._id }}/favorites" style="display: block; margin-top: 12px; padding: 10px; text-align: center; background: #FF6B6B; color: white; border-radius: 4px; text-decoration: none; font-weight: 600;">
                         ⭐ View My Favorites
                     </a>
@@ -35,31 +37,7 @@
 
             <div class="main-right">
                 {{#if isOwnProfile}}
-                <div class="card" id="edit-card" style="display:none;">
-                    <h3>Edit Profile</h3>
-                    <form id="editProfileForm" action="/users/{{ user._id }}/edit" method="POST" enctype="multipart/form-data">
-                        <div>
-                            <label for="editBio">Update Bio</label>
-                            <textarea id="editBio" name="bio" rows="4" placeholder="Tell other users about yourself...">{{ user.bio }}</textarea>
-                        </div>
-                        <div>
-                            <label for="editEmail">Update Contact Email</label>
-                            <input type="email" id="editEmail" name="email" placeholder="you@example.com" value="{{ user.email }}">
-                        </div>
-                        <div>
-                            <label for="editPhone">Update Contact Number</label>
-                            <input type="tel" id="editPhone" name="phone" placeholder="0917xxxxxxx" value="{{ user.phone }}">
-                        </div>
-                        <div>
-                            <label for="editPicture">Change Profile Picture</label>
-                            <input type="file" id="editPicture" name="picture">
-                        </div>
-                        <div style="margin-top:10px">
-                            <button type="submit">Save Changes</button>
-                            <button type="button" id="cancelEditBtn">Cancel</button>
-                        </div>
-                    </form>
-                </div>
+                <!-- Edit Profile and Change Password Modal will appear on click -->
                 {{/if}}
 
                 <!-- Reviews Container -->
@@ -84,6 +62,65 @@
 </main>
 
 {{#if isOwnProfile}}
+<!-- Edit Profile Modal Overlay -->
+<div id="editProfileOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 8px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        <div id="editProfileTab">
+            <h2 style="margin-top: 0;">Edit Profile</h2>
+            <form id="editProfileForm" method="POST" enctype="multipart/form-data">
+                <div>
+                    <label for="editName">Full Name</label>
+                    <input type="text" id="editName" name="name" placeholder="Your full name" value="{{ user.name }}" required>
+                </div>
+                <div>
+                    <label for="editBio">Bio</label>
+                    <textarea id="editBio" name="bio" rows="4" placeholder="Tell other users about yourself...">{{ user.bio }}</textarea>
+                </div>
+                <div>
+                    <label for="editEmail">Contact Email</label>
+                    <input type="email" id="editEmail" name="email" placeholder="you@example.com" value="{{ user.email }}" required>
+                </div>
+                <div>
+                    <label for="editPhone">Contact Number</label>
+                    <input type="tel" id="editPhone" name="phone" placeholder="0917xxxxxxx" value="{{ user.phone }}">
+                </div>
+                <div>
+                    <label for="editPicture">Change Profile Picture</label>
+                    <input type="file" id="editPicture" name="picture">
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" id="switchToPassword" style="padding: 10px 20px; background: #FF9800; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Change Password</button>
+                    <button type="button" id="cancelEditBtn" style="padding: 10px 20px; background: #999; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Cancel</button>
+                    <button type="submit" style="padding: 10px 20px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="changePasswordTab" style="display: none;">
+            <h2 style="margin-top: 0;">Change Password</h2>
+            <form id="changePasswordForm">
+                <div>
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter your current password" required>
+                </div>
+                <div>
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" placeholder="Enter your new password" required>
+                </div>
+                <div>
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your new password" required>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" id="switchToProfile" style="padding: 10px 20px; background: #9C27B0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Edit Profile</button>
+                    <button type="button" id="cancelPasswordBtn" style="padding: 10px 20px; background: #999; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Cancel</button>
+                    <button type="submit" style="padding: 10px 20px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Delete Account Modal -->
 <div id="deleteAccountModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; align-items: center; justify-content: center;">
     <div style="background: white; border-radius: 8px; padding: 30px; max-width: 400px; width: 90%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
@@ -110,9 +147,16 @@
 </style>
 
 <script>
-    var editBtn = document.getElementById('edit-button');
-    var editCard = document.getElementById('edit-card');
+    var editProfileBtn = document.getElementById('edit-profile-btn');
+    var editProfileOverlay = document.getElementById('editProfileOverlay');
+    var editProfileTab = document.getElementById('editProfileTab');
+    var changePasswordTab = document.getElementById('changePasswordTab');
     var cancelEditBtn = document.getElementById('cancelEditBtn');
+    var cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
+    var switchToPassword = document.getElementById('switchToPassword');
+    var switchToProfile = document.getElementById('switchToProfile');
+    var editProfileForm = document.getElementById('editProfileForm');
+    var changePasswordForm = document.getElementById('changePasswordForm');
     var deleteAccountBtn = document.getElementById('delete-account-btn');
     var deleteAccountModal = document.getElementById('deleteAccountModal');
     var confirmEmailInput = document.getElementById('confirmEmailInput');
@@ -121,21 +165,97 @@
     
     const userEmail = '{{ user.email }}';
 
-    editBtn.addEventListener('click', function() {
-        if (editCard.style.display === 'none') {
-            editCard.style.display = 'block';
-            editBtn.textContent = 'Cancel';
-        } else {
-            editCard.style.display = 'none';
-            editBtn.textContent = 'Edit Profile';
-        }
+    // Edit Profile Modal
+    editProfileBtn.addEventListener('click', function() {
+        editProfileOverlay.style.display = 'flex';
+        editProfileTab.style.display = 'block';
+        changePasswordTab.style.display = 'none';
+    });
+
+    // Switch between tabs in modal
+    switchToPassword.addEventListener('click', function() {
+        editProfileTab.style.display = 'none';
+        changePasswordTab.style.display = 'block';
+    });
+
+    switchToProfile.addEventListener('click', function() {
+        editProfileTab.style.display = 'block';
+        changePasswordTab.style.display = 'none';
     });
 
     cancelEditBtn.addEventListener('click', function() {
-        editCard.style.display = 'none';
-        editBtn.textContent = 'Edit Profile';
+        editProfileOverlay.style.display = 'none';
     });
 
+    cancelPasswordBtn.addEventListener('click', function() {
+        editProfileOverlay.style.display = 'none';
+    });
+
+    editProfileOverlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+            editProfileOverlay.style.display = 'none';
+        }
+    });
+
+    // Handle profile edit form submission
+    editProfileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        fetch('/users/{{ user._id }}/edit', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => {
+            if (res.ok) {
+                location.reload();
+            } else {
+                alert('Failed to update profile');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Error updating profile');
+        });
+    });
+
+    // Handle password change form submission
+    changePasswordForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (newPassword !== confirmPassword) {
+            alert('❌ Passwords do not match!');
+            return;
+        }
+        
+        const data = {
+            currentPassword: document.getElementById('currentPassword').value,
+            newPassword: newPassword
+        };
+        
+        fetch('/users/{{ user._id }}/change-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('✓ Password changed successfully!');
+                changePasswordForm.reset();
+            } else {
+                alert('❌ ' + (data.message || 'Failed to change password'));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('❌ Error changing password');
+        });
+    });
+
+    // Delete Account functionality
     deleteAccountBtn.addEventListener('click', function() {
         const confirmed = confirm('⚠️ WARNING: This will permanently delete your account and all associated data (reviews, profile pictures, etc.). This action cannot be undone. Are you sure?');
         if (confirmed) {

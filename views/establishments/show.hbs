@@ -1,82 +1,124 @@
 <div class="establishment-det-holder">
-    <img src="/images/{{ establishment.image }}" alt="{{ establishment.name }}" style="width: 100%; height: 300px; object-fit: cover;">
+    <img src="{{ imageUrl establishment.image }}" alt="{{ establishment.name }}" style="width: 100%; height: 300px; object-fit: cover;">
 </div>
 
 <!-- Detail Section -->
 <section class="detail-header">
     <div class="container">
         <div id="details">
-            <h2 class="establishment-title">{{ establishment.name }}</h2>
-            
-            <!-- Business Status Badge -->
-            {{#if businessStatus}}
-            {{#if (eq businessStatus.status "open")}}
-            <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: #4CAF50; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">🟢 {{ businessStatus.message }}</div>
-            {{else if (eq businessStatus.status "closing")}}
-            <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: #FF9800; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">⏰ {{ businessStatus.message }}</div>
-            {{else}}
-            <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: #f44336; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">🔴 {{ businessStatus.message }}</div>
-            {{/if}}
-            {{/if}}
+            <!-- Header with Title and Rating Breakdown -->
+            <div style="display: flex; gap: 32px; align-items: flex-start; margin-bottom: 20px;">
+                <div style="flex: 1;">
+                    <h2 class="establishment-title">{{ establishment.name }}</h2>
+                    
+                    <!-- Business Status Badge -->
+                    {{#if businessStatus}}
+                    <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: {{statusColor businessStatus.status}}; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">{{statusEmoji businessStatus.status}} {{ businessStatus.message }}</div>
+                    {{/if}}
+                    
+                    {{#if canEdit}}
+                    <div style="margin-top: 16px;">
+                        <button id="edit-button">Edit</button>
+                    </div>
+                    {{/if}}
+                </div>
 
-            <!-- Rating Breakdown -->
-            <div style="margin: 20px 0; padding: 16px; background: #f9f9f9; border-radius: 8px;">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                    <span style="font-size: 28px; font-weight: bold;">{{ establishment.rating }}</span>
-                    <div>
-                        <div style="font-size: 20px;">{{ stars establishment.rating }}</div>
-                        <small style="color: #666;">{{ ratingBreakdown.total }} reviews</small>
+                <!-- Rating Breakdown -->
+                <div style="flex: 0 0 300px; padding: 16px; background: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <span style="font-size: 28px; font-weight: bold;">{{ establishment.rating }}</span>
+                        <div>
+                            <div style="font-size: 20px;">{{ stars establishment.rating }}</div>
+                            <small style="color: #666;">{{ ratingBreakdown.total }} reviews</small>
+                        </div>
                     </div>
+                    {{#if ratingBreakdown.total}}
+                    <div style="font-size: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                            <span style="width: 30px;">5★</span>
+                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.five ratingBreakdown.total}}%;"></div>
+                            </div>
+                            <span style="width: 25px; text-align: right;">{{ ratingBreakdown.five }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                            <span style="width: 30px;">4★</span>
+                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.four ratingBreakdown.total}}%;"></div>
+                            </div>
+                            <span style="width: 25px; text-align: right;">{{ ratingBreakdown.four }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                            <span style="width: 30px;">3★</span>
+                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.three ratingBreakdown.total}}%;"></div>
+                            </div>
+                            <span style="width: 25px; text-align: right;">{{ ratingBreakdown.three }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                            <span style="width: 30px;">2★</span>
+                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.two ratingBreakdown.total}}%;"></div>
+                            </div>
+                            <span style="width: 25px; text-align: right;">{{ ratingBreakdown.two }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                            <span style="width: 30px;">1★</span>
+                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.one ratingBreakdown.total}}%;"></div>
+                            </div>
+                            <span style="width: 25px; text-align: right;">{{ ratingBreakdown.one }}</span>
+                        </div>
+                    </div>
+                    {{/if}}
                 </div>
-                {{#if ratingBreakdown.total}}
-                <div style="font-size: 12px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
-                        <span style="width: 30px;">5★</span>
-                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
-                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.five ratingBreakdown.total}}%;"></div>
-                        </div>
-                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.five }}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
-                        <span style="width: 30px;">4★</span>
-                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
-                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.four ratingBreakdown.total}}%;"></div>
-                        </div>
-                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.four }}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
-                        <span style="width: 30px;">3★</span>
-                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
-                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.three ratingBreakdown.total}}%;"></div>
-                        </div>
-                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.three }}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
-                        <span style="width: 30px;">2★</span>
-                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
-                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.two ratingBreakdown.total}}%;"></div>
-                        </div>
-                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.two }}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
-                        <span style="width: 30px;">1★</span>
-                        <div style="background: #e0e0e0; width: 120px; height: 8px; border-radius: 4px; overflow: hidden;">
-                            <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.one ratingBreakdown.total}}%;"></div>
-                        </div>
-                        <span style="width: 30px; text-align: right;">{{ ratingBreakdown.one }}</span>
-                    </div>
-                </div>
-                {{/if}}
             </div>
 
             <div class="main-content">
                 <div class="main-left card">
-                    <p><strong>Overall Rating:</strong> {{ stars establishment.rating }} {{ establishment.rating }}</p>
                     {{#if establishment.category}}<p><strong>Category:</strong> {{ establishment.category }}</p>{{/if}}
                     <p><strong>Location:</strong> {{#if establishment.location}}{{ establishment.location }}{{else}}<em>Not provided</em>{{/if}}</p>
-                    <p><strong>Contact:</strong> {{#if establishment.contact}}{{ establishment.contact }}{{else}}<em>Not provided</em>{{/if}}</p>
+                    {{#if establishment.contact}}<p><strong>Contact Email:</strong> <a href="mailto:{{ establishment.contact }}" style="color: #007bff;">{{ establishment.contact }}</a></p>{{/if}}
                     {{#if establishment.phone}}<p><strong>Phone:</strong> <a href="tel:{{ establishment.phone }}" style="color: #007bff;">{{ formatPhone establishment.phone }}</a></p>{{/if}}
-                    <p><strong>Hours:</strong> {{#if establishment.hours}}{{ establishment.hours }}{{else}}<em>Not provided</em>{{/if}}</p>
+                    {{#if establishment.hours}}
+                    <div style="margin-top: 12px;">
+                        <strong>Operating Hours:</strong>
+                        <table class="hours-table">
+                            <tbody>
+                                <tr>
+                                    <td>Sunday</td>
+                                    <td>{{ formatDayHours (getHoursByDay establishment.hours 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Monday</td>
+                                    <td>{{ formatDayHours (getHoursByDay establishment.hours 1) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tuesday</td>
+                                    <td>{{ formatDayHours (getHoursByDay establishment.hours 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Wednesday</td>
+                                    <td>{{ formatDayHours (getHoursByDay establishment.hours 3) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Thursday</td>
+                                    <td>{{ formatDayHours (getHoursByDay establishment.hours 4) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Friday</td>
+                                    <td>{{ formatDayHours (getHoursByDay establishment.hours 5) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Saturday</td>
+                                    <td>{{ formatDayHours (getHoursByDay establishment.hours 6) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    {{else}}
+                    <p><strong>Hours:</strong> <em>Not provided</em></p>
+                    {{/if}}
                     {{#if establishment.link}}<p><strong>Links:</strong> <a href="{{ establishment.link }}" target="_blank" rel="noopener noreferrer" style="color: #007bff;">Facebook ↗</a></p>{{/if}}
                 </div>
 
@@ -84,57 +126,6 @@
                     <h3>Description</h3>
                     <p id="estDescription">{{#if establishment.description}}{{ establishment.description }}{{else}}<em>No description provided</em>{{/if}}</p>
                 </div>
-
-                {{#if canEdit}}
-                <button id="edit-button">Edit</button>
-
-                <div class="card" id="edit-card" style="display:none;">
-                    <h3>Edit Establishment</h3>
-                    <form id="editEstablishmentForm" action="/establishments/{{ establishment._id }}/edit" method="POST" enctype="multipart/form-data">
-                        <div>
-                            <label>Establishment Name</label>
-                            <input type="text" name="name" value="{{ establishment.name }}" required>
-                        </div>
-                        <div>
-                            <label>Category</label>
-                            <input type="text" name="category" value="{{ establishment.category }}" placeholder="e.g., Cafe, Italian Restaurant, Fast Food">
-                        </div>
-                        <div>
-                            <label>Location</label>
-                            <input type="text" id="editLocation" name="location" value="{{ establishment.location }}">
-                        </div>
-                        <div>
-                            <label>Contact Email</label>
-                            <input type="text" id="editContact" name="contact" value="{{ establishment.contact }}">
-                        </div>
-                        <div>
-                            <label>Phone Number</label>
-                            <input type="tel" name="phone" value="{{ establishment.phone }}" placeholder="e.g., (02) 123-4567">
-                        </div>
-                        <div>
-                            <label>Hours</label>
-                            <input type="text" id="editHours" name="hours" value="{{ establishment.hours }}" placeholder="e.g., 7:00 AM - 9:00 PM">
-                        </div>
-                        <div>
-                            <label>Facebook Link</label>
-                            <input type="url" id="editLink" name="link" value="{{ establishment.link }}" placeholder="https://facebook.com/...">
-                        </div>
-                        <div>
-                            <label>Image</label>
-                            <input type="file" name="image" accept="image/*">
-                            {{#if establishment.image}}<small style="display: block; margin-top: 4px; color: #666;">Current image: {{ establishment.image }}</small>{{/if}}
-                        </div>
-                        <div>
-                            <label>Description</label>
-                            <textarea id="editDescription" name="description" rows="4">{{ establishment.description }}</textarea>
-                        </div>
-                        <div style="margin-top:10px">
-                            <button type="submit">Save Changes</button>
-                            <button type="button" id="cancelEditBtn">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-                {{/if}}
             </div>
         </div>
 
@@ -150,6 +141,78 @@
         {{/if}}
     </div>
 </section>
+
+<!-- Edit Establishment Overlay -->
+{{#if canEdit}}
+<div id="editEstablishmentOverlay" class="overlay" style="display:none;">
+    <div class="popup" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <h3>Edit Establishment</h3>
+        <form id="editEstablishmentForm" action="/establishments/{{ establishment._id }}/edit" method="POST" enctype="multipart/form-data">
+            <div>
+                <label>Establishment Name</label>
+                <input type="text" name="name" value="{{ establishment.name }}" required>
+            </div>
+            <div>
+                <label>Category</label>
+                <input type="text" name="category" value="{{ establishment.category }}" placeholder="e.g., Cafe, Italian Restaurant, Fast Food">
+            </div>
+            <div>
+                <label>Location</label>
+                <input type="text" id="editLocation" name="location" value="{{ establishment.location }}">
+            </div>
+            <div>
+                <label>Contact Email</label>
+                <input type="text" id="editContact" name="contact" value="{{ establishment.contact }}">
+            </div>
+            <div>
+                <label>Phone Number</label>
+                <input type="tel" name="phone" value="{{ establishment.phone }}" placeholder="e.g., (02) 123-4567">
+            </div>
+            <div class="hours-container">
+                <label><strong>Operating Hours</strong></label>
+                {{#each establishment.hours}}
+                <div class="day-hours">
+                    <label>
+                        {{#if (eq this.dayOfWeek 0)}}Sunday
+                        {{else if (eq this.dayOfWeek 1)}}Monday
+                        {{else if (eq this.dayOfWeek 2)}}Tuesday
+                        {{else if (eq this.dayOfWeek 3)}}Wednesday
+                        {{else if (eq this.dayOfWeek 4)}}Thursday
+                        {{else if (eq this.dayOfWeek 5)}}Friday
+                        {{else}}Saturday{{/if}}
+                    </label>
+                    <div class="time-inputs">
+                        <input type="checkbox" name="hours[{{ this.dayOfWeek }}][isClosed]" {{#if this.isClosed}}checked{{/if}}> Closed
+                    </div>
+                    <div class="time-row">
+                        <input type="time" name="hours[{{ this.dayOfWeek }}][openTime]" value="{{ this.openTime }}">
+                        <span>to</span>
+                        <input type="time" name="hours[{{ this.dayOfWeek }}][closeTime]" value="{{ this.closeTime }}">
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            <div>
+                <label>Facebook Link</label>
+                <input type="url" id="editLink" name="link" value="{{ establishment.link }}" placeholder="https://facebook.com/...">
+            </div>
+            <div>
+                <label>Image</label>
+                <input type="file" name="image" accept="image/*">
+                {{#if establishment.image}}<small style="display: block; margin-top: 4px; color: #666;">Current image: {{ establishment.image }}</small>{{/if}}
+            </div>
+            <div>
+                <label>Description</label>
+                <textarea id="editDescription" name="description" rows="4">{{ establishment.description }}</textarea>
+            </div>
+            <div style="margin-top:10px">
+                <button type="submit">Save Changes</button>
+                <button type="button" id="cancelEditBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{/if}}
 
 <!-- Review Form Overlay -->
 {{#if isLoggedIn}}
@@ -168,17 +231,18 @@
             </div>
             <div>
                 <label>Rating</label>
-                <div class="star-rating">
-                    <label for="star1" title="1 star">1★</label>
-                    <input type="radio" id="star1" name="rating" value="1">
-                    <label for="star2" title="2 stars">2★</label>
-                    <input type="radio" id="star2" name="rating" value="2">
-                    <label for="star3" title="3 stars">3★</label>
-                    <input type="radio" id="star3" name="rating" value="3">
-                    <label for="star4" title="4 stars">4★</label>
-                    <input type="radio" id="star4" name="rating" value="4">
-                    <label for="star5" title="5 stars">5★</label>
-                    <input type="radio" id="star5" name="rating" value="5" required>
+                <div class="drag-rating-slider">
+                    <div class="stars-container">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                    <input type="hidden" name="rating" id="reviewRating" required>
+                    <div class="rating-display">
+                        <span id="ratingValue">0</span>/5 stars
+                    </div>
                 </div>
             </div>
             <button type="submit">Post Review</button>
@@ -202,13 +266,19 @@
             </div>
             <div>
                 <label>Rating</label>
-                <select id="editRating" name="rating" required>
-                    <option value="1">1★</option>
-                    <option value="2">2★</option>
-                    <option value="3">3★</option>
-                    <option value="4">4★</option>
-                    <option value="5">5★</option>
-                </select>
+                <div class="drag-rating-slider">
+                    <div class="stars-container">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                    <input type="hidden" name="rating" id="editRating" required>
+                    <div class="rating-display">
+                        <span id="editRatingValue">0</span>/5 stars
+                    </div>
+                </div>
             </div>
             <button type="submit">Update Review</button>
             <button type="button" class="cancel" onclick="closeEditOverlay()">Cancel</button>
@@ -223,7 +293,7 @@
         <div class="review-list">
             <div class="review-list-header">
                 <h3>Reviews</h3>
-                <span>{{ reviews.length }} review{{#unless (eq reviews.length 1)}}s{{/unless}}</span>
+                <span>{{ reviews.length }} {{ pluralize reviews.length 'review' 'reviews' }}</span>
             </div>
 
             <!-- Review Filters & Sorting -->
@@ -367,19 +437,7 @@
         <h2 style="margin-top: 0; margin-bottom: 24px;">People Also Liked 👍</h2>
         <div class="card-grid">
             {{#each recommendations}}
-            <a href="/establishments/{{ this._id }}" class="est-card">
-                <div class="est-card-img">
-                    <img src="/images/{{ this.image }}" alt="{{ this.name }}" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                <div class="est-card-body">
-                    <h3>{{ this.name }}</h3>
-                    <div class="est-card-rating">
-                        <span class="stars">{{ stars this.rating }}</span>
-                        <span class="rating-num">{{ this.rating }}</span>
-                    </div>
-                    <p>{{ this.description }}</p>
-                </div>
-            </a>
+            {{> est-card}}
             {{/each}}
         </div>
     </div>
@@ -387,19 +445,65 @@
 {{/if}}
 
 <script>
+    // Star Rating Picker
+    function setupStarRating(containerId, inputId, displayId) {
+        const container = document.querySelector(`#${containerId} .stars-container`);
+        const input = document.getElementById(inputId);
+        const display = document.getElementById(displayId);
+        if (!container) return;
+
+        const stars = Array.from(container.querySelectorAll('.star'));
+
+        function highlight(count) {
+            stars.forEach((s, i) => s.classList.toggle('active', i < count));
+        }
+
+        function setRating(value) {
+            input.value = value;
+            if (display) display.textContent = value;
+            highlight(value);
+        }
+
+        stars.forEach((star, i) => {
+            star.addEventListener('mouseover', () => highlight(i + 1));
+            star.addEventListener('click', () => setRating(i + 1));
+            star.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                setRating(i + 1);
+            }, { passive: false });
+        });
+
+        container.addEventListener('mouseleave', () => highlight(parseInt(input.value) || 0));
+    }
+
+    // Initialize write review rating
+    setupStarRating('reviewOverlayForm', 'reviewRating', 'ratingValue');
+
+    // Initialize edit review rating
+    setupStarRating('editReviewOverlay', 'editRating', 'editRatingValue');
+
     // Edit establishment toggle
     var editBtn = document.getElementById('edit-button');
-    var editCard = document.getElementById('edit-card');
+    var editOverlay = document.getElementById('editEstablishmentOverlay');
     var cancelEditBtn = document.getElementById('cancelEditBtn');
 
-    if (editBtn) {
+    if (editBtn && editOverlay) {
         editBtn.addEventListener('click', function() {
-            editCard.style.display = 'block';
+            editOverlay.style.display = 'flex';
         });
     }
     if (cancelEditBtn) {
         cancelEditBtn.addEventListener('click', function() {
-            editCard.style.display = 'none';
+            editOverlay.style.display = 'none';
+        });
+    }
+
+    // Close overlay when clicking outside
+    if (editOverlay) {
+        editOverlay.addEventListener('click', function(e) {
+            if (e.target === editOverlay) {
+                editOverlay.style.display = 'none';
+            }
         });
     }
 
@@ -426,7 +530,21 @@
         form.action = `/reviews/${id}/edit`;
         document.getElementById('editTitle').value = title;
         document.getElementById('editComment').value = comment;
-        document.getElementById('editRating').value = rating;
+        
+        // Set rating with drag slider
+        const ratingInput = document.getElementById('editRating');
+        const ratingDisplay = document.getElementById('editRatingValue');
+        ratingInput.value = rating;
+        ratingDisplay.textContent = rating;
+        
+        const stars = overlay.querySelectorAll('.star');
+        stars.forEach((star, index) => {
+            if (index + 1 <= rating) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
         
         overlay.style.display = 'flex';
     }

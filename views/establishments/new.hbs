@@ -18,7 +18,7 @@
                     </div>
                     <div class="progress-step" id="step2Indicator">
                         <span class="step-number">2</span>
-                        <span class="step-label">Location & Contact</span>
+                        <span class="step-label">Location & Contact Info</span>
                     </div>
                     <div class="progress-step" id="step3Indicator">
                         <span class="step-number">3</span>
@@ -97,10 +97,10 @@
                     </div>
                 </div>
 
-                <!-- STEP 2: LOCATION & CONTACT -->
+                <!-- STEP 2: LOCATION & CONTACT INFO -->
                 <div class="form-step" id="step2">
                     <div class="step-title">
-                        <h2>📍 Location & Contact</h2>
+                        <h2>📍 Location & Contact Info</h2>
                         <p>Help customers find you</p>
                     </div>
 
@@ -124,7 +124,7 @@
                             name="contact" 
                             placeholder="e.g., info@establishment.com"
                         >
-                        <span class="form-hint">Email for inquiries</span>
+                        <span class="form-hint">Email address for inquiries</span>
                     </div>
 
                     <div class="form-group">
@@ -159,28 +159,93 @@
                 <div class="form-step" id="step3">
                     <div class="step-title">
                         <h2>🕐 Operating Hours</h2>
-                        <p>When is it open?</p>
+                        <p>When are you open each day?</p>
                     </div>
 
-                    <div class="form-group">
-                        <label for="hours">Operating Hours *</label>
-                        <input 
-                            type="text" 
-                            id="hours" 
-                            name="hours" 
-                            placeholder="e.g., 7:00 AM - 8:00 PM (Monday - Friday)"
-                            required
-                        >
-                        <span class="form-hint">Format: Start Time - End Time (Days of Operation)</span>
-                    </div>
+                    <div class="hours-container">
+                        <div class="day-hours">
+                            <label><strong>Sunday</strong></label>
+                            <div class="time-inputs">
+                                <input type="checkbox" name="hours[0][isClosed]" class="is-closed-checkbox"> Closed
+                            </div>
+                            <div class="time-row">
+                                <input type="time" name="hours[0][openTime]" class="time-input" value="09:00">
+                                <span>to</span>
+                                <input type="time" name="hours[0][closeTime]" class="time-input" value="17:00">
+                            </div>
+                        </div>
 
-                    <div class="hours-examples">
-                        <h4>Example Formats:</h4>
-                        <ul>
-                            <li>7:00 AM - 10:00 PM (Daily)</li>
-                            <li>10:00 AM - 6:00 PM (Monday - Friday)</li>
-                            <li>Closed on Sundays</li>
-                        </ul>
+                        <div class="day-hours">
+                            <label><strong>Monday</strong></label>
+                            <div class="time-inputs">
+                                <input type="checkbox" name="hours[1][isClosed]" class="is-closed-checkbox"> Closed
+                            </div>
+                            <div class="time-row">
+                                <input type="time" name="hours[1][openTime]" class="time-input" value="07:00">
+                                <span>to</span>
+                                <input type="time" name="hours[1][closeTime]" class="time-input" value="21:00">
+                            </div>
+                        </div>
+
+                        <div class="day-hours">
+                            <label><strong>Tuesday</strong></label>
+                            <div class="time-inputs">
+                                <input type="checkbox" name="hours[2][isClosed]" class="is-closed-checkbox"> Closed
+                            </div>
+                            <div class="time-row">
+                                <input type="time" name="hours[2][openTime]" class="time-input" value="07:00">
+                                <span>to</span>
+                                <input type="time" name="hours[2][closeTime]" class="time-input" value="21:00">
+                            </div>
+                        </div>
+
+                        <div class="day-hours">
+                            <label><strong>Wednesday</strong></label>
+                            <div class="time-inputs">
+                                <input type="checkbox" name="hours[3][isClosed]" class="is-closed-checkbox"> Closed
+                            </div>
+                            <div class="time-row">
+                                <input type="time" name="hours[3][openTime]" class="time-input" value="07:00">
+                                <span>to</span>
+                                <input type="time" name="hours[3][closeTime]" class="time-input" value="21:00">
+                            </div>
+                        </div>
+
+                        <div class="day-hours">
+                            <label><strong>Thursday</strong></label>
+                            <div class="time-inputs">
+                                <input type="checkbox" name="hours[4][isClosed]" class="is-closed-checkbox"> Closed
+                            </div>
+                            <div class="time-row">
+                                <input type="time" name="hours[4][openTime]" class="time-input" value="07:00">
+                                <span>to</span>
+                                <input type="time" name="hours[4][closeTime]" class="time-input" value="21:00">
+                            </div>
+                        </div>
+
+                        <div class="day-hours">
+                            <label><strong>Friday</strong></label>
+                            <div class="time-inputs">
+                                <input type="checkbox" name="hours[5][isClosed]" class="is-closed-checkbox"> Closed
+                            </div>
+                            <div class="time-row">
+                                <input type="time" name="hours[5][openTime]" class="time-input" value="07:00">
+                                <span>to</span>
+                                <input type="time" name="hours[5][closeTime]" class="time-input" value="21:00">
+                            </div>
+                        </div>
+
+                        <div class="day-hours">
+                            <label><strong>Saturday</strong></label>
+                            <div class="time-inputs">
+                                <input type="checkbox" name="hours[6][isClosed]" class="is-closed-checkbox"> Closed
+                            </div>
+                            <div class="time-row">
+                                <input type="time" name="hours[6][openTime]" class="time-input" value="08:00">
+                                <span>to</span>
+                                <input type="time" name="hours[6][closeTime]" class="time-input" value="22:00">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="review-summary">
@@ -270,12 +335,6 @@
                 alert('Please enter the location');
                 return false;
             }
-        } else if (step === 3) {
-            const hours = document.getElementById('hours').value.trim();
-            if (!hours) {
-                alert('Please enter the operating hours');
-                return false;
-            }
         }
         return true;
     }
@@ -283,7 +342,33 @@
     function updateSummary() {
         document.getElementById('summaryName').textContent = document.getElementById('name').value || 'Not entered';
         document.getElementById('summaryLocation').textContent = document.getElementById('location').value || 'Not entered';
-        document.getElementById('summaryHours').textContent = document.getElementById('hours').value || 'Not entered';
+        
+        // Build hours summary from time inputs
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        let hoursSummary = '';
+        
+        for (let i = 0; i < 7; i++) {
+            const isClosed = document.querySelector(`input[name="hours[${i}][isClosed]"]`).checked;
+            if (!isClosed) {
+                const openTime = document.querySelector(`input[name="hours[${i}][openTime]"]`).value;
+                const closeTime = document.querySelector(`input[name="hours[${i}][closeTime]"]`).value;
+                
+                if (openTime && closeTime) {
+                    const openHour = parseInt(openTime.split(':')[0]);
+                    const closeHour = parseInt(closeTime.split(':')[0]);
+                    const openAMPM = openHour >= 12 ? 'PM' : 'AM';
+                    const closeAMPM = closeHour >= 12 ? 'PM' : 'AM';
+                    const displayOpen = openHour % 12 || 12;
+                    const displayClose = closeHour % 12 || 12;
+                    
+                    if (hoursSummary === '') {
+                        hoursSummary = `${dayNames[i]} ${displayOpen}:00 ${openAMPM} - ${displayClose}:00 ${closeAMPM}`;
+                    }
+                }
+            }
+        }
+        
+        document.getElementById('summaryHours').textContent = hoursSummary || 'Not configured';
     }
 
     // Image preview for file upload
