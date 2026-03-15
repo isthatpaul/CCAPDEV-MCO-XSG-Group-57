@@ -4,30 +4,31 @@ const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
 const path = require('path');
 
+// Helper function to extract public_id from Cloudinary URL
+function extractPublicIdFromUrl(url) {
+    if (!url || !url.startsWith('https://res.cloudinary.com')) {
+        return null;
+    }
+    try {
+        // URL format: https://res.cloudinary.com/cloud_name/image/upload/v123/folder/filename.ext
+        // We need: folder/filename (without extension)
+        const parts = url.split('/upload/');
+        if (parts.length < 2) return null;
+        
+        const pathParts = parts[1].split('/');
+        // Remove version number if present (v123456)
+        let startIdx = pathParts[0].startsWith('v') ? 1 : 0;
+        
+        // Join remaining parts and remove file extension
+        const publicId = pathParts.slice(startIdx).join('/');
+        return publicId.split('.')[0]; // Remove file extension
+    } catch (err) {
+        console.error('Error extracting public_id:', err);
+        return null;
+    }
+}
+
 const userController = {
-    // Helper function to extract public_id from Cloudinary URL
-    extractPublicIdFromUrl(url) {
-        if (!url || !url.startsWith('https://res.cloudinary.com')) {
-            return null;
-        }
-        try {
-            // URL format: https://res.cloudinary.com/cloud_name/image/upload/v123/folder/filename.ext
-            // We need: folder/filename (without extension)
-            const parts = url.split('/upload/');
-            if (parts.length < 2) return null;
-            
-            const pathParts = parts[1].split('/');
-            // Remove version number if present (v123456)
-            let startIdx = pathParts[0].startsWith('v') ? 1 : 0;
-            
-            // Join remaining parts and remove file extension
-            const publicId = pathParts.slice(startIdx).join('/');
-            return publicId.split('.')[0]; // Remove file extension
-        } catch (err) {
-            console.error('Error extracting public_id:', err);
-            return null;
-        }
-    },
 
     async getProfile(req, res) {
         try {
@@ -61,31 +62,26 @@ const userController = {
             // If a file was uploaded, handle image upload to Cloudinary
             if (req.file) {
                 try {
-                    // Get the current user to check for old image and get email
+                    // Get the current user to get email
                     const user = await User.findById(req.params.id);
                     
                     if (!user) {
                         return res.status(404).send('User not found');
                     }
                     
-                    // Delete old profile image from Cloudinary if it exists
-                    if (user && user.image && user.image.startsWith('https://res.cloudinary.com')) {
-                        try {
-                            const oldPublicId = this.extractPublicIdFromUrl(user.image);
-                            if (oldPublicId) {
-                                await cloudinary.uploader.destroy(oldPublicId);
-                                console.log('✓ Deleted old Cloudinary image:', oldPublicId);
-                            }
-                        } catch (destroyErr) {
-                            console.error('Error deleting old image:', destroyErr);
-                            // Continue with new upload even if old deletion fails
-                        }
-                    }
+                    // Generate datetime-based filename
+                    const now = new Date();
+                    const timestamp = now.toISOString().replace(/[:.]/g, '-').split('T')[0] + '_' + 
+                                     now.getHours() + '-' + now.getMinutes() + '-' + now.getSeconds();
+                    const fileExtension = path.extname(req.file.originalname);
+                    const publicId = `${timestamp}${fileExtension}`;
 
                     // Upload new image to Cloudinary using user email as folder identifier
+                    // Old images are kept archived, new ones get datetime filenames
                     const result = await new Promise((resolve, reject) => {
                         cloudinary.uploader.upload_stream({
                             folder: `cloudinary/users/${user.email}/profile_pictures`,
+                            public_id: publicId,
                             resource_type: 'auto'
                         }, (error, uploadResult) => {
                             if (error) reject(error);
@@ -94,6 +90,7 @@ const userController = {
                     });
 
                     updateData.image = result.secure_url;
+                    console.log('✓ New profile picture uploaded:', publicId);
                 } catch (cloudinaryErr) {
                     console.error('Cloudinary upload error:', cloudinaryErr);
                     return res.status(500).send('Image upload failed');
@@ -177,18 +174,14 @@ const userController = {
             if (!user) 
                 return res.status(404).send('User not found');
 
-            // Delete profile image from Cloudinary if it exists
-            if (user.image && user.image.startsWith('https://res.cloudinary.com')) {
-                try {
-                    const publicId = this.extractPublicIdFromUrl(user.image);
-                    if (publicId) {
-                        await cloudinary.uploader.destroy(publicId);
-                        console.log('✓ Deleted Cloudinary image:', publicId);
-                    }
-                } catch (cloudinaryErr) {
-                    console.error('Error deleting Cloudinary image:', cloudinaryErr);
-                    // Continue with user deletion even if image deletion fails
-                }
+            // Delete all user's files from Cloudinary folder when account is deleted
+            try {
+                // Delete all resources in the user's cloudinary folder
+                await cloudinary.api.delete_resources_by_prefix(`cloudinary/users/${user.email}`);
+                console.log('✓ Deleted all Cloudinary resources for user:', user.email);
+            } catch (cloudinaryErr) {
+                console.error('Error deleting Cloudinary resources:', cloudinaryErr);
+                // Continue with user deletion even if folder deletion fails
             }
 
             // Delete all reviews by this user
