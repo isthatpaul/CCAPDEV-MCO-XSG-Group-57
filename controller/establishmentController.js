@@ -177,9 +177,26 @@ const establishmentController = {
 
     async update(req, res) {
         try {
-            const { location, contact, hours, link, description } = req.body;
+            const { name, location, contact, hours, link, description } = req.body;
+            const establishment = await Establishment.findById(req.params.id);
+            if (!establishment) return res.status(404).send('Establishment not found');
+
+            if (req.session.userId) {
+                const user = await User.findById(req.session.userId).lean();
+                if (user && user.isAdmin) {
+                    const managedIds = user.establishmentsManaged.map(id => id.toString());
+                    if (!managedIds.includes(establishment._id.toString())) {
+                        return res.status(403).send('You do not have permission to edit this establishment');
+                    }
+                } else {
+                    return res.status(403).send('You do not have permission to edit this establishment');
+                }
+            } else {
+                return res.status(401).send('Unauthorized');
+            }
+
             await Establishment.findByIdAndUpdate(req.params.id, {
-                location, contact, hours, link, description
+                name, location, contact, hours, link, description
             });
             res.redirect('/establishments/' + req.params.id);
         } catch (err) {
@@ -274,6 +291,20 @@ const establishmentController = {
         try {
             const establishment = await Establishment.findById(req.params.id);
             if (!establishment) return res.status(404).send('Establishment not found');
+
+            if (req.session.userId) {
+                const user = await User.findById(req.session.userId).lean();
+                if (user && user.isAdmin) {
+                    const managedIds = user.establishmentsManaged.map(id => id.toString());
+                    if (!managedIds.includes(establishment._id.toString())) {
+                        return res.status(403).send('You do not have permission to delete this establishment');
+                    }
+                } else {
+                    return res.status(403).send('You do not have permission to delete this establishment');
+                }
+            } else {
+                return res.status(401).send('Unauthorized');
+            }
 
             // Delete establishment image from Cloudinary if it exists
             if (establishment.image && establishment.image.startsWith('https://res.cloudinary.com')) {
