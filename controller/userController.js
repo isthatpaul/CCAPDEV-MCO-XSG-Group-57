@@ -117,10 +117,20 @@ const userController = {
         try {
             const { name, email, password, confirmPassword } = req.body;
 
+            // Password Match
             if (password !== confirmPassword) {
                 return res.render('register', { title: 'Sign Up', error: 'Passwords do not match' });
             }
 
+            // Email format validation check
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                return res.render('register', { 
+                    title: 'Sign Up', error: 'Invalid email format'
+                });
+            }
+
+            // Duplicate email check
             const existing = await User.findOne({ email });
             if (existing) {
                 return res.render('register', { title: 'Sign Up', error: 'Email already registered' });
