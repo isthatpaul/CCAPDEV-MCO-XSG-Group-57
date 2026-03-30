@@ -31,8 +31,14 @@ const userController = {
 
     async updateProfile(req, res) {
         try {
-            const { bio, email, phone } = req.body;
-            const updateData = { bio, email, phone };
+            const { name, bio, email, phone } = req.body;
+            const updateData = { name, bio, email, phone };
+
+             // Email validation
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                return res.render('users/show', { error: 'Invalid email format', user: updateData });
+            }
 
             // If a file was uploaded, handle image upload to Cloudinary
             if (req.file) {
