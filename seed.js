@@ -41,7 +41,7 @@ async function seed() {
     console.log('✓ Database admin created:', databaseAdmin.email);
 
     // Create establishment admins first (so we can reference them)
-    const adminUsers = await User.insertMany([
+    const adminData = [
         { name: 'Ana Bloemen', email: 'ana@bloemen.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
         { name: 'Carlos Agno', email: 'carlos@agnocourt.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
         { name: 'Diana TaftCafe', email: 'diana@taftcafe.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
@@ -51,7 +51,15 @@ async function seed() {
         { name: 'Hannah Jollibee', email: 'hannah@jollibee.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
         { name: 'Ivan Sunny', email: 'ivan@sunny.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' },
         { name: 'Julia Brew', email: 'julia@brew.com', password: 'admin123', joinDate: new Date(), isAdmin: true, adminType: 'establishment_admin' }
-    ]);
+    ];
+
+    // Create Establishment Admins one by one to ensure HASHING
+    const adminUsers = [];
+    for (const data of adminData) {
+        const admin = await User.create({ ...data, joinDate: new Date() });
+        adminUsers.push(admin);
+    }
+    console.log('✓ 9 Establishment Admins created (Hashed)');
 
     // Create establishments with admin references
     const establishments = await Establishment.insertMany([
@@ -73,13 +81,20 @@ async function seed() {
     }
 
     // Create regular users
-    const users = await User.insertMany([
+    const userData = [
         { name: 'Luis Harold', email: 'luis_harold@gmail.com', password: '1234', joinDate: new Date('2026-02-01'), bio: 'Sophomore student, ID 124!', phone: '09112123231', image: 'sample_profile.jpg' },
         { name: 'Maria Santos', email: 'maria_santos@gmail.com', password: '1234', joinDate: new Date('2025-03-01'), bio: 'Food veteran :)', phone: '09181517222', image: 'sample_profile2.png' },
         { name: 'Karlie Chirk', email: 'karlofdachirk@gmail.com', password: '1234', joinDate: new Date('2024-04-01'), bio: 'Food lover :)', phone: '09097623483', image: 'sample_profile3.png' },
         { name: 'Bob Builder', email: 'Bob@gmail.com', password: '1234', joinDate: new Date('2026-01-01'), bio: 'Hello...', phone: '09251185412', image: 'sample_profile4.jpg' },
         { name: 'John Doe', email: 'John@yahoo.com', password: '1234', joinDate: new Date('2025-12-01'), bio: 'Nice nice', phone: '09332145678', image: 'sample_profile5.webp' }
-    ]);
+    ]
+
+    // Create the user's using the User create hook
+    const users = [];
+    for (const data of userData) {
+        const user = await User.create(data);
+        users.push(user);
+    }
 
     // Create reviews
     await Review.insertMany([

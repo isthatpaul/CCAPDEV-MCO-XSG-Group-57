@@ -438,12 +438,14 @@ const adminController = {
             }
 
             // Update user
-            await User.findByIdAndUpdate(userId, {
-                name,
-                email,
-                phone: phone || '',
-                bio: bio || ''
-            });
+            const user = await User.findById(userId);
+            if (user) {
+                user.name = name;
+                user.email = email;
+                user.phone = phone || '';
+                user.bio = bio || '';
+                await user.save();
+            }
 
             res.json({ success: true, message: 'User updated successfully' });
         } catch (err) {

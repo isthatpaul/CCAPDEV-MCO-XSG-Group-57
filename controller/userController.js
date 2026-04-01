@@ -2,6 +2,7 @@ const User = require('../model/User');
 const Review = require('../model/Review');
 const cloudinary = require('../config/cloudinary');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 const userController = {
 
@@ -87,9 +88,10 @@ const userController = {
     async postLogin(req, res) {
         try {
             const { email, password } = req.body;
-            const user = await User.findOne({ email, password }).lean();
+            const user = await User.findOne({ email });
 
-            if (!user) {
+            // compare crypted password
+            if (!user || !(await bcrypt.compare(password, user.password))) {
                 return res.render('login', { title: 'Login', error: 'Invalid email or password' });
             }
 
@@ -225,7 +227,8 @@ const userController = {
             }
 
             // Verify current password
-            if (user.password !== currentPassword) {
+            // hash the password
+            if (!(await bcrypt.compare(currentPassword, user.password))) {
                 return res.status(401).json({ success: false, message: 'Current password is incorrect' });
             }
 
