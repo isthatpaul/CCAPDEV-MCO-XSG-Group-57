@@ -127,6 +127,12 @@ const userController = {
             if (existing) {
                 return res.render('register', { title: 'Sign Up', error: 'Email already registered' });
             }
+            
+            // Duplicate username check
+            const existing1 = await User.findOne({ name });
+            if (existing1) {
+                return res.render('register', { title: 'Sign Up', error: 'Username already registered' });
+            }
 
             const user = await User.create({ name, email, password });
 
