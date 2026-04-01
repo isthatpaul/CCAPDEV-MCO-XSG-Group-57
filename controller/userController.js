@@ -122,14 +122,6 @@ const userController = {
                 return res.render('register', { title: 'Sign Up', error: 'Passwords do not match' });
             }
 
-            // Email format validation check
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            if (!emailPattern.test(email)) {
-                return res.render('register', { 
-                    title: 'Sign Up', error: 'Invalid email format'
-                });
-            }
-
             // Duplicate email check
             const existing = await User.findOne({ email });
             if (existing) {
