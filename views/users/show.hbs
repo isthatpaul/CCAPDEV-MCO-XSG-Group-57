@@ -82,7 +82,7 @@
                 </div>
                 <div>
                     <label for="editPhone">Contact Number</label>
-                    <input type="tel" id="editPhone" name="phone" placeholder="0917xxxxxxx" value="{{ user.phone }}" pattern="[0-9\s\-\+]{7,12}"  title="Phone number must be 7-12 digits, can include +, - and spaces">>
+                    <input type="tel" id="editPhone" name="phone" placeholder="0917xxxxxxx" value="{{ user.phone }}" pattern="^[0-9\-\+]{5,15}$"  title="Enter a valid phone number with 5 to 15 digits.">>
                 </div>
                 <div>
                     <label for="editPicture">Change Profile Picture</label>

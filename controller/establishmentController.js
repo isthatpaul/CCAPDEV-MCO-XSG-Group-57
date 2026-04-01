@@ -135,7 +135,7 @@ const establishmentController = {
 
             const ratingFilter = req.query.rating ? parseInt(req.query.rating) : null;
             const sortBy = req.query.sort || 'newest';
-
+            
             let reviewFilter = { establishmentId: establishment._id };
             if (ratingFilter) {
                 reviewFilter.rating = ratingFilter;

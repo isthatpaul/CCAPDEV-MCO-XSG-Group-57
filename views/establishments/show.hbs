@@ -158,15 +158,15 @@
             </div>
             <div>
                 <label>Location</label>
-                <input type="text" id="editLocation" name="location" value="{{ establishment.location }}">
+                <input type="text" id="editLocation" name="location" value="{{ establishment.location }}" required>
             </div>
             <div>
                 <label>Contact Email</label>
-                <input type="text" id="editContact" name="contact" value="{{ establishment.contact }}">
+                <input type="email" id="editContact" name="contact" value="{{ establishment.contact }}">
             </div>
             <div>
                 <label>Phone Number</label>
-                <input type="tel" name="phone" value="{{ establishment.phone }}" placeholder="e.g., (02) 123-4567">
+                <input type="tel" name="phone" value="{{ establishment.phone }}" placeholder="e.g., 09123456789 or +639123456789" pattern="^[0-9\-\+]{5,15}$"  title="Enter a valid phone number with 5 to 15 digits." required>
             </div>
             <div class="hours-container">
                 <label><strong>Operating Hours</strong></label>
