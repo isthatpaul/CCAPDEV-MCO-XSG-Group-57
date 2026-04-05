@@ -3,13 +3,14 @@ const express = require('express');
 const { engine } = require('express-handlebars');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const mongoStore = require('connect-mongo').default;
 const path = require('path');
 const { formatTime, formatDayHours, formatAllHours } = require('./utils/businessHelpers');
 
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://angelobarras_db_user:apdev@ac-0vk9nij-shard-00-00.umiueta.mongodb.net:27017,ac-0vk9nij-shard-00-01.umiueta.mongodb.net:27017,ac-0vk9nij-shard-00-02.umiueta.mongodb.net:27017/?ssl=true&replicaSet=atlas-cb3ity-shard-0&authSource=admin&appName=CCAPDEV-TaftBites')
+mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
@@ -113,9 +114,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(session({
-    secret: 'taftbites-secret-key',
+    secret: process.env.SESSION_SECRET_KEY,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: mongoStore.create({ 
+        mongoUrl: process.env.MONGO_URL
+    }),
+    cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
 // Make session data available in ALL views
