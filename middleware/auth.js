@@ -7,7 +7,7 @@ const requireLogin = (req, res, next) => {
             error: 'You must be logged in to access this page' 
         });
     }
-    next();
+    return next();
 };
 
 const requireEstablishmentAdmin = async (req, res, next) => {
@@ -34,10 +34,10 @@ const requireEstablishmentAdmin = async (req, res, next) => {
             });
         }
 
-        next();
+        return next();
     } catch (err) {
         console.error('Auth middleware error:', err);
-        res.status(500).send('Server error');
+        return res.status(500).send('Server error');
     }
 };
 
@@ -54,10 +54,10 @@ const requireDatabaseAdmin = async (req, res, next) => {
             return res.status(403).send('You do not have permission to access this resource');
         }
 
-        next();
+        return next();
     } catch (err) {
         console.error('Auth middleware error:', err);
-        res.status(500).send('Server error');
+        return res.status(500).send('Server error');
     }
 };
 

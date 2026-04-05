@@ -74,7 +74,9 @@ const userController = {
             }
 
             await User.findByIdAndUpdate(req.params.id, updateData);
-            res.redirect('/users/' + req.params.id);
+
+            return res.redirect('/users/' + req.params.id);
+
         } catch (err) {
             console.error(err);
             res.status(500).send('Update failed');
@@ -101,9 +103,9 @@ const userController = {
             req.session.adminType = user.adminType;
 
             if (user.isAdmin && user.establishmentsManaged && user.establishmentsManaged.length > 0) {
-                res.redirect('/establishments/' + user.establishmentsManaged[0]);
+                return res.redirect('/establishments/' + user.establishmentsManaged[0]);
             } else {
-                res.redirect('/users/' + user._id);
+                return res.redirect('/users/' + user._id);
             }
         } catch (err) {
             console.error(err);
@@ -141,7 +143,8 @@ const userController = {
             req.session.userId = user._id.toString();
             req.session.userName = user.name;
 
-            res.redirect('/users/' + user._id);
+            return res.redirect('/users/' + user._id);
+            
         } catch (err) {
             console.error(err);
             res.status(500).send('Registration failed');
@@ -149,8 +152,10 @@ const userController = {
     },
 
     logout(req, res) {
-        req.session.destroy();
-        res.redirect('/');
+        req.session.destroy((err) => {
+            if (err) console.error("Logout error:", err);
+            return res.redirect('/');
+        });
     },
 
     async deleteProfile(req, res) {
@@ -195,9 +200,14 @@ const userController = {
             await User.findByIdAndDelete(req.params.id);
 
             // Destroy session
-            req.session.destroy();
-
-            res.redirect('/');
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send('Error destroying session');
+                }
+                return res.redirect('/');
+            });
+            
         } catch (err) {
             console.error(err);
             res.status(500).send('Delete failed');
