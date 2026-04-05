@@ -133,6 +133,13 @@ app.use((req, res, next) => {
     next();
 });
 
+// About Page Route
+app.get('/about', (req, res) => {
+    res.render('about', {
+        title: 'About TaftBites'
+    });
+});
+
 // Routes
 app.use('/', require('./routes/establishments'));
 app.use('/admin', require('./routes/admin'));

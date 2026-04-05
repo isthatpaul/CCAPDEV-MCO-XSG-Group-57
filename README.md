@@ -26,7 +26,9 @@ A full-stack restaurant review web application for students and food lovers near
 ```
 CCAPDEV-MCO-XSG-Group-57/
 ├── controller/
+|   ├── adminController.js
 │   ├── establishmentController.js
+|   ├── favoritesController.js
 │   ├── reviewController.js
 │   └── userController.js
 ├── model/
@@ -34,6 +36,7 @@ CCAPDEV-MCO-XSG-Group-57/
 │   ├── Review.js
 │   └── User.js
 ├── routes/
+|   ├── admin.js
 │   ├── establishments.js
 │   ├── reviews.js
 │   └── users.js
@@ -43,11 +46,16 @@ CCAPDEV-MCO-XSG-Group-57/
 │   ├── partials/
 │   │   ├── sidebar.hbs
 │   │   └── footer.hbs
+|   |   └── est-card.hbs
+|   |   └── error-flash.hbs
 │   ├── establishments/
 │   │   ├── index.hbs
+|   |   └── new.hbs
 │   │   └── show.hbs
 │   ├── users/
+|   |   └── favorites.hbs
 │   │   └── show.hbs
+|   ├── about.hbs
 │   ├── index.hbs
 │   ├── login.hbs
 │   └── register.hbs
@@ -65,6 +73,7 @@ CCAPDEV-MCO-XSG-Group-57/
 │   │   ├── user.png
 │   │   ├── sign up.png
 │   │   └── login.png
+|   |   |__ question-sign.png
 │   └── images/
 │       ├── taft.jpg
 │       ├── sample_estab1.jpg – sample_estab9.jpg
@@ -242,3 +251,4 @@ AY 2025–2026
 ## License
 
 This project is for academic purposes only.
+>>>>>>> Stashed changes
