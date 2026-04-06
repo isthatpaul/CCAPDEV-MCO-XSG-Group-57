@@ -1020,6 +1020,52 @@
 .status-badge.status-closing { background: #e07b00; }
 .status-badge.status-closed  { background: #d32f2f; }
 
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    /* Search page */
+    .search-section { padding: 24px 0 16px; }
+    .search-section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .search-form { flex-direction: column; gap: 8px; }
+    .search-form input[type="text"] {
+        border-radius: 8px;
+        border-right: 2px solid var(--border);
+        width: 100%;
+    }
+    .search-form button { border-radius: 8px; width: 100%; }
+    .filter-form { flex-wrap: wrap; gap: 8px; }
+    .filter-group { flex: 1 1 140px; }
+
+    /* List items */
+    .est-list-item { gap: 12px; padding: 14px; }
+    .est-list-icon { width: 60px; height: 60px; font-size: 26px; flex-shrink: 0; }
+    .est-list-info h3 { font-size: 16px; }
+    .est-list-meta { gap: 10px; }
+
+    /* New establishment form */
+    .create-establishment-section { padding: 24px 0; }
+    .create-header h1 { font-size: 24px; }
+    .form-step { padding: 20px 16px; }
+    .step-title h2 { font-size: 20px; }
+    .multi-step-form { border-radius: 8px; }
+    .step-controls { flex-direction: column; gap: 10px; }
+    .step-controls .btn,
+    .step-controls .btn-secondary { min-width: 0; width: 100%; }
+    .progress-steps { gap: 4px; }
+    .step-number { width: 36px; height: 36px; font-size: 14px; }
+    .step-label { font-size: 11px; }
+
+    /* Hours grid: stack day label above time inputs */
+    .day-hours { grid-template-columns: 1fr; gap: 6px; padding: 10px; }
+    .time-row { flex-wrap: wrap; }
+    .time-input { width: 90px; }
+}
+
+@media (max-width: 480px) {
+    .est-list-item { flex-direction: column; gap: 10px; }
+    .est-list-icon { width: 100%; height: 48px; border-radius: 8px; }
+    .est-list-meta { gap: 6px; font-size: 12px; }
+}
+
 /* Description truncation on card */
 .est-card-desc {
     display: -webkit-box;

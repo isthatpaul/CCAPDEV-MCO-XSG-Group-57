@@ -2,6 +2,8 @@
 
 A full-stack restaurant review web application for students and food lovers near **De La Salle University — Manila**. Discover, review, and share your favorite dining spots along Taft Avenue.
 
+> CCAPDEV Machine Project — Group 57 (XSG)
+
 ## Features
 
 - **Browse Establishments** — View restaurants, food courts, and cafes near DLSU
