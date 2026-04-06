@@ -13,7 +13,7 @@
                     
                     <!-- Business Status Badge -->
                     {{#if businessStatus}}
-                    <div style="margin: 12px 0 16px 0; padding: 10px 14px; background: {{statusColor businessStatus.status}}; color: white; border-radius: 4px; font-weight: 600; display: inline-block;">{{statusEmoji businessStatus.status}} {{ businessStatus.message }}</div>
+                    <div class="business-status-badge {{statusClass businessStatus.status}}">{{statusEmoji businessStatus.status}} {{ businessStatus.message }}</div>
                     {{/if}}
 
                     <!-- Action Buttons -->
@@ -142,7 +142,7 @@
 
 <!-- Edit Establishment Overlay -->
 {{#if canEdit}}
-<div id="editEstablishmentOverlay" class="overlay" style="display:none;">
+<div id="editEstablishmentOverlay" class="overlay">
     <div class="popup" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
         <h3>Edit Establishment</h3>
         <form id="editEstablishmentForm" action="/establishments/{{ establishment._id }}/edit" method="POST" enctype="multipart/form-data">
@@ -197,8 +197,19 @@
             </div>
             <div>
                 <label for="editImageUpload">Image</label>
+                {{#if establishment.image}}
+                <div class="img-picker-current">
+                    <img src="{{ imageUrl establishment.image }}" alt="Current image">
+                    <small>Current image &mdash; select a file below to replace it.</small>
+                </div>
+                {{/if}}
                 <input type="file" id="editImageUpload" name="image" accept="image/*">
-                {{#if establishment.image}}<small style="display: block; margin-top: 4px; color: #666;">Current image will be kept if no new file is chosen.</small>{{/if}}
+                <div id="estEditPreviewWrapper" class="img-picker-preview">
+                    <img id="estEditPreviewImg" src="" alt="New image preview">
+                    <div class="img-picker-preview-actions">
+                        <button type="button" class="btn-small" onclick="document.getElementById('estEditPreviewWrapper').style.display='none'; document.getElementById('editImageUpload').value='';">&#10005; Remove</button>
+                    </div>
+                </div>
             </div>
             <div>
                 <label for="editDescription">Description</label>
@@ -215,7 +226,7 @@
 
 <!-- Review Form Overlay -->
 {{#if isLoggedIn}}
-<div id="reviewOverlayForm" class="overlay" style="display:none;">
+<div id="reviewOverlayForm" class="overlay">
     <div class="popup">
         <h3>Write Review</h3>
         <form id="reviewForm" action="/reviews" method="POST">
@@ -251,7 +262,7 @@
 </div>
 
 <!-- Edit Review Form Overlay -->
-<div id="editReviewOverlay" class="overlay" style="display:none;">
+<div id="editReviewOverlay" class="overlay">
     <div class="popup">
         <h3>Edit Review</h3>
         <form id="editReviewForm" method="POST">
@@ -421,7 +432,7 @@
 </section>
 
 {{!-- Delete Reply Overlay --}}
-<div id="deleteReplyOverlay" class="overlay" style="display:none;">
+<div id="deleteReplyOverlay" class="overlay">
     <div class="popup" style="max-width: 400px; text-align: center;">
         <h3>Delete Reply?</h3>
         <p>Are you sure you want to remove your response? This action cannot be undone.</p>
@@ -494,12 +505,12 @@
 
     if (editBtn && editOverlay) {
         editBtn.addEventListener('click', function() {
-            editOverlay.style.display = 'flex';
+            editOverlay.classList.add('open');
         });
     }
     if (cancelEditBtn) {
         cancelEditBtn.addEventListener('click', function() {
-            editOverlay.style.display = 'none';
+            editOverlay.classList.remove('open');
         });
     }
 
@@ -507,7 +518,7 @@
     if (editOverlay) {
         editOverlay.addEventListener('click', function(e) {
             if (e.target === editOverlay) {
-                editOverlay.style.display = 'none';
+                editOverlay.classList.remove('open');
             }
         });
     }
@@ -521,7 +532,7 @@
             fetch(action, { method: 'POST', body: formData })
                 .then(function(res) {
                     if (res.ok || res.redirected) {
-                        editOverlay.style.display = 'none';
+                        editOverlay.classList.remove('open');
                         showToast('\u2713 Establishment updated!', 'success');
                         setTimeout(function() { location.reload(); }, 1200);
                     } else {
@@ -541,10 +552,10 @@
     if (writeBtn && reviewOverlay) {
         var cancelReview = reviewOverlay.querySelector('.cancel');
         writeBtn.addEventListener('click', function() {
-            reviewOverlay.style.display = 'flex';
+            reviewOverlay.classList.add('open');
         });
         cancelReview.addEventListener('click', function() {
-            reviewOverlay.style.display = 'none';
+            reviewOverlay.classList.remove('open');
         });
     }
 
@@ -577,11 +588,11 @@
             }
         });
         
-        overlay.style.display = 'flex';
+        overlay.classList.add('open');
     }
 
     function closeEditOverlay() {
-        document.getElementById('editReviewOverlay').style.display = 'none';
+        document.getElementById('editReviewOverlay').classList.remove('open');
     }
 
     function openDeleteReply(reviewId) {
@@ -590,11 +601,11 @@
         
         form.action = `/reviews/${reviewId}/reply/delete`;
         
-        overlay.style.display = 'flex';
+        overlay.classList.add('open');
     }
 
     function closeDeleteOverlay() {
-        document.getElementById('deleteReplyOverlay').style.display = 'none';
+        document.getElementById('deleteReplyOverlay').classList.remove('open');
     }
 
     // Image overlay for review images
@@ -619,13 +630,16 @@
         
         if (userHasVoted[reviewId]) {
             if (voteType === 'helpful' && userHasVoted[reviewId].helpful) {
-                btn.style.background = '#2e7d32';
+                btn.classList.add('active');
                 btn.disabled = true;
             } else if (voteType === 'unhelpful' && userHasVoted[reviewId].unhelpful) {
-                btn.style.background = '#c62828';
+                btn.classList.add('active');
                 btn.disabled = true;
             }
         }
     });
+
+    // Image cropper for establishment edit
+    initImageCropper({ inputId: 'editImageUpload', previewImgId: 'estEditPreviewImg', previewWrapperId: 'estEditPreviewWrapper', aspectRatio: 16 / 9 });
 
 </script>

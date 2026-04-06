@@ -88,7 +88,7 @@
                         <span>{{ this.location }}</span>
                         <span>{{ formatAllHours this.hours }}</span>
                         {{#if this.businessStatus}}
-                        <span class="status-badge" style="background: {{statusColor this.businessStatus.status}};">{{statusEmoji this.businessStatus.status}} {{statusLabel this.businessStatus.status}}</span>
+                        <span class="status-badge {{statusClass this.businessStatus.status}}">{{statusEmoji this.businessStatus.status}} {{statusLabel this.businessStatus.status}}</span>
                         {{/if}}
                     </div>
                     <p>{{ this.description }}</p>

@@ -86,9 +86,11 @@
                             accept="image/*"
                             required
                         >
-                        <div class="image-preview" id="imagePreview" style="display: none;">
+                        <div class="img-picker-preview" id="imagePreview">
                             <img id="previewImg" src="" alt="Preview">
-                            <button type="button" class="btn-small" onclick="clearImagePreview()">Remove</button>
+                            <div class="img-picker-preview-actions">
+                                <button type="button" class="btn-small" onclick="clearImagePreview()">&#10005; Remove</button>
+                            </div>
                         </div>
                         <span class="form-hint">Upload a photo of the establishment (JPG, PNG, GIF - Max 5MB)</span>
                     </div>
@@ -412,18 +414,8 @@
         document.getElementById('summaryHours').textContent = hoursSummary || 'Not configured';
     }
 
-    // Image preview for file upload
-    document.getElementById('image').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                document.getElementById('previewImg').src = event.target.result;
-                document.getElementById('imagePreview').style.cssText = 'display:flex;';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+    // Image cropper for new establishment
+    initImageCropper({ inputId: 'image', previewImgId: 'previewImg', previewWrapperId: 'imagePreview', aspectRatio: 16 / 9 });
 
     function clearImagePreview() {
         document.getElementById('imagePreview').style.display = 'none';

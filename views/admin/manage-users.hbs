@@ -58,8 +58,8 @@
 </main>
 
 <!-- Edit User Modal -->
-<div id="editUserModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editUserModalTitle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;">
-    <div style="background: white; border-radius: 8px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+<div id="editUserModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editUserModalTitle">
+    <div class="modal-box">
         <h2 id="editUserModalTitle" style="margin-top: 0;">Edit User</h2>
         <form id="editUserForm">
             <div>
@@ -87,6 +87,27 @@
 </div>
 
 <style>
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+        background: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
     .btn-edit {
         padding: 8px 12px;
         background: #2196F3;
@@ -125,12 +146,12 @@
         document.getElementById('editUserPhone').value = btn.dataset.phone || '';
         document.getElementById('editUserBio').value = btn.dataset.bio || '';
         const modal = document.getElementById('editUserModal');
-        modal.style.display = 'flex';
+        modal.classList.add('open');
         document.getElementById('editUserName').focus();
     }
 
     function closeEditModal() {
-        document.getElementById('editUserModal').style.display = 'none';
+        document.getElementById('editUserModal').classList.remove('open');
         currentUserId = null;
     }
 

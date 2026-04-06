@@ -1,14 +1,14 @@
 <a href="/establishments/{{ this._id }}" class="est-card">
-    {{#if this.businessStatus}}
-    <div class="est-card-status" style="background: {{statusColor this.businessStatus.status}};" aria-label="Status: {{statusLabel this.businessStatus.status}}">
-        <span aria-hidden="true">{{statusEmoji this.businessStatus.status}}</span> {{statusLabel this.businessStatus.status}}
-    </div>
-    {{/if}}
     <div class="est-card-img">
         <img src="{{ imageUrl this.image }}" alt="{{ this.name }}">
     </div>
     <div class="est-card-body">
         <h3>{{ this.name }}</h3>
+        {{#if this.businessStatus}}
+        <span class="status-badge {{statusClass this.businessStatus.status}}" aria-label="Status: {{statusLabel this.businessStatus.status}}">
+            {{statusEmoji this.businessStatus.status}} {{statusLabel this.businessStatus.status}}
+        </span>
+        {{/if}}
         <div class="est-card-rating">
             <span class="stars" aria-label="{{ this.rating }} out of 5 stars">{{ stars this.rating }}</span>
             <span class="rating-num">{{ this.rating }}</span>

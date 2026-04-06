@@ -7,12 +7,50 @@
     <title>{{#if title}}{{ title }} - {{/if}}TaftBites</title>
     <link rel="icon" type="image/png" href="/icons/Utensils.png">
     <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
     {{#if extraCSS}}
         <link rel="stylesheet" href="/css/{{ extraCSS }}">
     {{/if}}
     {{#if extraCSS2}}
         <link rel="stylesheet" href="/css/{{ extraCSS2 }}">
     {{/if}}
+    <script>
+        // Define before any page script runs (Cropper CDN is loaded at bottom of body,
+        // but is only instantiated inside the file-change handler — after full page load)
+        window._cropState = { instance: null, input: null, previewImg: null, previewWrapper: null, fileName: '' };
+        window.initImageCropper = function(opts) {
+            var fileInput = document.getElementById(opts.inputId);
+            if (!fileInput) return;
+            fileInput.addEventListener('change', function(e) {
+                var file = e.target.files[0];
+                if (!file) return;
+                var state = window._cropState;
+                state.input = fileInput;
+                state.previewImg = opts.previewImgId ? document.getElementById(opts.previewImgId) : null;
+                state.previewWrapper = opts.previewWrapperId ? document.getElementById(opts.previewWrapperId) : null;
+                state.aspectRatio = opts.aspectRatio !== undefined ? opts.aspectRatio : NaN;
+                state.fileName = file.name;
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    var img = document.getElementById('cropSourceImg');
+                    img.src = ev.target.result;
+                    document.getElementById('cropModal').classList.add('open');
+                    if (state.instance) { state.instance.destroy(); }
+                    state.instance = new Cropper(img, {
+                        aspectRatio: state.aspectRatio,
+                        viewMode: 2,
+                        dragMode: 'move',
+                        autoCropArea: 0.9,
+                        responsive: true,
+                        checkOrientation: false,
+                        minContainerWidth: 260
+                    });
+                };
+                reader.readAsDataURL(file);
+                fileInput.value = '';
+            });
+        };
+    </script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -26,6 +64,69 @@
     {{> footer}}
 
     <script src="/js/sidebar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
+    <!-- Global Image Crop Modal -->
+    <div id="cropModal" class="overlay">
+        <div class="popup crop-popup">
+            <h3 style="margin: 0 0 6px;">Crop Image</h3>
+            <p class="crop-hint">Drag to reposition &middot; drag corners to resize</p>
+            <div class="crop-canvas-wrap">
+                <img id="cropSourceImg" src="" alt="Image to crop">
+            </div>
+            <div class="crop-actions">
+                <button type="button" id="cropRotateLeft" class="btn-secondary">&#8634; Rotate</button>
+                <button type="button" id="cropConfirmBtn" class="btn">&#10003; Apply Crop</button>
+                <button type="button" id="cropCancelBtn" class="btn-secondary">&#10005; Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wire up global crop modal buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('cropConfirmBtn').addEventListener('click', function() {
+                var state = window._cropState;
+                if (!state.instance) return;
+                state.instance.getCroppedCanvas({ maxWidth: 1400, maxHeight: 1400, fillColor: '#fff' })
+                    .toBlob(function(blob) {
+                        var croppedFile = new File([blob], state.fileName, { type: 'image/jpeg' });
+                        var dt = new DataTransfer();
+                        dt.items.add(croppedFile);
+                        state.input.files = dt.files;
+                        if (state.previewImg) {
+                            state.previewImg.src = URL.createObjectURL(blob);
+                        }
+                        if (state.previewWrapper) {
+                            state.previewWrapper.style.display = 'flex';
+                        }
+                        document.getElementById('cropModal').classList.remove('open');
+                        state.instance.destroy();
+                        state.instance = null;
+                    }, 'image/jpeg', 0.92);
+            });
+
+            document.getElementById('cropCancelBtn').addEventListener('click', function() {
+                document.getElementById('cropModal').classList.remove('open');
+                if (window._cropState.instance) {
+                    window._cropState.instance.destroy();
+                    window._cropState.instance = null;
+                }
+            });
+
+            document.getElementById('cropRotateLeft').addEventListener('click', function() {
+                if (window._cropState.instance) {
+                    window._cropState.instance.rotate(-90);
+                }
+            });
+
+            document.getElementById('cropModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    document.getElementById('cropCancelBtn').click();
+                }
+            });
+        });
+    </script>
     <script>
         // Global toast notification helper
         (function() {

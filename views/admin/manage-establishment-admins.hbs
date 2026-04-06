@@ -51,7 +51,7 @@
 </main>
 
 <!-- Assign Admin Modal -->
-<div id="assignModal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="assignModalTitle" style="display: none;">
+<div id="assignModal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="assignModalTitle">
     <div class="popup">
         <h3 id="assignModalTitle">Assign Admin to Establishment</h3>
         <p style="color: #666; margin-bottom: 16px;">Choose an existing admin or create a new one.</p>
@@ -88,7 +88,7 @@
                 <label for="newAdminPassword" style="display: block; margin-bottom: 8px; font-weight: 500;">Password</label>
                 <input type="password" id="newAdminPassword" placeholder="Minimum 8 characters" minlength="8" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px;">
                 
-                <button type="button" onclick="createAndAssignAdmin()" class="btn" style="background: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                <button type="button" onclick="createAndAssignAdmin()" class="btn">
                     Create &amp; Assign
                 </button>
             </div>
@@ -107,13 +107,13 @@
     function openAssignModal(estId, estName) {
         currentEstablishmentId = estId;
         currentEstablishmentName = estName;
-        document.getElementById('assignModal').style.display = 'flex';
+        document.getElementById('assignModal').classList.add('open');
         document.getElementById('newAdminName').value = '';
         document.getElementById('newAdminEmail').value = '';
     }
 
     function closeAssignModal() {
-        document.getElementById('assignModal').style.display = 'none';
+        document.getElementById('assignModal').classList.remove('open');
         currentEstablishmentId = null;
     }
 
@@ -150,15 +150,15 @@
         const password = document.getElementById('newAdminPassword').value;
 
         if (!name) {
-            alert('Please enter a name');
+            showToast('\u2717 Please enter a name', 'error');
             return;
         }
         if (!email || !email.includes('@')) {
-            alert('Please enter a valid email');
+            showToast('\u2717 Please enter a valid email', 'error');
             return;
         }
         if (!password || password.length < 8) {
-            alert('Password must be at least 8 characters');
+            showToast('\u2717 Password must be at least 8 characters', 'error');
             return;
         }
 

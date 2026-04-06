@@ -607,14 +607,6 @@
     font-size: 15px;
 }
 
-.est-list-meta .status-badge {
-    padding: 4px 10px;
-    border-radius: 3px;
-    font-size: 11px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Detail */
@@ -991,15 +983,42 @@
     right: 10px;
     background: rgba(0,0,0,0.55);
     color: #fff;
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 800;
+    letter-spacing: 0.4px;
     display: flex;
     align-items: center;
-    gap: 4px;
-    backdrop-filter: blur(2px);
+    gap: 5px;
+    backdrop-filter: blur(3px);
 }
+.est-card-status.status-open    { background: rgba(22, 120, 60, 0.82); }
+.est-card-status.status-closing { background: rgba(180, 100, 0, 0.82); }
+.est-card-status.status-closed  { background: rgba(160, 30, 30, 0.82); }
+
+/* Status badge — shared between list-view meta and card body */
+.status-badge {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #fff;
+    white-space: nowrap;
+    margin-bottom: 8px;
+}
+/* In the list-view meta row, sit flush next to sibling spans */
+.est-list-meta .status-badge {
+    margin-bottom: 0;
+    margin-left: 4px;
+}
+.status-badge.status-open    { background: #1e8a3c; }
+.status-badge.status-closing { background: #e07b00; }
+.status-badge.status-closed  { background: #d32f2f; }
 
 /* Description truncation on card */
 .est-card-desc {

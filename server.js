@@ -101,6 +101,11 @@ app.engine('hbs', engine({
             if (status === 'open') return 'Open';
             if (status === 'closing') return 'Closing';
             return 'Closed';
+        },
+        statusClass: function(status) {
+            if (status === 'open') return 'status-open';
+            if (status === 'closing') return 'status-closing';
+            return 'status-closed';
         }
     }
 }));
