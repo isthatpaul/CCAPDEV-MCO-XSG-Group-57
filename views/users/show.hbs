@@ -3,6 +3,7 @@
         <div class="main-content">
             <div class="main-left">
                 <div class="card" id="profile-info">
+                    <h2>{{ user.name }} </h2>
                     <div id="profile_photo" class="card center">
                         <h3>Profile Photo</h3>
                         <img id="profileImg" src="{{ imageUrl user.image }}" alt="Profile photo.">
@@ -69,7 +70,7 @@
             <h2 style="margin-top: 0;">Edit Profile</h2>
             <form id="editProfileForm" method="POST" enctype="multipart/form-data">
                 <div>
-                    <label for="editName">Full Name</label>
+                    <label for="editName">Username</label>
                     <input type="text" id="editName" name="name" placeholder="Your full name" value="{{ user.name }}" required>
                 </div>
                 <div>
