@@ -1,5 +1,5 @@
 <div class="establishment-det-holder">
-    <img src="{{ imageUrl establishment.image }}" alt="{{ establishment.name }}" style="width: 100%; height: 300px; object-fit: cover;">
+    <img src="{{ imageUrl establishment.image }}" alt="{{ establishment.name }}">
 </div>
 
 <!-- Detail Section -->
@@ -42,40 +42,30 @@
                         </div>
                     </div>
                     {{#if ratingBreakdown.total}}
-                    <div style="font-size: 12px;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                    <div>
+                        <div class="rating-bar-row">
                             <span style="width: 30px;">5★</span>
-                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
-                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.five ratingBreakdown.total}}%;"></div>
-                            </div>
+                            <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: {{ratingPercentage ratingBreakdown.five ratingBreakdown.total}}%;"></div></div>
                             <span style="width: 25px; text-align: right;">{{ ratingBreakdown.five }}</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <div class="rating-bar-row">
                             <span style="width: 30px;">4★</span>
-                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
-                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.four ratingBreakdown.total}}%;"></div>
-                            </div>
+                            <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: {{ratingPercentage ratingBreakdown.four ratingBreakdown.total}}%;"></div></div>
                             <span style="width: 25px; text-align: right;">{{ ratingBreakdown.four }}</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <div class="rating-bar-row">
                             <span style="width: 30px;">3★</span>
-                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
-                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.three ratingBreakdown.total}}%;"></div>
-                            </div>
+                            <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: {{ratingPercentage ratingBreakdown.three ratingBreakdown.total}}%;"></div></div>
                             <span style="width: 25px; text-align: right;">{{ ratingBreakdown.three }}</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <div class="rating-bar-row">
                             <span style="width: 30px;">2★</span>
-                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
-                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.two ratingBreakdown.total}}%;"></div>
-                            </div>
+                            <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: {{ratingPercentage ratingBreakdown.two ratingBreakdown.total}}%;"></div></div>
                             <span style="width: 25px; text-align: right;">{{ ratingBreakdown.two }}</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                        <div class="rating-bar-row">
                             <span style="width: 30px;">1★</span>
-                            <div style="background: #e0e0e0; width: 100px; height: 8px; border-radius: 4px; overflow: hidden;">
-                                <div style="background: #FFB800; height: 100%; width: {{ratingPercentage ratingBreakdown.one ratingBreakdown.total}}%;"></div>
-                            </div>
+                            <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: {{ratingPercentage ratingBreakdown.one ratingBreakdown.total}}%;"></div></div>
                             <span style="width: 25px; text-align: right;">{{ ratingBreakdown.one }}</span>
                         </div>
                     </div>

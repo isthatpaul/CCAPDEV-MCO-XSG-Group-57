@@ -228,3 +228,19 @@
         height: 140px;
     }
 }
+
+@media (max-width: 480px) {
+    #profileImg {
+        width: 110px;
+        height: 110px;
+    }
+    #profile-info {
+        padding: 16px;
+    }
+    #edit-card {
+        padding: 16px;
+    }
+    #edit-card form > div {
+        margin-bottom: 16px;
+    }
+}
