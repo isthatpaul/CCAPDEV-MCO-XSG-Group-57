@@ -1,28 +1,32 @@
 /* Vote buttons */
 .review-actions{
     display: flex;
-    gap: 16px;
+    gap: 12px;
     margin-top: 14px;
     align-items: center;
+    flex-wrap: wrap;
 }
 .btn-vote{
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: transparent;
-    border: 1px solid var(--border);
+    border: 2px solid var(--border);
     color: var(--muted);
-    padding: 8px 12px;
+    padding: 7px 14px;
     border-radius: 6px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
+    box-shadow: none;
 }
 .btn-vote:hover{
     color: var(--green);
     border-color: var(--green);
     background: var(--green-light);
+    transform: none;
+    box-shadow: none;
 }
 .btn-vote.active{
     color: var(--green);
@@ -31,4 +35,174 @@
 }
 .btn-vote-icon{
     font-size: 16px;
+}
+
+/* Helpful / Unhelpful vote buttons */
+.btn-helpful {
+    color: #2e7d32;
+    border-color: #a5d6a7;
+}
+.btn-helpful:hover {
+    color: #fff;
+    background: #43a047;
+    border-color: #43a047;
+}
+.btn-helpful.active {
+    color: #fff;
+    background: #43a047;
+    border-color: #43a047;
+}
+
+.btn-unhelpful {
+    color: #c0392b;
+    border-color: #f5c6c0;
+}
+.btn-unhelpful:hover {
+    color: #fff;
+    background: #e53935;
+    border-color: #e53935;
+}
+.btn-unhelpful.active {
+    color: #fff;
+    background: #e53935;
+    border-color: #e53935;
+}
+
+/* Edit / Delete review buttons */
+.btn-edit-review {
+    color: #1565c0;
+    border-color: #90caf9;
+}
+.btn-edit-review:hover {
+    color: #fff;
+    background: #1976d2;
+    border-color: #1976d2;
+}
+
+.btn-delete-review {
+    color: #c0392b;
+    border-color: #f5c6c0;
+}
+.btn-delete-review:hover {
+    color: #fff;
+    background: #e53935;
+    border-color: #e53935;
+}
+
+/* Owner Reply buttons */
+.btn-reply-post {
+    color: #fff;
+    background: #1976d2;
+    border-color: #1976d2;
+}
+.btn-reply-post:hover {
+    background: #1565c0;
+    border-color: #1565c0;
+    color: #fff;
+}
+
+.btn-delete-reply {
+    font-size: 12px;
+    padding: 5px 10px;
+    color: #c0392b;
+    border-color: #f5c6c0;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+.btn-delete-reply:hover {
+    color: #fff;
+    background: #e53935;
+    border-color: #e53935;
+}
+
+/* Favorite button */
+.btn-favorite {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--muted);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: none;
+}
+.btn-favorite:hover {
+    border-color: #FF6B6B;
+    color: #FF6B6B;
+    background: #fff5f5;
+    transform: none;
+    box-shadow: none;
+}
+.btn-favorite.favorited {
+    background: #FF6B6B;
+    border-color: #FF6B6B;
+    color: #fff;
+}
+.btn-favorite.favorited:hover {
+    background: #e55a5a;
+    border-color: #e55a5a;
+    color: #fff;
+}
+
+/* Review filter bar */
+.review-filter-bar {
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+.review-filter-form {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+.review-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.review-filter-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.review-filter-group select {
+    padding: 7px 10px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    color: #222;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.review-filter-group select:focus {
+    outline: none;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(0,112,60,0.15);
+}
+.btn-clear-filter {
+    display: inline-block;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    background: transparent;
+    color: var(--muted);
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: var(--transition);
+    margin-top: 16px;
+}
+.btn-clear-filter:hover {
+    background: var(--border);
+    color: #222;
+    text-decoration: none;
 }

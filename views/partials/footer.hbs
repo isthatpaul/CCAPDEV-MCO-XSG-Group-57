@@ -1,3 +1,11 @@
 <footer class="footer">
-    <p>TaftBites © 2026</p>
+    <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <span aria-hidden="true">·</span>
+        <a href="/establishments">Establishments</a>
+        <span aria-hidden="true">·</span>
+        <a href="/about">About</a>
+    </nav>
+    <p class="footer-copy">TaftBites &copy; <span id="copyrightYear">2026</span> &mdash; For academic use only.</p>
+    <script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
 </footer>

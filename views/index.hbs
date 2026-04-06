@@ -1,12 +1,14 @@
 <section class="hero">
-    <img src="/images/taft.jpg" alt="" class="hero-bg"/>
+    <img src="/images/taft.jpg" alt="Taft Avenue, Manila" class="hero-bg"/>
     <div class="hero-overlay"></div>
     <div class="container">
-        <h2>Discover restaurants near DLSU</h2>
+        <h1>Discover Restaurants Near DLSU</h1>
         <p>Share reviews and find new places to eat around De La Salle University — Manila.</p>
-        <form class="hero-search" action="/establishments" method="get">
+        <form class="hero-search" action="/establishments" method="get" role="search">
+            <label for="heroSearch" class="sr-only">Search establishments</label>
             <input
                 type="text"
+                id="heroSearch"
                 name="q"
                 class="hero-search-input"
                 placeholder="Search for restaurants, cafes, food courts…"
@@ -14,6 +16,7 @@
             />
             <button type="submit" class="hero-search-btn">Search</button>
         </form>
+        <a href="/establishments" class="hero-cta-btn">Browse All Establishments &rarr;</a>
     </div>
 </section>
 
@@ -27,6 +30,8 @@
         <div class="card-grid">
             {{#each establishments}}
             {{> est-card}}
+            {{else}}
+            <p class="empty-state">No establishments yet. <a href="/establishments">Check back soon!</a></p>
             {{/each}}
         </div>
     </div>
@@ -41,10 +46,17 @@
         <div id="recentReviews" class="reviews-grid">
             {{#each reviews}}
             <div class="review-item">
-                <h4><a href="/establishments/{{ this.establishmentId._id }}">{{ this.title }}</a></h4>
-                <p>By: <a href="/users/{{ this.userId._id }}">{{ this.userId.name }}</a> on {{ this.establishmentId.name }}</p>
-                <p>Rating: {{ stars this.rating }}</p>
+                <div class="review-item-stars" aria-label="{{ this.rating }} out of 5 stars">{{ stars this.rating }}</div>
+                <h4><a href="{{#if this.establishmentId}}/establishments/{{ this.establishmentId._id }}{{else}}/establishments{{/if}}">{{ this.title }}</a></h4>
+                {{#if this.comment}}<p class="review-item-body">{{ this.comment }}</p>{{/if}}
+                <p class="review-item-meta">
+                    By <a href="/users/{{ this.userId._id }}">{{ this.userId.name }}</a>
+                    {{#if this.establishmentId}} on {{ this.establishmentId.name }}{{/if}}
+                    {{#if this.createdAt}} &middot; {{ formatDate this.createdAt }}{{/if}}
+                </p>
             </div>
+            {{else}}
+            <p class="empty-state">No reviews yet. Be the first to <a href="/establishments">write one</a>!</p>
             {{/each}}
         </div>
     </div>

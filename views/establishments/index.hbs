@@ -1,29 +1,30 @@
 <!-- Search Section -->
 <section class="search-section">
     <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px;">
-            <h1 style="margin: 0;">Find Establishments</h1>
+        <div class="search-section-header">
+            <h1>Find Establishments</h1>
             {{#if (eq adminType "database_admin")}}
-            <a href="/establishments/new" class="btn" style="display: inline-block; padding: 12px 20px; text-decoration: none;">+ Add New</a>
+            <a href="/establishments/new" class="btn">+ Add New</a>
             {{/if}}
         </div>
-        <form id="searchForm" class="search-form" action="/establishments" method="get">
+        <form id="searchForm" class="search-form" action="/establishments" method="get" role="search">
+            <label for="searchInput" class="sr-only">Search establishments</label>
             <input type="text" id="searchInput" name="q" placeholder="Search for restaurants, cuisines, or locations..." value="{{ query }}">
             <button type="submit">Search</button>
         </form>
-        <a href="/establishments"><button type="button" id="resetSearchBtn" class="reset-btn">Show All</button></a>
+        <a href="/establishments" class="reset-btn">Show All</a>
     </div>
 </section>
 
-<!-- Filters Section -->
-<section style="background: #f9f9f9; padding: 16px 0; border-bottom: 1px solid #eee;">
+<!-- Filters & Sort Section -->
+<section class="filter-section" aria-label="Filter and sort establishments">
     <div class="container">
-        <form method="GET" style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+        <form class="filter-form" method="GET" action="/establishments">
             <input type="hidden" name="q" value="{{ query }}">
-            
-            <div>
-                <label for="rating-filter" style="font-weight: 600; margin-right: 8px;">Minimum Rating:</label>
-                <select id="rating-filter" name="rating" onchange="this.form.submit()" style="padding: 8px 12px; border-radius: 4px; border: 1px solid #ddd;">
+
+            <div class="filter-group">
+                <label for="rating-filter">Min. Rating:</label>
+                <select id="rating-filter" name="rating" onchange="this.form.submit()">
                     <option value="">All Ratings</option>
                     <option value="4.5" {{#if (eq minRating 4.5)}}selected{{/if}}>4.5+ ⭐</option>
                     <option value="4" {{#if (eq minRating 4)}}selected{{/if}}>4.0+ ⭐</option>
@@ -32,28 +33,48 @@
                 </select>
             </div>
 
-            <div>
-                <label for="sort-filter" style="font-weight: 600; margin-right: 8px;">Sort by:</label>
-                <select id="sort-filter" name="sort" onchange="this.form.submit()" style="padding: 8px 12px; border-radius: 4px; border: 1px solid #ddd;">
+            <div class="filter-group">
+                <label for="sort-filter">Sort by:</label>
+                <select id="sort-filter" name="sort" onchange="this.form.submit()">
                     <option value="newest" {{#if (eq sortBy "newest")}}selected{{/if}}>Newest</option>
                     <option value="rating-high" {{#if (eq sortBy "rating-high")}}selected{{/if}}>Highest Rating</option>
                     <option value="rating-low" {{#if (eq sortBy "rating-low")}}selected{{/if}}>Lowest Rating</option>
                 </select>
             </div>
 
+            <!-- Noscript fallback submit button -->
+            <noscript><button type="submit" class="btn">Apply Filters</button></noscript>
+
             {{#if minRating}}
-            <div>
-                <a href="/establishments?q={{ query }}" style="padding: 8px 12px; background: #ff6b6b; color: white; border-radius: 4px; text-decoration: none; font-size: 14px;">Clear Filters</a>
+            <div class="filter-group">
+                <a href="/establishments?q={{ query }}&sort={{ sortBy }}" class="btn-clear-filter">Clear Filters</a>
             </div>
             {{/if}}
         </form>
     </div>
 </section>
 
+<!-- Status Legend -->
+<section class="status-legend-section" aria-label="Business status legend">
+    <div class="container">
+        <div class="status-legend">
+            <span class="legend-label">Status:</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#4CAF50;"></span> Open</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#FF9800;"></span> Closing Soon</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#f44336;"></span> Closed</span>
+        </div>
+    </div>
+</section>
+
 <!-- Establishments List -->
 <section class="est-list-section">
     <div class="container">
-        <h2>All Establishments Near DLSU</h2>
+        <div class="est-list-header">
+            <h2>All Establishments Near DLSU</h2>
+            {{#if establishments.length}}
+            <span class="result-count" aria-live="polite">{{ establishments.length }} result{{#unless (eq establishments.length 1)}}s{{/unless}}</span>
+            {{/if}}
+        </div>
         <div id="establishmentsList">
             {{#each establishments}}
             <div class="est-list-item">
@@ -63,15 +84,20 @@
                 <div class="est-list-info">
                     <h3><a href="/establishments/{{ this._id }}">{{ this.name }}</a></h3>
                     <div class="est-list-meta">
-                        <span class="est-list-rating">{{ stars this.rating }}</span>
+                        <span class="est-list-rating" aria-label="{{ this.rating }} out of 5 stars">{{ stars this.rating }}</span>
                         <span>{{ this.location }}</span>
                         <span>{{ formatAllHours this.hours }}</span>
                         {{#if this.businessStatus}}
-                        <span class="status-badge" style="background: {{statusColor this.businessStatus.status}}; color: white;">{{statusEmoji this.businessStatus.status}} {{statusLabel this.businessStatus.status}}</span>
+                        <span class="status-badge" style="background: {{statusColor this.businessStatus.status}};">{{statusEmoji this.businessStatus.status}} {{statusLabel this.businessStatus.status}}</span>
                         {{/if}}
                     </div>
                     <p>{{ this.description }}</p>
                 </div>
+            </div>
+            {{else}}
+            <div class="empty-state-box">
+                <p>No establishments match your search{{#if minRating}} or filter{{/if}}.</p>
+                <a href="/establishments" class="btn">Clear search</a>
             </div>
             {{/each}}
         </div>

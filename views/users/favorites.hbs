@@ -1,6 +1,7 @@
 <main class="main">
     <div class="container">
         <div style="margin-bottom: 24px;">
+            {{#if user}}<a href="/users/{{ user._id }}" style="font-size:14px; color:#555;">&larr; Back to Profile</a>{{/if}}
             <h1>{{user.name}}'s Favorite Places</h1>
             <p style="color: #666; margin-top: 8px;">{{ favorites.length }} {{ pluralize favorites.length 'favorite' 'favorites' }}</p>
         </div>
@@ -16,7 +17,7 @@
             <p style="color: #999; padding: 16px; text-align: center;">
                 {{#if isOwnFavorites}}
                 <strong>You haven't favorited any places yet!</strong><br>
-                Start favoriting your favorite establishments.
+                Start exploring — <a href="/establishments">Browse Establishments</a>
                 {{else}}
                 <strong>No favorites yet</strong><br>
                 This user hasn't favorited any places.

@@ -39,8 +39,8 @@
                             type="password" 
                             id="adminPassword" 
                             name="password" 
-                            placeholder="Minimum 4 characters"
-                            minlength="4"
+                            placeholder="Minimum 8 characters"
+                            minlength="8"
                             required
                         >
                     </div>
@@ -314,23 +314,26 @@
             const data = await response.json();
 
             if (data.success) {
-                formMessage.textContent = '✓ Admin created successfully! Refreshing...';
+                formMessage.textContent = '\u2713 Admin created successfully!';
                 formMessage.className = 'success';
                 formMessage.style.display = 'inline-block';
-                
+                showToast('\u2713 Admin created successfully!', 'success');
+                createAdminForm.reset();
                 setTimeout(() => {
                     window.location.reload();
-                }, 2000);
+                }, 1500);
             } else {
                 formMessage.textContent = '✗ ' + data.message;
                 formMessage.className = 'error';
                 formMessage.style.display = 'inline-block';
+                showToast('✗ ' + data.message, 'error');
             }
         } catch (err) {
             console.error('Error:', err);
             formMessage.textContent = '✗ Failed to create admin. Try again.';
             formMessage.className = 'error';
             formMessage.style.display = 'inline-block';
+            showToast('✗ Failed to create admin. Try again.', 'error');
         }
     });
 
@@ -347,14 +350,14 @@
             const data = await response.json();
 
             if (data.success) {
-                alert('Admin deleted successfully. Refreshing...');
-                window.location.reload();
+                showToast('\u2713 Admin deleted.', 'success');
+                setTimeout(function() { window.location.reload(); }, 1200);
             } else {
-                alert('Error: ' + data.message);
+                showToast('\u2717 ' + data.message, 'error');
             }
         } catch (err) {
             console.error('Error:', err);
-            alert('Failed to delete admin');
+            showToast('\u2717 Failed to delete admin', 'error');
         }
     }
 </script>

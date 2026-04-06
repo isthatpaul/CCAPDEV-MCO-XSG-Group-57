@@ -1,5 +1,10 @@
 {{#if error}}
-<div style="background-color:#fee; color:#c33; padding:12px; border-radius:4px; margin-bottom:12px; border:1px solid #fcc; font-size:14px;">
+<div role="alert" aria-live="assertive" class="flash-error">
     {{ error }}
+</div>
+{{/if}}
+{{#if success}}
+<div role="status" aria-live="polite" class="flash-success">
+    {{ success }}
 </div>
 {{/if}}

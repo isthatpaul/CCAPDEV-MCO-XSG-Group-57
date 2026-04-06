@@ -30,7 +30,13 @@
                         </td>
                         <td style="padding: 12px;">{{ this.phone }}</td>
                         <td style="padding: 12px;">
-                            <button class="btn-edit" onclick="openEditModal('{{ this._id }}', '{{ this.name }}', '{{ this.email }}', '{{ this.phone }}', '{{ this.bio }}')">
+                            <button class="btn-edit"
+                                data-id="{{ this._id }}"
+                                data-name="{{ this.name }}"
+                                data-email="{{ this.email }}"
+                                data-phone="{{ this.phone }}"
+                                data-bio="{{ this.bio }}"
+                                onclick="openEditModal(this)">
                                 ✏️ Edit
                             </button>
                             <button class="btn-delete" onclick="deleteUser('{{ this._id }}', '{{ this.name }}')" style="margin-left: 8px;">
@@ -52,9 +58,9 @@
 </main>
 
 <!-- Edit User Modal -->
-<div id="editUserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;">
+<div id="editUserModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editUserModalTitle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;">
     <div style="background: white; border-radius: 8px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <h2 style="margin-top: 0;">Edit User</h2>
+        <h2 id="editUserModalTitle" style="margin-top: 0;">Edit User</h2>
         <form id="editUserForm">
             <div>
                 <label for="editUserName">Full Name</label>
@@ -112,13 +118,15 @@
 <script>
     let currentUserId = null;
 
-    function openEditModal(userId, name, email, phone, bio) {
-        currentUserId = userId;
-        document.getElementById('editUserName').value = name;
-        document.getElementById('editUserEmail').value = email;
-        document.getElementById('editUserPhone').value = phone;
-        document.getElementById('editUserBio').value = bio;
-        document.getElementById('editUserModal').style.display = 'flex';
+    function openEditModal(btn) {
+        currentUserId = btn.dataset.id;
+        document.getElementById('editUserName').value = btn.dataset.name || '';
+        document.getElementById('editUserEmail').value = btn.dataset.email || '';
+        document.getElementById('editUserPhone').value = btn.dataset.phone || '';
+        document.getElementById('editUserBio').value = btn.dataset.bio || '';
+        const modal = document.getElementById('editUserModal');
+        modal.style.display = 'flex';
+        document.getElementById('editUserName').focus();
     }
 
     function closeEditModal() {
@@ -152,14 +160,16 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                closeEditModal();
+                showToast('\u2713 User updated successfully!', 'success');
+                setTimeout(function() { location.reload(); }, 1200);
             } else {
-                alert('❌ ' + (data.message || 'Failed to update user'));
+                showToast('\u2717 ' + (data.message || 'Failed to update user'), 'error');
             }
         })
         .catch(err => {
             console.error(err);
-            alert('❌ Error updating user');
+            showToast('\u2717 Error updating user', 'error');
         });
     });
 
@@ -172,14 +182,15 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    location.reload();
+                    showToast('\u2713 User deleted.', 'success');
+                    setTimeout(function() { location.reload(); }, 1200);
                 } else {
-                    alert('❌ ' + (data.message || 'Failed to delete user'));
+                    showToast('\u2717 ' + (data.message || 'Failed to delete user'), 'error');
                 }
             })
             .catch(err => {
                 console.error(err);
-                alert('❌ Error deleting user');
+                showToast('\u2717 Error deleting user', 'error');
             });
         }
     }

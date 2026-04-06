@@ -220,7 +220,7 @@
 
 /* Image Preview */
 .image-preview {
-    display: flex !important;
+    display: none;
     align-items: center;
     gap: 16px;
     margin-top: 12px;
@@ -457,12 +457,12 @@
 }
 
 .btn-success {
-    background: var(--accent) !important;
+    background: var(--accent);
     width: 100%;
 }
 
 .btn-success:hover {
-    background: #e55a2b !important;
+    background: #e55a2b;
 }
 
 /* Search */
@@ -674,8 +674,10 @@
 }
 .detail-actions {
     display: flex;
-    gap: 12px;
-    margin: 20px 0;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 /* Reviews */
@@ -838,4 +840,197 @@
 .hours-table td:last-child {
     text-align: right;
     color: #333;
+}
+
+/* ---- Establishments Index new classes ---- */
+
+/* Search section header row (title + result count) */
+.search-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+/* Result count badge */
+.result-count {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+/* Filter bar */
+.filter-section {
+    padding: 16px 0 20px;
+    border-bottom: 2px solid var(--divider);
+    margin-bottom: 24px;
+}
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 140px;
+}
+.filter-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.filter-group select {
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    font-family: inherit;
+    color: #222;
+    transition: var(--transition);
+    cursor: pointer;
+}
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(0,112,60,0.15);
+}
+
+/* Reset / "Show All" link styled as button */
+.reset-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background: transparent;
+    color: var(--muted);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+}
+.reset-btn:hover {
+    background: var(--border);
+    color: #222;
+    text-decoration: none;
+}
+
+/* Establishments list header row */
+.est-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--divider);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.est-list-header h2 {
+    margin: 0;
+}
+
+/* Empty state box */
+.empty-state-box {
+    text-align: center;
+    padding: 48px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+}
+.empty-state-box p {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+.empty-state-box a {
+    color: var(--green);
+    font-weight: 600;
+}
+
+/* Status legend (Open / Closing Soon / Closed) */
+.status-legend-section {
+    margin-bottom: 20px;
+}
+.status-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #444;
+    font-weight: 600;
+}
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.legend-dot.open   { background: #28a745; }
+.legend-dot.closing { background: #fd7e14; }
+.legend-dot.closed  { background: #dc3545; }
+
+/* Est card status badge */
+.est-card-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    backdrop-filter: blur(2px);
+}
+
+/* Description truncation on card */
+.est-card-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Recommendations section on show page */
+.recommendations-section {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 2px solid var(--divider);
+}
+.recommendations-heading {
+    margin: 0 0 20px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+
+/* Step inline error (new establishment form) */
+.step-inline-error {
+    margin: 8px 0 0;
+    padding: 10px 14px;
+    background: #fff0f0;
+    border-left: 4px solid #c0392b;
+    border-radius: 6px;
+    color: #c0392b;
+    font-size: 13px;
+    font-weight: 600;
 }

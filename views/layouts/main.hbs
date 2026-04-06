@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title }} - TaftBites</title>
+    <meta name="description" content="{{#if metaDescription}}{{ metaDescription }}{{else}}Discover and review restaurants near De La Salle University, Manila.{{/if}}">
+    <title>{{#if title}}{{ title }} - {{/if}}TaftBites</title>
+    <link rel="icon" type="image/png" href="/icons/Utensils.png">
     <link rel="stylesheet" href="/css/base.css">
     {{#if extraCSS}}
         <link rel="stylesheet" href="/css/{{ extraCSS }}">
@@ -13,12 +15,44 @@
     {{/if}}
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     {{> sidebar}}
 
-    {{{ body }}}
+    <div id="main-content">
+        {{{ body }}}
+    </div>
 
     {{> footer}}
 
     <script src="/js/sidebar.js"></script>
+    <script>
+        // Global toast notification helper
+        (function() {
+            var container = null;
+            function getContainer() {
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'toast-container';
+                    document.body.appendChild(container);
+                }
+                return container;
+            }
+            window.showToast = function(message, type) {
+                var c = getContainer();
+                var toast = document.createElement('div');
+                toast.className = 'toast toast-' + (type || 'success');
+                toast.textContent = message;
+                c.appendChild(toast);
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() { toast.classList.add('show'); });
+                });
+                setTimeout(function() {
+                    toast.classList.remove('show');
+                    setTimeout(function() { toast.remove(); }, 300);
+                }, 3500);
+            };
+        })();
+    </script>
 </body>
 </html>

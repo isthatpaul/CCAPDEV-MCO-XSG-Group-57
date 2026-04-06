@@ -1,5 +1,5 @@
 <!-- Sidebar Toggle Button -->
-<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
     <span class="hamburger-line"></span>
     <span class="hamburger-line"></span>
     <span class="hamburger-line"></span>
@@ -9,7 +9,7 @@
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- Sidebar Navigation -->
-<nav class="sidebar" id="sidebar">
+<nav class="sidebar" id="sidebar" aria-label="Main navigation">
     <div class="sidebar-header">
         <h1>TaftBites</h1>
         <p class="tagline">Discover restaurants near DLSU</p>
@@ -21,12 +21,26 @@
         {{#if isLoggedIn}}
             <li><a href="/users/{{ currentUserId }}"><img src="/icons/User.png" class="menu-icon" alt=""> Profile</a></li>
             {{#if isAdmin}}
-            <li><a href="/admin/dashboard"><img src="/icons/Utensils.png" class="menu-icon" alt=""> Admin Dashboard</a></li>
+            <li><a href="/admin/dashboard"><img src="/icons/User.png" class="menu-icon" alt=""> Admin Dashboard</a></li>
             {{/if}}
-            <li><a href="/users/logout" id="logoutBtn"><img src="/icons/Login.png" class="menu-icon" alt=""> Logout</a></li>
+            <li id="logoutNav"><a href="/users/logout"><img src="/icons/Login.png" class="menu-icon" alt=""> Logout</a></li>
         {{else}}
             <li><a href="/users/register"><img src="/icons/SignUp.png" class="menu-icon" alt=""> Sign Up</a></li>
-            <li><a href="/users/login" id="logoutBtn"><img src="/icons/Login.png" class="menu-icon" alt=""> Login</a></li>
+            <li id="loginNav"><a href="/users/login"><img src="/icons/Login.png" class="menu-icon" alt=""> Login</a></li>
         {{/if}}
     </ul>
 </nav>
+
+<script>
+    // Mark active nav link based on current path
+    (function () {
+        var path = window.location.pathname;
+        document.querySelectorAll('.sidebar-menu a').forEach(function (link) {
+            var href = link.getAttribute('href');
+            if (href === path || (href !== '/' && path.startsWith(href))) {
+                link.classList.add('active');
+                link.setAttribute('aria-current', 'page');
+            }
+        });
+    })();
+</script>

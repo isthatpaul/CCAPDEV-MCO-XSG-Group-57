@@ -6,6 +6,8 @@
                 <p>Help others discover amazing places to eat around DLSU</p>
             </div>
 
+            {{> error-flash}}
+
             <!-- Progress Bar -->
             <div class="progress-container">
                 <div class="progress-bar">
@@ -100,7 +102,7 @@
                 <!-- STEP 2: LOCATION & CONTACT INFO -->
                 <div class="form-step" id="step2">
                     <div class="step-title">
-                        <h2>📍 Location & Contact Info</h2>
+                        <h2>� Location &amp; Contact Info</h2>
                         <p>Help customers find you</p>
                     </div>
 
@@ -164,9 +166,10 @@
 
                     <div class="hours-container">
                         <div class="day-hours">
-                            <label><strong>Sunday</strong></label>
+                            <label for="closed-0"><strong>Sunday</strong></label>
                             <div class="time-inputs">
-                                <input type="checkbox" name="hours[0][isClosed]" class="is-closed-checkbox"> Closed
+                                <input type="checkbox" id="closed-0" name="hours[0][isClosed]" class="is-closed-checkbox">
+                                <label for="closed-0" style="font-weight:normal;">Closed</label>
                             </div>
                             <div class="time-row">
                                 <input type="time" name="hours[0][openTime]" class="time-input" value="09:00">
@@ -176,9 +179,10 @@
                         </div>
 
                         <div class="day-hours">
-                            <label><strong>Monday</strong></label>
+                            <label for="closed-1"><strong>Monday</strong></label>
                             <div class="time-inputs">
-                                <input type="checkbox" name="hours[1][isClosed]" class="is-closed-checkbox"> Closed
+                                <input type="checkbox" id="closed-1" name="hours[1][isClosed]" class="is-closed-checkbox">
+                                <label for="closed-1" style="font-weight:normal;">Closed</label>
                             </div>
                             <div class="time-row">
                                 <input type="time" name="hours[1][openTime]" class="time-input" value="07:00">
@@ -188,9 +192,10 @@
                         </div>
 
                         <div class="day-hours">
-                            <label><strong>Tuesday</strong></label>
+                            <label for="closed-2"><strong>Tuesday</strong></label>
                             <div class="time-inputs">
-                                <input type="checkbox" name="hours[2][isClosed]" class="is-closed-checkbox"> Closed
+                                <input type="checkbox" id="closed-2" name="hours[2][isClosed]" class="is-closed-checkbox">
+                                <label for="closed-2" style="font-weight:normal;">Closed</label>
                             </div>
                             <div class="time-row">
                                 <input type="time" name="hours[2][openTime]" class="time-input" value="07:00">
@@ -200,9 +205,10 @@
                         </div>
 
                         <div class="day-hours">
-                            <label><strong>Wednesday</strong></label>
+                            <label for="closed-3"><strong>Wednesday</strong></label>
                             <div class="time-inputs">
-                                <input type="checkbox" name="hours[3][isClosed]" class="is-closed-checkbox"> Closed
+                                <input type="checkbox" id="closed-3" name="hours[3][isClosed]" class="is-closed-checkbox">
+                                <label for="closed-3" style="font-weight:normal;">Closed</label>
                             </div>
                             <div class="time-row">
                                 <input type="time" name="hours[3][openTime]" class="time-input" value="07:00">
@@ -212,9 +218,10 @@
                         </div>
 
                         <div class="day-hours">
-                            <label><strong>Thursday</strong></label>
+                            <label for="closed-4"><strong>Thursday</strong></label>
                             <div class="time-inputs">
-                                <input type="checkbox" name="hours[4][isClosed]" class="is-closed-checkbox"> Closed
+                                <input type="checkbox" id="closed-4" name="hours[4][isClosed]" class="is-closed-checkbox">
+                                <label for="closed-4" style="font-weight:normal;">Closed</label>
                             </div>
                             <div class="time-row">
                                 <input type="time" name="hours[4][openTime]" class="time-input" value="07:00">
@@ -224,9 +231,10 @@
                         </div>
 
                         <div class="day-hours">
-                            <label><strong>Friday</strong></label>
+                            <label for="closed-5"><strong>Friday</strong></label>
                             <div class="time-inputs">
-                                <input type="checkbox" name="hours[5][isClosed]" class="is-closed-checkbox"> Closed
+                                <input type="checkbox" id="closed-5" name="hours[5][isClosed]" class="is-closed-checkbox">
+                                <label for="closed-5" style="font-weight:normal;">Closed</label>
                             </div>
                             <div class="time-row">
                                 <input type="time" name="hours[5][openTime]" class="time-input" value="07:00">
@@ -236,9 +244,10 @@
                         </div>
 
                         <div class="day-hours">
-                            <label><strong>Saturday</strong></label>
+                            <label for="closed-6"><strong>Saturday</strong></label>
                             <div class="time-inputs">
-                                <input type="checkbox" name="hours[6][isClosed]" class="is-closed-checkbox"> Closed
+                                <input type="checkbox" id="closed-6" name="hours[6][isClosed]" class="is-closed-checkbox">
+                                <label for="closed-6" style="font-weight:normal;">Closed</label>
                             </div>
                             <div class="time-row">
                                 <input type="time" name="hours[6][openTime]" class="time-input" value="08:00">
@@ -254,7 +263,16 @@
                             <strong>Name:</strong> <span id="summaryName"></span>
                         </div>
                         <div class="summary-item">
+                            <strong>Category:</strong> <span id="summaryCategory"></span>
+                        </div>
+                        <div class="summary-item">
                             <strong>Location:</strong> <span id="summaryLocation"></span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>Contact Email:</strong> <span id="summaryContact"></span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>Phone:</strong> <span id="summaryPhone"></span>
                         </div>
                         <div class="summary-item">
                             <strong>Hours:</strong> <span id="summaryHours"></span>
@@ -317,22 +335,42 @@
         });
     }
 
+    function showStepError(message) {
+        var existing = document.querySelector('.step-inline-error');
+        if (existing) existing.remove();
+        var err = document.createElement('p');
+        err.className = 'step-inline-error field-error';
+        err.setAttribute('role', 'alert');
+        err.textContent = message;
+        var activeStep = document.querySelector('.form-step.active');
+        if (activeStep) activeStep.prepend(err);
+    }
+
+    function clearStepError() {
+        var existing = document.querySelector('.step-inline-error');
+        if (existing) existing.remove();
+    }
+
     function validateStep(step) {
+        clearStepError();
         if (step === 1) {
             const name = document.getElementById('name').value.trim();
             if (!name) {
-                alert('Please enter the establishment name');
+                showStepError('Please enter the establishment name.');
+                document.getElementById('name').focus();
                 return false;
             }
             const imageInput = document.getElementById('image');
             if (!imageInput.files || imageInput.files.length === 0) {
-                alert('Please upload an establishment image');
+                showStepError('Please upload an establishment image.');
+                imageInput.focus();
                 return false;
             }
         } else if (step === 2) {
             const location = document.getElementById('location').value.trim();
             if (!location) {
-                alert('Please enter the location');
+                showStepError('Please enter the location.');
+                document.getElementById('location').focus();
                 return false;
             }
         }
@@ -341,7 +379,10 @@
 
     function updateSummary() {
         document.getElementById('summaryName').textContent = document.getElementById('name').value || 'Not entered';
+        document.getElementById('summaryCategory').textContent = document.getElementById('category').value || 'Not specified';
         document.getElementById('summaryLocation').textContent = document.getElementById('location').value || 'Not entered';
+        document.getElementById('summaryContact').textContent = document.getElementById('contact').value || 'Not provided';
+        document.getElementById('summaryPhone').textContent = document.getElementById('phone').value || 'Not provided';
         
         // Build hours summary from time inputs
         const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -378,7 +419,7 @@
             const reader = new FileReader();
             reader.onload = function(event) {
                 document.getElementById('previewImg').src = event.target.result;
-                document.getElementById('imagePreview').style.display = 'flex';
+                document.getElementById('imagePreview').style.cssText = 'display:flex;';
             };
             reader.readAsDataURL(file);
         }
@@ -394,7 +435,7 @@
         document.getElementById('charCount').textContent = e.target.value.length;
     });
 
-    // Initialize
+    // Initialize — start progress bar at step 1 (33%)
     updateProgressBar();
     updateBackButton();
 

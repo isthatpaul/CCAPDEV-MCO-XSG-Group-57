@@ -51,9 +51,9 @@
 </main>
 
 <!-- Assign Admin Modal -->
-<div id="assignModal" class="overlay" style="display: none;">
+<div id="assignModal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="assignModalTitle" style="display: none;">
     <div class="popup">
-        <h3>Assign Admin to Establishment</h3>
+        <h3 id="assignModalTitle">Assign Admin to Establishment</h3>
         <p style="color: #666; margin-bottom: 16px;">Choose an existing admin or create a new one.</p>
         
         <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
@@ -79,14 +79,17 @@
         <div style="margin-bottom: 20px;">
             <h4 style="margin-bottom: 12px;">Create New Admin</h4>
             <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Full Name</label>
+                <label for="newAdminName" style="display: block; margin-bottom: 8px; font-weight: 500;">Full Name</label>
                 <input type="text" id="newAdminName" placeholder="e.g., John Smith" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px;">
                 
-                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Email</label>
+                <label for="newAdminEmail" style="display: block; margin-bottom: 8px; font-weight: 500;">Email</label>
                 <input type="email" id="newAdminEmail" placeholder="e.g., admin@establishment.com" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px;">
+
+                <label for="newAdminPassword" style="display: block; margin-bottom: 8px; font-weight: 500;">Password</label>
+                <input type="password" id="newAdminPassword" placeholder="Minimum 8 characters" minlength="8" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px;">
                 
                 <button type="button" onclick="createAndAssignAdmin()" class="btn" style="background: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
-                    Create & Assign
+                    Create &amp; Assign
                 </button>
             </div>
         </div>
@@ -128,21 +131,23 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert('Admin assigned successfully!');
-                location.reload();
+                closeAssignModal();
+                showToast('\u2713 Admin assigned successfully!', 'success');
+                setTimeout(function() { location.reload(); }, 1200);
             } else {
-                alert('Error: ' + (data.message || 'Failed to assign admin'));
+                showToast('\u2717 ' + (data.message || 'Failed to assign admin'), 'error');
             }
         })
         .catch(err => {
             console.error(err);
-            alert('Error assigning admin');
+            showToast('\u2717 Error assigning admin', 'error');
         });
     }
 
     function createAndAssignAdmin() {
         const name = document.getElementById('newAdminName').value.trim();
         const email = document.getElementById('newAdminEmail').value.trim();
+        const password = document.getElementById('newAdminPassword').value;
 
         if (!name) {
             alert('Please enter a name');
@@ -152,6 +157,10 @@
             alert('Please enter a valid email');
             return;
         }
+        if (!password || password.length < 8) {
+            alert('Password must be at least 8 characters');
+            return;
+        }
 
         fetch('/admin/create-and-assign-establishment-admin', {
             method: 'POST',
@@ -159,21 +168,23 @@
             body: JSON.stringify({
                 name: name,
                 email: email,
+                password: password,
                 establishmentId: currentEstablishmentId
             })
         })
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert('Admin created and assigned successfully! They can log in with their email and password.');
-                location.reload();
+                closeAssignModal();
+                showToast('\u2713 Admin created and assigned!', 'success');
+                setTimeout(function() { location.reload(); }, 1200);
             } else {
-                alert('Error: ' + (data.message || 'Failed to create and assign admin'));
+                showToast('\u2717 ' + (data.message || 'Failed to create and assign admin'), 'error');
             }
         })
         .catch(err => {
             console.error(err);
-            alert('Error creating and assigning admin');
+            showToast('\u2717 Error creating admin', 'error');
         });
     }
 

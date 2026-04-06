@@ -7,42 +7,51 @@
                 <ul class="text-muted">
                     <li>Post reviews and photos</li>
                     <li>Save favorite establishments</li>
-                    <li>Follow other users</li>
                 </ul>
             </div>
             <div class="main-right">
                 <div class="card">
-                    <form id="registerForm" action="/users/register" method="POST">
+                    <form id="registerForm" action="/users/register" method="POST" novalidate>
 
                         {{> error-flash}}
 
                         <!-- Full name -->
                         <div>
-                            <label for="fullName">Username</label>
+                            <label for="fullName">Full Name</label>
                             <input type="text" id="fullName" name="name" required autocomplete="name" placeholder="Jane Doe">
+                            <span class="field-error" id="nameError" aria-live="polite"></span>
                         </div>
 
                         <!-- Email -->
                         <div>
                             <label for="regEmail">Email</label>
                             <input type="email" id="regEmail" name="email" required autocomplete="email" placeholder="you@example.com">
+                            <span class="field-error" id="regEmailError" aria-live="polite"></span>
                         </div>
 
                         <!-- Password -->
                         <div>
                             <label for="regPassword">Password</label>
-                            <input type="password" id="regPassword" name="password" required minlength="4" autocomplete="new-password" placeholder="At least 4 characters">
+                            <div class="input-with-toggle">
+                                <input type="password" id="regPassword" name="password" required minlength="4" autocomplete="new-password" placeholder="At least 4 characters">
+                                <button type="button" class="pw-toggle" aria-label="Show password" data-target="regPassword">Show</button>
+                            </div>
                             <small>Password must be at least 4 characters.</small>
+                            <span class="field-error" id="regPasswordError" aria-live="polite"></span>
                         </div>
 
                         <div>
                             <label for="regConfirmPassword">Confirm password</label>
-                            <input type="password" id="regConfirmPassword" name="confirmPassword" required autocomplete="new-password" placeholder="Repeat your password">
+                            <div class="input-with-toggle">
+                                <input type="password" id="regConfirmPassword" name="confirmPassword" required autocomplete="new-password" placeholder="Repeat your password">
+                                <button type="button" class="pw-toggle" aria-label="Show confirm password" data-target="regConfirmPassword">Show</button>
+                            </div>
+                            <span class="field-error" id="confirmError" aria-live="polite"></span>
                         </div>
 
                         <div>
                             <label>
-                                <input type="checkbox" id="agreeTerms" name="terms" required> I agree to the <a href="#terms">terms and conditions</a>
+                                <input type="checkbox" id="agreeTerms" name="terms" required> I agree to the terms and conditions
                             </label>
                         </div>
 
@@ -57,3 +66,57 @@
         </div>
     </div>
 </main>
+
+<script>
+    // Password show/hide toggles
+    document.querySelectorAll('.pw-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var input = document.getElementById(btn.getAttribute('data-target'));
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'Hide';
+                btn.setAttribute('aria-label', 'Hide ' + (btn.getAttribute('data-target') === 'regPassword' ? '' : 'confirm ') + 'password');
+            } else {
+                input.type = 'password';
+                btn.textContent = 'Show';
+                btn.setAttribute('aria-label', 'Show ' + (btn.getAttribute('data-target') === 'regPassword' ? '' : 'confirm ') + 'password');
+            }
+        });
+    });
+
+    // Client-side validation including confirm password match
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        var valid = true;
+        var nameEl = document.getElementById('fullName');
+        var emailEl = document.getElementById('regEmail');
+        var passwordEl = document.getElementById('regPassword');
+        var confirmEl = document.getElementById('regConfirmPassword');
+        var termsEl = document.getElementById('agreeTerms');
+
+        document.getElementById('nameError').textContent = '';
+        document.getElementById('regEmailError').textContent = '';
+        document.getElementById('regPasswordError').textContent = '';
+        document.getElementById('confirmError').textContent = '';
+
+        if (!nameEl.value.trim()) {
+            document.getElementById('nameError').textContent = 'Full name is required.';
+            valid = false;
+        }
+        if (!emailEl.value.trim() || !/^[^@]+@[^@]+\.[^@]+$/.test(emailEl.value.trim())) {
+            document.getElementById('regEmailError').textContent = 'Please enter a valid email address.';
+            valid = false;
+        }
+        if (passwordEl.value.length < 4) {
+            document.getElementById('regPasswordError').textContent = 'Password must be at least 4 characters.';
+            valid = false;
+        }
+        if (passwordEl.value !== confirmEl.value) {
+            document.getElementById('confirmError').textContent = 'Passwords do not match.';
+            valid = false;
+        }
+        if (!termsEl.checked) {
+            valid = false;
+        }
+        if (!valid) e.preventDefault();
+    });
+</script>
